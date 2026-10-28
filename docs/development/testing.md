@@ -21,12 +21,16 @@ Build and distribution licensing remain separate from this validation workflow.
 
 The `plasma-wayland-smoke` PR job builds a disposable Debian 13 image from trusted
 APT packages. It runs real KWin Wayland with its X11 windowed backend inside Xvfb,
-then starts plasmashell. Mesa llvmpipe provides software rendering; the desktop runs
+then starts plasmashell. KWin QPainter and Qt Quick software rendering run without a
+DRM device; the desktop runs
 as UID 1000 with a private D-Bus session and no runtime network, host display or devices.
 The CI image build installs test dependencies only inside the container, not on miix320.
+It clears KWin's packaged realtime scheduling file capability so execution fits Docker's
+default capability bound; no container capability is added. Production realtime scheduling
+is outside this test's scope.
 
 Bounded checks require the Wayland socket, a responsive Plasma scripting API reporting
-at least one desktop and panel, llvmpipe in KWin support information, live processes
+at least one desktop and panel, active Wayland QPainter compositing, live processes
 and a non-blank 1280x800 screenshot. The seven-day `plasma-wayland-smoke` artifact
 contains the screenshot, process logs, KWin support information and JSON result. Process
 exit or timeout fails the job; the workflow still copies diagnostics from the container.

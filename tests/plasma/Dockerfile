@@ -1,6 +1,6 @@
 FROM debian:13
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-    kwin-wayland plasma-desktop plasma-workspace dbus-x11 libglib2.0-bin \
+    kwin-wayland plasma-desktop plasma-workspace breeze dbus-x11 libglib2.0-bin \
     xvfb libgl1-mesa-dri libegl-mesa0 imagemagick python3 fonts-dejavu-core libcap2-bin \
     && rm -rf /var/lib/apt/lists/* \
     && useradd --create-home --uid 1000 smoke \

@@ -21,8 +21,8 @@ os.environ.update(
     KDE_FULL_SESSION="true",
     KDE_SESSION_VERSION="6",
     QT_QPA_PLATFORM="wayland",
-    LIBGL_ALWAYS_SOFTWARE="1",
-    GALLIUM_DRIVER="llvmpipe",
+    QT_QUICK_BACKEND="software",
+    KWIN_COMPOSE="Q",
 )
 processes = []
 logs = []
@@ -87,17 +87,20 @@ try:
     subprocess.run([
         "dbus-update-activation-environment", "DISPLAY", "WAYLAND_DISPLAY", "XDG_RUNTIME_DIR",
         "XDG_SESSION_TYPE", "XDG_CURRENT_DESKTOP", "XDG_MENU_PREFIX", "QT_QPA_PLATFORM",
-        "KDE_FULL_SESSION", "KDE_SESSION_VERSION", "LIBGL_ALWAYS_SOFTWARE", "GALLIUM_DRIVER",
+        "KDE_FULL_SESSION", "KDE_SESSION_VERSION", "QT_QUICK_BACKEND", "KWIN_COMPOSE",
     ], check=True, timeout=5)
     start("plasmashell", ["plasmashell"])
     wait_for(shell_ready, "Plasma desktop and panel")
     support = dbus("org.kde.KWin", "/KWin", "org.kde.KWin.supportInformation")
-    (artifacts / "kwin-support.txt").write_text(ast.literal_eval(support)[0])
-    assert "llvmpipe" in support.lower(), "Expected Mesa software rendering"
+    support = ast.literal_eval(support)[0]
+    (artifacts / "kwin-support.txt").write_text(support)
+    assert "Operation Mode: Wayland" in support
+    assert "Compositing is active" in support
+    assert "Compositing Type: QPainter" in support, "Expected KWin's CPU compositor"
     wait_for(rendered, "non-blank rendered desktop")
     assert all(process.poll() is None for process in processes)
     (artifacts / "result.json").write_text(json.dumps({
-        "status": "passed", "uid": os.getuid(), "renderer": "llvmpipe",
+        "status": "passed", "uid": os.getuid(), "renderer": "QPainter",
         "layout": layout, "scope": "KWin Wayland and Plasma shell startup, not a login session",
     }, indent=2) + "\n")
     print("Plasma Wayland smoke test passed:", layout, flush=True)
