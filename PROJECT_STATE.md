@@ -13,6 +13,13 @@ structured JSON report; six tests; CI; agent protocol; verbatim master plan/full
 architecture/design/ADR, contribution/security docs and templates. Fourteen user Wiki
 pages plus sidebar are published in the GitHub Wiki; reviewed copies stay in docs/wiki.
 
+Review correction: session definitions may omit Type, as Debian 13 Plasma does.
+The parser now accepts that format while rejecting explicit non-application types,
+hidden definitions and missing required fields. A Debian Plasma fixture is exercised
+through filesystem inventory and KDE session-entry status. The regression reproduced
+before the fix; validation results are recorded in the PR.
+Review: https://github.com/WhatzGames/Universal-Desktop-Manager/pull/1#discussion_r4406256111
+
 Toolchain: Rust 1.99.1, latest stable confirmed 2026-10-28, pinned in toolchain file,
 workspace and CI. Local macOS aarch64 fmt/Clippy/build/tests/report and fresh-checkout
 locked offline build/tests passed. Linux Ubuntu CI and unprivileged, network-disabled

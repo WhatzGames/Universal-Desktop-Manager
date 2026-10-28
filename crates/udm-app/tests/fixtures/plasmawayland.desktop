@@ -1,0 +1,7 @@
+# Session fields from Debian plasma-workspace 4:6.3.6-2's CMake template.
+# https://sources.debian.org/src/plasma-workspace/4%3A6.3.6-2/login-sessions/plasmawayland.desktop.cmake/
+[Desktop Entry]
+Exec=@CMAKE_INSTALL_FULL_LIBEXECDIR@/plasma-dbus-run-session-if-needed ${CMAKE_INSTALL_FULL_BINDIR}/startplasma-wayland
+TryExec=${CMAKE_INSTALL_FULL_BINDIR}/startplasma-wayland
+DesktopNames=KDE
+Name=Plasma (Wayland)

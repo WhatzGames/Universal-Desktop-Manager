@@ -5,7 +5,8 @@ Host: compile target OS/architecture; on Linux read /etc/os-release (fallback
 No shell evaluation. An absent Linux release file or unreadable entry fails explicitly.
 
 Sessions: read /usr/share/{wayland-sessions,xsessions}/*.desktop, only Desktop Entry
-Type=Application with Name and Exec, excluding Hidden=true. Exec/TryExec are data only.
+with Name and Exec, excluding Hidden=true. Type may be absent (as in Debian Plasma);
+when present it must be Application. Exec/TryExec are data only.
 Localized names, XDG user overrides, executable validation, logind/session authority,
 GPU readiness, storage and custom distribution paths are unimplemented. This is a
 standard system-entry inventory, not proof that a session is installed or launchable.

@@ -87,7 +87,10 @@ pub fn session(text: &str, id: String, backend: &str) -> Option<Session> {
             data.insert(k.trim(), v.trim());
         }
     }
-    if data.get("Type") != Some(&"Application") || data.get("Hidden") == Some(&"true") {
+    // Session definitions such as Debian Plasma can omit Type.
+    if data.get("Type").is_some_and(|kind| *kind != "Application")
+        || data.get("Hidden") == Some(&"true")
+    {
         return None;
     }
     let name = data.get("Name").filter(|s| !s.is_empty())?;
@@ -140,8 +143,11 @@ mod tests {
         std::fs::create_dir_all(root.join("etc")).unwrap();
         std::fs::create_dir_all(root.join("usr/share/wayland-sessions")).unwrap();
         std::fs::write(root.join("etc/os-release"), "ID=debian\nVERSION_ID=13").unwrap();
-        std::fs::write(root.join("usr/share/wayland-sessions/plasma.desktop"),
-            "[Desktop Entry]\nType=Application\nName=Plasma\nExec=startplasma-wayland\nDesktopNames=KDE").unwrap();
+        std::fs::write(
+            root.join("usr/share/wayland-sessions/plasma.desktop"),
+            include_str!("../tests/fixtures/plasmawayland.desktop"),
+        )
+        .unwrap();
         let h = host(&root, true).unwrap();
         assert_eq!(h.distribution, "debian");
         assert_eq!(h.version, "13");
@@ -150,6 +156,16 @@ mod tests {
         assert_eq!(found.len(), 1);
         assert_eq!(found[0].backend, "wayland");
         assert_eq!(found[0].desktop, "KDE");
+        assert_eq!(found[0].name, "Plasma (Wayland)");
+        assert_eq!(
+            found[0].try_exec.as_deref(),
+            Some("${CMAKE_INSTALL_FULL_BINDIR}/startplasma-wayland")
+        );
+        assert!(
+            crate::compat::kde(&h, &found)
+                .unwrap()
+                .session_entry_present
+        );
         std::fs::write(
             root.join("usr/share/wayland-sessions/invalid.desktop"),
             [255],
@@ -179,6 +195,16 @@ mod tests {
             )
             .is_none()
         );
+        for kind in ["Link", "Directory", ""] {
+            assert!(
+                session(
+                    &entry.replace("Type=Application", &format!("Type={kind}")),
+                    "x".into(),
+                    "wayland"
+                )
+                .is_none()
+            );
+        }
         assert!(
             session(
                 "[Desktop Entry]\nType=Application\nName=X",
