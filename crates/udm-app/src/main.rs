@@ -3,7 +3,12 @@ use std::path::Path;
 use udm_app::{CatalogDesktop, DesktopCatalogPlugin, Snapshot, compat, discovery};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    if std::env::args_os().len() != 1 {
+    let args: Vec<String> = std::env::args().skip(1).collect();
+    if args.first().is_some_and(|arg| arg == "packages") {
+        udm_app::packages::run(&args[1..])?;
+        return Ok(());
+    }
+    if !args.is_empty() {
         return Err("Usage: udm-app (read-only JSON report; no options)".into());
     }
     let linux = cfg!(target_os = "linux");
@@ -14,7 +19,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         vec![]
     };
     let desktops = vec![compat::kde(&host, &sessions)?];
-    let warnings = vec!["Read-only discovery. No installs, session activation or live switching implemented. Session launchability and GPU support are unverified.".into()];
+    let warnings = vec!["Read-only discovery command. Explicit package commands are separate; no session activation or live switching implemented. Session launchability and GPU support are unverified.".into()];
     let mut app = App::new();
     app.insert_resource(Snapshot {
         host,

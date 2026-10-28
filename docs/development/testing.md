@@ -2,7 +2,7 @@
 
 Use the pinned Rust 1.99.1 toolchain and the README commands for formatting, Clippy,
 locked build, tests and a JSON report smoke test. These are read-only application tests;
-there is no compositor, installer or session activation to test yet.
+the explicit v0.2 installer has separate tests below; no compositor or session activation exists.
 
 ## Linux and supported distribution
 
@@ -36,3 +36,15 @@ not establish arbitrary window preservation or the absence of every possible sid
 For Debian desktop compatibility, use a separate disposable Debian 13 test system;
 CachyOS hardware cannot validate the release-specific APT adapter. Keep recorded results
 in PROJECT_STATE.md and the relevant issue/PR, distinguishing observed from planned.
+
+## v0.2 package workflow
+
+Run `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests/packages -v`
+for safety, journal and injected-failure tests without root or APT. The separate
+Debian CI job provisions python3-apt in a disposable container and runs
+`tests/packages/debian-simulation.sh` as nobody. It checks repeated native resolution,
+no removal/upgrade/display-manager additions, honest pre-install verification and
+identical before/after package inventory. It never installs KDE.
+
+[Evidence and snapshot-VM acceptance blocker](validation/v0.2/README.md). Real
+installation requires a newly reviewed VM-specific plan and explicit approval.

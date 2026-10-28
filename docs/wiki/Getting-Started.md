@@ -1,11 +1,11 @@
 # Getting started
 
-There are no packaged releases. The foundation is under review in
-[PR #1](https://github.com/WhatzGames/Universal-Desktop-Manager/pull/1) and is not yet
-on the main branch. With Git, rustup and a native linker on your development machine:
+There are no packaged releases. The v0.1 foundation from
+[PR #1](https://github.com/WhatzGames/Universal-Desktop-Manager/pull/1) is merged into
+the main branch. v0.2 installation work is experimental and remains under development. With Git, rustup and a native linker on your development machine:
 
 ```sh
-git clone --branch setup/v0.1-foundation https://github.com/WhatzGames/Universal-Desktop-Manager.git
+git clone https://github.com/WhatzGames/Universal-Desktop-Manager.git
 cd Universal-Desktop-Manager
 cargo run --locked -p udm-app
 ```

@@ -7,7 +7,10 @@ Only Debian 13 has a local APT candidate query; this does not prove installabili
 Other distributions report unsupported package querying. Session entry presence does
 not prove installation completeness or launchability. macOS runs report unsupported.
 
-No GUI, package installation, compositor, session activation or live switching exists.
+The v0.2 development branch adds an explicit Debian 13 KDE transaction CLI and restricted
+Polkit helper. Native APT simulation is tested; actual installation and desktop continuity
+remain unvalidated pending an approved snapshot VM. See [helper setup and limits](packaging/debian/README.md).
+No GUI, compositor, session activation or live switching exists.
 Arbitrary GNOME/KDE or Xorg/Wayland window migration is not promised. Future integrated
 switching uses custom shells on one persistent compositor, not native GNOME/KDE shells.
 
@@ -26,7 +29,7 @@ cargo test --workspace --locked
 Validation: [offline hardware and Debian evidence](docs/development/validation/README.md),
 [testing procedure](docs/development/testing.md).
 
-No sudo is needed. JSON stdout contains a schema version, host, sessions, desktops and
+The default report needs no sudo. Explicit package installation requires Polkit administrator authorization. JSON stdout contains a schema version, host, sessions, desktops and
 warnings. Failures reading existing definitions or executing the supported query return
 nonzero; missing session directories are normal. No configuration file is needed yet.
 

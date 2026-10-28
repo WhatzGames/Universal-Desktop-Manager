@@ -5,4 +5,5 @@
 3. Read the discovered sessions and KDE status in the JSON report.
 4. See [Known Limitations](Known-Limitations) before interpreting compatibility.
 
-Installing or switching desktops is planned and cannot be performed in this version.
+Experimental Debian 13 installation commands are described in [Installing Desktops](Installing-Desktops).
+They require a separately provisioned helper and approved snapshot-VM testing. Switching is not implemented.
