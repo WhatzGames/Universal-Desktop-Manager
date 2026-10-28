@@ -1,7 +1,7 @@
 # Wiki publication
 
 Wiki enabled; SSH inspection on 2026-10-28 returned Repository not found, consistent
-with an uninitialized Wiki. These pages are ready to publish; they make no release claims.
+with an uninitialized Wiki. Fourteen user pages and a sidebar are ready to publish; they make no release claims.
 
 Owner: open https://github.com/WhatzGames/Universal-Desktop-Manager/wiki and click
 Create the first page, name it Home, paste Home.md, then save. This initializes Wiki Git.
@@ -9,7 +9,7 @@ Then (using the configured GitHub SSH alias):
 
 ```sh
 git clone git@github-personal:WhatzGames/Universal-Desktop-Manager.wiki.git
-cp docs/wiki/{Home,Getting-Started,KDE-Plasma,Known-Limitations,Troubleshooting}.md Universal-Desktop-Manager.wiki/
+cp docs/wiki/{Home,Getting-Started,Installation,First-Launch,Quick-Start,Installing-Desktops,Switching-Desktops,X11-and-Wayland,Supported-Desktops,KDE-Plasma,Settings,Troubleshooting,Known-Limitations,FAQ,_Sidebar}.md Universal-Desktop-Manager.wiki/
 cd Universal-Desktop-Manager.wiki
 git add '*.md'
 git commit -S -m 'Add initial user manual'

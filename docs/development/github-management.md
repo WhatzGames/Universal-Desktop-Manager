@@ -7,7 +7,8 @@ issues or milestones. Branch metadata reported unprotected; protection endpoint 
 Owner granted integration access; earlier 403 errors resolved. PR #1 is open/unmerged:
 https://github.com/WhatzGames/Universal-Desktop-Manager/pull/1
 Eight enhancement tasks #2–#9 contain dependencies, acceptance criteria, PR coverage and
-Rust 1.99.1 validation evidence. All remain open pending review/merge, assigned to v0.1.
+Rust 1.99.1 validation evidence, including offline CachyOS hardware and Debian 13
+container checks (docs/development/validation/README.md). All remain open pending review/merge, assigned to v0.1.
 
 Milestones (plans, not releases):
 
@@ -32,4 +33,4 @@ milestone and issue state through GitHub API; removed temporary workflow. No tok
 scope expansion, main changes, issue closure or merge occurred.
 
 Wiki is enabled/uninitialized. No Wiki initialization connector; browser signed out.
-Publish-ready user pages and exact manual instructions: ../wiki/README.md.
+Fourteen publish-ready user pages plus sidebar and exact manual instructions: ../wiki/README.md.

@@ -1,41 +1,46 @@
 # Current project state
 
-Verified: 2026-10-28. Phase: v0.1 foundation setup, pending review.
+Verified: 2026-10-28. Scope: Section 12 initial setup and v0.1 foundation validation.
 PR: https://github.com/WhatzGames/Universal-Desktop-Manager/pull/1 (open, unmerged).
 Branch: setup/v0.1-foundation. No release or merge has occurred.
-Milestone: https://github.com/WhatzGames/Universal-Desktop-Manager/milestone/1
-Tracking: issues #2–#9, all open, assigned to v0.1 and covered by PR #1.
-Roadmap milestones v0.1 through v1.0 exist (IDs 1–8; v0.7–v0.9 grouped).
+v0.1 milestone: https://github.com/WhatzGames/Universal-Desktop-Manager/milestone/1
+Issues #2–#9 are open, assigned to v0.1 and implemented by PR #1. Eight roadmap
+milestones through v1.0 exist; v0.7–v0.9 are grouped. No temporary setup workflow remains.
 
-Implemented: one-member Cargo workspace; exact Bevy 0.20 app/ECS dependencies;
-read-only host/system-session discovery; KDE catalog; Debian 13 local APT candidate
-query; structured JSON report; ECS startup plugin; six tests; CI; agent protocol;
-full master plan copied verbatim and complete phase roadmap; architecture/design/ADR;
-contribution/security guides; templates and publish-ready Wiki.
+Implemented: one-member Cargo workspace; pinned Bevy 0.20 app/ECS; headless ECS plugin;
+read-only host and standard session discovery; KDE catalog; Debian 13 local APT query;
+structured JSON report; six tests; CI; agent protocol; verbatim master plan/full roadmap;
+architecture/design/ADR, contribution/security docs and templates. Fourteen user Wiki
+pages plus sidebar are publish-ready, with exact owner initialization steps.
 
-Current toolchain: Rust 1.99.1, latest stable confirmed by rustup and upstream release
-announcement on 2026-10-28. Workspace requirement, rust-toolchain.toml and CI pin it.
-Validated locally on macOS aarch64: fmt, Clippy with warnings denied, locked build,
-six tests and report smoke test passed. A fresh detached checkout passed locked offline
-build and tests with 1.99.1. Linux Ubuntu CI with 1.99.1 passed all checks and smoke test:
-https://github.com/WhatzGames/Universal-Desktop-Manager/actions/runs/40771121727
-LICENSE and .gitignore match main byte-for-byte; master-plan.md matches supplied source.
-Published commits have valid GitHub Verified SSH signatures using the My Flow identity.
+Toolchain: Rust 1.99.1, latest stable confirmed 2026-10-28, pinned in toolchain file,
+workspace and CI. Local macOS aarch64 fmt/Clippy/build/tests/report and fresh-checkout
+locked offline build/tests passed. Linux Ubuntu CI and unprivileged, network-disabled
+Debian 13 container report checks passed on source commit 1e967726ee962b7d718a2c1fa25192b6cea4fde7:
+https://github.com/WhatzGames/Universal-Desktop-Manager/actions/runs/40773101833
+https://github.com/WhatzGames/Universal-Desktop-Manager/actions/runs/40773110954
+Debian detected APT and executed the real local-cache query; empty metadata honestly
+reported unknown. Candidate/no-candidate/error parsing is covered by unit tests.
 
-GitHub access: owner granted integration access; prior PR/issue 403 errors resolved.
-Approved temporary issues:write workflow created milestones and assigned issues. Its
-last PR-assignment step lacked token permission; assignment completed through connector.
-Temporary workflow removed after verifying all remote state. No privileges expanded.
-Wiki enabled but uninitialized; source and exact owner publication steps: docs/wiki.
-Browser signed out; available connector has no Wiki initialization tool.
+miix320 now reachable over its internal SSH alias. Offline CachyOS x86_64 test passed
+as UID 1000 using a hash-verified CI executable transferred over the LAN. Report matched
+both Hyprland Wayland entries, detected pacman, no KDE entry and unsupported package
+querying. Package inventory hash unchanged; temporary device files removed. No internet,
+package installation, root action, graphical session or clock change was used.
+Evidence and limits: docs/development/validation/README.md and adjacent JSON reports.
+Testing procedure: docs/development/testing.md.
 
-Unverified: real Debian 13 desktop-session/package query, executable launchability,
-GPU readiness and hardware. miix320 has no internet and is LAN-only; internal SSH alias
-returns No route to host. Later device checks must use offline/transferred artifacts.
-No GUI, package install, session activation, compositor or live switching exists. Standard
-session paths and synchronous local APT query limits: docs/design/discovery.md.
-Project SPDX choice and distribution dependency audit remain open; LICENSE unchanged.
+LICENSE and .gitignore unchanged; master-plan.md matches supplied source byte-for-byte.
+Commits use My Flow personal SSH signing and attribution hooks; published signatures
+verified on GitHub. Bare repository and implementation worktree follow My Flow layout.
 
-Next: review PR checks, publish Wiki via documented owner steps, validate discovery on
-reachable Debian 13 Linux. v0.2 installation needs a separate scoped task and disposable
-VM. Do not merge here. Task mapping: docs/development/github-tasks.json.
+Remaining access limit: Wiki enabled/uninitialized; connector cannot initialize it and
+browser is signed out. The Section 12 publish-ready fallback is complete in docs/wiki.
+No remaining blocker to the initial read-only foundation. Project SPDX choice and a
+release dependency audit remain open; do not infer license terms or publish a release.
+
+Unimplemented/unverified: full Debian desktop dependencies and launchability, GPU
+readiness, installation, GUI, session activation, compositor and live switching/window
+preservation. CachyOS hardware inventory does not validate an Arch package adapter.
+Next: review PR without merging, initialize Wiki using owner steps, then choose a scoped
+next task (Debian desktop compatibility or v0.2 planning) in a disposable environment.

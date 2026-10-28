@@ -28,13 +28,13 @@ My Flow bare/worktree layout, github-personal SSH transport, personal SSH signin
 attribution hook configured. Owner granted integration access; PR #1 and enhancement issues #2–#9 now exist.
 Milestones v0.1 through v1.0 were created using an explicitly approved temporary
 issues:write workflow, then the workflow was removed. Issues and PR belong to v0.1. Wiki is
-enabled but uninitialized; user pages are ready to publish. miix320 SSH failed with
-No route to host. All eight milestones exist; see github-management.md.
+enabled but uninitialized; user pages are ready to publish. Offline miix320 inventory test now passes as UID 1000; sanitized reports and limits
+are in docs/development/validation. All eight milestones exist; see github-management.md.
 
 ## Scope, risks and next task
 
 No GUI, package install, compositor, session activation or live switching. Standard
 system session paths only, no executable/GPU readiness proof. APT metadata may be stale;
-a synchronous query can stall if the local tool hangs. Real Debian 13 desktop validation
+a synchronous query can stall if the local tool hangs. Debian 13 container query execution passed; full desktop/graphics compatibility
 and distribution-license audit remain open. Next: publish Wiki using documented owner steps
 and validate discovery on Debian 13 before planning v0.2. Do not merge this PR.

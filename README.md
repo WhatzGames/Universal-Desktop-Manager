@@ -23,6 +23,9 @@ cargo clippy --workspace --all-targets --locked -- -D warnings
 cargo test --workspace --locked
 ```
 
+Validation: [offline hardware and Debian evidence](docs/development/validation/README.md),
+[testing procedure](docs/development/testing.md).
+
 No sudo is needed. JSON stdout contains a schema version, host, sessions, desktops and
 warnings. Failures reading existing definitions or executing the supported query return
 nonzero; missing session directories are normal. No configuration file is needed yet.
