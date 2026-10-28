@@ -1,23 +1,28 @@
 # GitHub management handoff
 
-Verified 2026-10-28: main had only LICENSE and .gitignore, no workflows/issues/milestones,
-and branch metadata reported unprotected. Protection endpoint returned 404 with the
-local CLI account, so organization rules are not fully audited. Connected app reports
-admin permission but create_issue returned 403 Resource not accessible by integration.
-The connector has no milestone-creation tool. Browser is signed out; local gh authenticates
-as a different account with read-only repository permission. Do not change credentials.
+Verified 2026-10-28: initial main had LICENSE and .gitignore only, no workflows/issues/
+milestones; branch metadata reported unprotected. Protection endpoint returned 404
+with the local CLI account, so organization rules are not fully audited.
 
-No issues or milestones were created. With an owner-authenticated gh session, create
-milestones v0.1, v0.2, v0.3, v0.4, v0.5, v0.6, v0.7–v0.9 and v1.0 using the phase names
-and acceptance criteria in roadmap.md (plans, not releases). Create the eight scoped
-v0.1 tasks from github-tasks.json, assign them to v0.1 and link the setup PR. Inspect for
-duplicates first; covered tasks stay open until the PR merges. Then update PROJECT_STATE.md.
+Owner granted integration access; earlier PR/issue 403 errors are resolved.
+PR #1 is open and unmerged: https://github.com/WhatzGames/Universal-Desktop-Manager/pull/1
+Eight open enhancement tasks #2–#9 link the PR, acceptance criteria and validation.
+Do not recreate them from github-tasks.json. Keep open until reviewed/merged.
 
-Example owner commands (review before publishing):
+No milestone-creation connector exists. Local gh account lacks owner write access;
+browser is signed out. Proposed temporary GitHub Actions workflow was rejected by
+automatic approval review because issues:write automation requires explicit scope
+approval. No such workflow is committed or active. Proposal: create only v0.1, v0.2,
+v0.3, v0.4, v0.5, v0.6, v0.7–v0.9 and v1.0 with phase names from roadmap.md; assign
+issues #2–#9 and PR #1 to v0.1; remove the workflow after success. Never close issues,
+change code/main, or merge through that workflow.
+
+Alternative owner-authenticated commands:
 
 ```sh
-gh api repos/WhatzGames/Universal-Desktop-Manager/milestones -f title=v0.1 -f description='Foundation and discovery; see docs/development/roadmap.md'
-gh issue create --repo WhatzGames/Universal-Desktop-Manager --title 'v0.1: Workspace foundation' --milestone v0.1 --body-file /path/to/reviewed-body.md
+gh api repos/WhatzGames/Universal-Desktop-Manager/milestones -f title=v0.1 -f description='Foundation and discovery; planned, not released; see docs/development/roadmap.md'
+gh issue edit 2 --repo WhatzGames/Universal-Desktop-Manager --milestone v0.1
 ```
 
+Repeat milestone creation for remaining phases and assignment for issues #3–#9/PR #1.
 Wiki initialization and exact publishing instructions: ../wiki/README.md.

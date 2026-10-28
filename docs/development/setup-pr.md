@@ -15,7 +15,7 @@ LICENSE and .gitignore are unchanged. No SPDX project license choice is inferred
 
 ## Validation
 
-Rust 1.97.1 on macOS aarch64: fresh detached checkout locked offline build, six tests,
+Historical baseline Rust 1.97.1 on macOS aarch64: fresh detached checkout locked offline build, six tests,
 formatting and Clippy with warnings denied passed. JSON report smoke test passed.
 Linux Ubuntu CI passed all checks and report smoke test:
 https://github.com/WhatzGames/Universal-Desktop-Manager/actions/runs/40770234918
@@ -25,11 +25,11 @@ Source master plan, LICENSE and .gitignore byte comparisons passed.
 ## GitHub handoff and blockers
 
 My Flow bare/worktree layout, github-personal SSH transport, personal SSH signing and
-attribution hook configured. Issues and PR creation returned 403 from the integration;
-local gh account has read-only access; no milestone creation tool is exposed. Eight
-scoped issue definitions and milestone publication instructions are included. Wiki is
+attribution hook configured. Owner granted integration access; PR #1 and enhancement issues #2–#9 now exist.
+No milestone creation tool is exposed; explicit approval is pending for temporary
+issues:write automation. Publication instructions are included. Wiki is
 enabled but uninitialized; user pages are ready to publish. miix320 SSH failed with
-No route to host. No issue/milestone IDs exist; do not claim they were created.
+No route to host. No milestones exist yet.
 
 ## Scope, risks and next task
 

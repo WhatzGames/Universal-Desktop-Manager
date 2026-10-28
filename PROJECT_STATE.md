@@ -18,7 +18,8 @@ https://github.com/WhatzGames/Universal-Desktop-Manager/actions/runs/40770234918
 Signed foundation commit c513695 is confirmed verified=true, reason=valid by GitHub:
 https://github.com/WhatzGames/Universal-Desktop-Manager/commit/c513695
 Published branch: https://github.com/WhatzGames/Universal-Desktop-Manager/tree/setup/v0.1-foundation
-PR creation returned 403 Resource not accessible by integration; no PR exists yet.
+PR #1 is open and unmerged: https://github.com/WhatzGames/Universal-Desktop-Manager/pull/1
+GitHub write access was granted by the owner; the earlier 403 is resolved.
 Ready-to-submit description: docs/development/setup-pr.md.
 
 Planned/unverified: real desktop-session host discovery and Debian 13 package query, executable
@@ -26,12 +27,19 @@ launchability, GPU support, package installation, UI, compositor, native session
 live shell switching. No preservation claims. Test host miix320 unreachable (No route
 to host). Missing/unreadable definitions and stale metadata limits are documented.
 
-GitHub blockers: issue creation rejected 403 by integration; no milestone creation tool;
-CLI account lacks write permission; Wiki enabled but uninitialized and browser signed
-out. Eight actionable tasks and owner instructions: docs/development/github-tasks.json
-and github-management.md. No remote issue/milestone IDs exist. Wiki source: docs/wiki.
+GitHub tracking: eight open enhancement issues #2–#9 cover workspace, ECS, catalog,
+distribution/session discovery, KDE compatibility, CI and docs. They link PR #1 and
+verified validation. Milestones are not yet created: no connector tool; temporary
+issues:write workflow rejected by automatic approval review, pending explicit approval.
+Wiki enabled but uninitialized; browser signed out. Publish-ready source: docs/wiki.
+Local gh account does not have owner write access. GitHub connector now does.
+Rust upgrade: latest stable 1.99.1 is pinned in rust-toolchain.toml, manifest and CI;
+formatting, Clippy with warnings denied, locked build, six tests and report smoke
+test passed locally. Latest-toolchain Linux CI pending push. Earlier Rust 1.97.1
+validation remains historical evidence. miix320 is internal-network-only; use its
+existing SSH alias, never substitute a public endpoint.
 
-Next: obtain working GitHub write authentication, open the prepared PR without merging,
-review foundation, obtain owner access for issue/milestone
-and Wiki publication, then validate discovery on reachable Debian 13 Linux. v0.2
+Next: finish Rust 1.99.1 validation and PR checks, obtain approval for milestone
+initialization or publish through an owner-authenticated browser/CLI, then validate
+discovery on reachable Debian 13 Linux. Publish Wiki using documented owner steps. v0.2
 installation requires a separate approved task and disposable VM. Do not merge here.

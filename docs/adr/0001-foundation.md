@@ -4,9 +4,9 @@ Status: accepted for this setup implementation; future runtime design remains pr
 Date: 2026-10-28
 
 Use Rust 2024 and exact Bevy app/ECS 0.20.0 pins, disabling default features and enabling
-std. Bevy ECS requires Rust 1.95; this workspace requires 1.97 and was built with 1.97.1.
-Cargo.lock fixes transitive resolution. The latest upstream stable inspected was Rust
-1.99.1; upgrading the developer toolchain is unnecessary for this compatible foundation.
+std. Bevy ECS requires Rust 1.95; this workspace requires and pins Rust 1.99.1, the latest stable verified 2026-10-28.
+Cargo.lock fixes transitive resolution. The toolchain file and CI both pin 1.99.1 at the user’s request; repeat validation
+when upgrading the pin. Historical baseline checks used 1.97.1.
 
 Use one workspace member and module boundaries to avoid empty crates. JSON is both the
 report and structured diagnostic output; defer configurable paths and persistent operation

@@ -13,7 +13,7 @@ switching uses custom shells on one persistent compositor, not native GNOME/KDE 
 
 ## Build and run
 
-Install stable Rust >= 1.97 (tested 1.97.1) with a native linker. From a clean checkout:
+Install Rust 1.99.1 (latest stable verified 2026-10-28; pinned by rust-toolchain.toml) with a native linker. From a clean checkout:
 
 ```sh
 cargo build --workspace --locked
