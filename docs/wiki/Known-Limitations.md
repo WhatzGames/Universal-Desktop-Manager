@@ -1,6 +1,9 @@
 # Known limitations
 
-No GUI, installation, desktop activation, compositor or live switching exists yet.
+No GUI, desktop activation, compositor or live switching exists yet. The v0.2
+Debian 13 installer is experimental: native resolution is tested, but snapshot-VM
+installation, Polkit prompts, interrupted dpkg recovery and desktop continuity
+are not yet validated. There is no automatic package rollback.
 Other distributions have unsupported package queries. Session entries can be stale.
 Xwayland lets X11 apps use a Wayland host; it does not migrate windows between desktops.
 Future nested desktop sessions retain applications in their original session. Native

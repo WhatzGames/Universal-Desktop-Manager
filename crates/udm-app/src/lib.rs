@@ -1,6 +1,7 @@
-//! UDM v0.1 read-only discovery controller. No compositor or privileged operations.
+//! UDM discovery controller and explicit restricted package workflow. No compositor.
 pub mod compat;
 pub mod discovery;
+pub mod packages;
 use bevy_app::{App, Plugin, Startup};
 use bevy_ecs::prelude::*;
 use serde::Serialize;

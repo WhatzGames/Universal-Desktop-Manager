@@ -16,6 +16,10 @@ Source: [complete master plan](master-plan.md). These phases are plans, not rele
 
 ### v0.2 — KDE installation
 
+Active implementation milestone after merged v0.1. Debian 13 native simulation and
+safety tests are implemented; real installation acceptance remains pending an approved
+snapshot VM. See [evidence](validation/v0.2/README.md). No release claim.
+
 - Native distribution package adapter (one distro first), transaction simulation, dependency/conflict review.
 - Privileged minimal helper + Polkit, authorized install, journal and failure handling.
 - Verify KDE Plasma Wayland install and session launcher.

@@ -1,56 +1,78 @@
 # Current project state
 
-Verified: 2026-10-28. Scope: Section 12 initial setup and v0.1 foundation validation.
-PR: https://github.com/WhatzGames/Universal-Desktop-Manager/pull/1 (open, unmerged).
-Branch: setup/v0.1-foundation. No release or merge has occurred.
-v0.1 milestone: https://github.com/WhatzGames/Universal-Desktop-Manager/milestone/1
-Issues #2–#9 are open, assigned to v0.1 and implemented by PR #1. Eight roadmap
-milestones through v1.0 exist; v0.7–v0.9 are grouped. No temporary setup workflow remains.
+Verified: 2026-10-28. Active milestone: v0.2 — KDE installation, Debian 13 only.
+This chat's persistent goal continues after v0.1; installation acceptance is not complete.
 
-Implemented: one-member Cargo workspace; pinned Bevy 0.20 app/ECS; headless ECS plugin;
-read-only host and standard session discovery; KDE catalog; Debian 13 local APT query;
-structured JSON report; six tests; CI; agent protocol; verbatim master plan/full roadmap;
-architecture/design/ADR, contribution/security docs and templates. Fourteen user Wiki
-pages plus sidebar are published in the GitHub Wiki; reviewed copies stay in docs/wiki.
+## Base and work
 
-Review correction: session definitions may omit Type, as Debian 13 Plasma does.
-The parser now accepts that format while rejecting explicit non-application types,
-hidden definitions and missing required fields. A Debian Plasma fixture is exercised
-through filesystem inventory and KDE session-entry status. The regression reproduced
-before the fix; validation results are recorded in the PR.
-Review: https://github.com/WhatzGames/Universal-Desktop-Manager/pull/1#discussion_r4406256111
+PR #1 is MERGED (live GitHub check), squash main
+`3bca2623e3cabf15bc8341f2d060aa482aceed15`. Foundation issues #2–#9 are closed.
+The original setup worktree/branch remains untouched.
+v0.2 branch: `feature/v0.2-debian-kde`, separate worktree
+`/Users/obedkooijman/CodexProjects/worktrees/Universal-Desktop-Manager-v0.2-kde`.
+Issues: [implementation #10](https://github.com/WhatzGames/Universal-Desktop-Manager/issues/10),
+[VM acceptance #11](https://github.com/WhatzGames/Universal-Desktop-Manager/issues/11),
+[milestone v0.2](https://github.com/WhatzGames/Universal-Desktop-Manager/milestone/2).
+[Draft PR #13](https://github.com/WhatzGames/Universal-Desktop-Manager/pull/13) is open.
+Keep the v0.2 PR unmerged; no release or v0.3 session activation.
 
-Toolchain: Rust 1.99.1, latest stable confirmed 2026-10-28, pinned in toolchain file,
-workspace and CI. Local macOS aarch64 fmt/Clippy/build/tests/report and fresh-checkout
-locked offline build/tests passed. Linux Ubuntu CI and unprivileged, network-disabled
-Debian 13 container report checks passed on source commit 1e967726ee962b7d718a2c1fa25192b6cea4fde7:
-https://github.com/WhatzGames/Universal-Desktop-Manager/actions/runs/40773101833
-https://github.com/WhatzGames/Universal-Desktop-Manager/actions/runs/40773110954
-Debian detected APT and executed the real local-cache query; empty metadata honestly
-reported unknown. Candidate/no-candidate/error parsing is covered by unit tests.
+## Implemented candidate
 
-miix320 now reachable over its internal SSH alias. Offline CachyOS x86_64 test passed
-as UID 1000 using a hash-verified CI executable transferred over the LAN. Report matched
-both Hyprland Wayland entries, detected pacman, no KDE entry and unsupported package
-querying. Package inventory hash unchanged; temporary device files removed. No internet,
-package installation, root action, graphical session or clock change was used.
-Evidence and limits: docs/development/validation/README.md and adjacent JSON reports.
-Testing procedure: docs/development/testing.md.
+Default Rust/Bevy discovery remains read-only. Explicit package CLI dispatches to a
+restricted root-owned isolated-Python helper backed by Debian's native python3-apt.
+Fixed KDE targets; resolution, full transaction review JSON, origin/version/dependency/
+conflict/size metadata; SHA-256-bound review and locked re-resolution; Polkit admin
+authorization; no UI commands/paths/package names; no repository additions or refresh.
+All removals/upgrades/reinstalls and new display managers are rejected. Temporary
+exclusive service-start policy preserves existing administrator policy by refusing it.
+Durable atomic/fsynced operation records distinguish failure/interruption from ready;
+manual native recovery guidance, no automatic rollback. Verify actual target packages,
+clean dpkg audit, launcher and Debian wrapped Wayland session definition. GPU readiness
+remains unverified. No session is started or switched.
 
-LICENSE and .gitignore unchanged; master-plan.md matches supplied source byte-for-byte.
-Commits use My Flow personal SSH signing and attribution hooks; published signatures
-verified on GitHub. Bare repository and implementation worktree follow My Flow layout.
+Design/limits: docs/design/installation.md, docs/adr/0002-debian-installation.md and
+packaging/debian/README.md. Existing LICENSE, .gitignore and master-plan.md unchanged.
 
-Wiki publication complete: https://github.com/WhatzGames/Universal-Desktop-Manager/wiki
-Owner initialized Home; signed Wiki commit ee09dc3f040e119c8e0c00c600bf97ed42455c67
-published all fourteen user pages and sidebar. Remote revision, signature identity,
-source equality and live Getting Started/navigation were verified. Wiki bare repository
-and worktree follow My Flow layout and use the same signing key and attribution hooks.
-Getting Started names the setup branch because PR #1 is still unmerged.
-No remaining blocker to the Section 12 initial setup. Project SPDX choice and a
-release dependency audit remain open; do not infer license terms or publish a release.
+## Verified evidence
 
-Unimplemented/unverified: full Debian desktop dependencies and launchability, GPU
-readiness, installation, GUI, session activation, compositor and live switching/window
-preservation. CachyOS hardware inventory does not validate an Arch package adapter.
-Next: review PR without merging, then choose a scoped next task (Debian desktop compatibility or v0.2 planning) in a disposable environment.
+Official stable Rust manifest still reports 1.99.1, matching toolchain/manifest/CI.
+macOS ARM64 fmt, warning-free Clippy, locked workspace build/tests (7 Rust tests),
+16 Python safety/injected-failure tests and default report smoke test pass.
+Native Debian 13 ARM64 simulation as UID 65534: repeated plans identical, package
+inventory unchanged; 798 NEW packages, 364,910,796 download bytes and 1,455,311,872
+installed bytes estimated, zero removals/upgrades/new display managers. Only test
+prerequisite python3-apt was provisioned. KDE was NOT installed. Container removed.
+GitHub push and PR CI both passed on bba56f1, including native Debian x86_64
+simulation and the Linux report job:
+https://github.com/WhatzGames/Universal-Desktop-Manager/actions/runs/40780259048
+https://github.com/WhatzGames/Universal-Desktop-Manager/actions/runs/40780213650
+Full evidence, digest, image identity, before/after inventories and limitations:
+docs/development/validation/v0.2/. Separate CI job repeats unprivileged simulation.
+
+## Acceptance blocker and next action
+
+No disposable Debian 13 desktop VM with snapshots is configured. Podman's appliance
+and Debian container are not installation acceptance environments. Actual KDE install,
+Polkit prompt/denial, real dpkg/download interruption recovery and preservation of an
+existing graphical session/display manager remain UNVERIFIED. Maintainer scripts run
+as root; policy-rc.d is not a sandbox. Do not use on the user's primary desktop.
+
+Next: provide a disposable Debian 13 desktop VM, snapshot it, record original session
+and display manager, provision reviewed helper prerequisites, generate a VM-specific
+plan and present its exact transaction for explicit installation approval. The saved
+container plan is review evidence, not authorization for another machine. Keep #11
+and milestone open until real success/failure acceptance evidence exists.
+
+miix320 is LAN-only, offline CachyOS, not Debian. It was not used for this milestone;
+never enable its internet or use it for Debian installation testing.
+
+## Documentation/publication
+
+Fourteen-page Wiki existed at signed commit ee09dc3f040e119c8e0c00c600bf97ed42455c67.
+Signed Wiki update f5bb5ac (following e0a3763) is published on master; all fourteen pages and sidebar
+match docs/wiki source copies. It corrects merged-foundation status and distinguishes
+simulation from unvalidated installation. GitHub confirms implementation commit
+bba56f10f6428d88177d1213d4180a6763b06468 as Verified. Personal SSH signing and My Flow attribution hooks are retained.
+GitHub CLI's credential has no repository push permission; connected GitHub API and
+personal SSH transport are used for authorized repository updates. Branch protections
+could not be read with the CLI credential (404); do not infer that none exist.

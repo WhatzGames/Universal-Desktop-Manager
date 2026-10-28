@@ -10,6 +10,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@1.99.1
         with:
           components: rustfmt, clippy
+      - run: python3 -m unittest discover -s tests/packages -v
       - run: cargo fmt --check
       - run: cargo clippy --workspace --all-targets --locked -- -D warnings
       - run: cargo build --workspace --locked
@@ -41,4 +42,23 @@ jobs:
           path: |
             udm-linux-x86_64-test.tar.gz
             debian-report.json
+          retention-days: 7
+
+  debian-simulation:
+    runs-on: ubuntu-latest
+    container: debian:13
+    steps:
+      - uses: actions/checkout@v4
+      - name: Provision native adapter test dependencies (not KDE)
+        run: apt-get update && apt-get install -y --no-install-recommends python3-apt
+      - name: Simulate as an unprivileged user
+        run: |
+          ln -s "$GITHUB_WORKSPACE" /source
+          mkdir /tmp/udm-evidence
+          chmod 777 /tmp/udm-evidence
+          su -s /bin/sh nobody -c 'sh /source/tests/packages/debian-simulation.sh /tmp/udm-evidence'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: debian-13-kde-simulation
+          path: /tmp/udm-evidence/
           retention-days: 7

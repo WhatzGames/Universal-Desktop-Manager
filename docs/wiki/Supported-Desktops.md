@@ -6,8 +6,10 @@
 | KDE Plasma Wayland catalog item | Always listed, including when no entry is found |
 | Debian 13 KDE package query | Read-only local APT candidate query; empty/stale metadata can give unknown |
 | CachyOS / Arch package query | Unsupported; host and session inventory smoke-tested on CachyOS |
-| Desktop installation or activation | Not implemented |
+| Debian 13 KDE installation | Experimental v0.2 candidate; native simulation tested, snapshot-VM installation acceptance pending |
+| Desktop activation | Not implemented |
 | Live switching and window preservation | Not implemented |
 
 Hardware smoke testing on one CachyOS machine does not establish general desktop or
-GPU compatibility. Full KDE Wayland dependency checks remain unverified.
+GPU compatibility. Native KDE dependency resolution is tested; actual installation
+and GPU readiness remain unverified.
