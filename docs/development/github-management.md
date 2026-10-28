@@ -1,28 +1,35 @@
 # GitHub management handoff
 
-Verified 2026-10-28: initial main had LICENSE and .gitignore only, no workflows/issues/
-milestones; branch metadata reported unprotected. Protection endpoint returned 404
-with the local CLI account, so organization rules are not fully audited.
+Verified 2026-10-28: initial main contained LICENSE and .gitignore only, no workflows,
+issues or milestones. Branch metadata reported unprotected; protection endpoint returned
+404 with the local CLI account, so organization rules are not fully audited.
 
-Owner granted integration access; earlier PR/issue 403 errors are resolved.
-PR #1 is open and unmerged: https://github.com/WhatzGames/Universal-Desktop-Manager/pull/1
-Eight open enhancement tasks #2–#9 link the PR, acceptance criteria and validation.
-Do not recreate them from github-tasks.json. Keep open until reviewed/merged.
+Owner granted integration access; earlier 403 errors resolved. PR #1 is open/unmerged:
+https://github.com/WhatzGames/Universal-Desktop-Manager/pull/1
+Eight enhancement tasks #2–#9 contain dependencies, acceptance criteria, PR coverage and
+Rust 1.99.1 validation evidence. All remain open pending review/merge, assigned to v0.1.
 
-No milestone-creation connector exists. Local gh account lacks owner write access;
-browser is signed out. Proposed temporary GitHub Actions workflow was rejected by
-automatic approval review because issues:write automation requires explicit scope
-approval. No such workflow is committed or active. Proposal: create only v0.1, v0.2,
-v0.3, v0.4, v0.5, v0.6, v0.7–v0.9 and v1.0 with phase names from roadmap.md; assign
-issues #2–#9 and PR #1 to v0.1; remove the workflow after success. Never close issues,
-change code/main, or merge through that workflow.
+Milestones (plans, not releases):
 
-Alternative owner-authenticated commands:
+| ID | Title | Phase |
+|---|---|---|
+| 1 | v0.1 | Foundation and discovery |
+| 2 | v0.2 | KDE installation |
+| 3 | v0.3 | Native session activation |
+| 4 | v0.4 | Persistent Wayland compositor |
+| 5 | v0.5 | Integrated live shells |
+| 6 | v0.6 | X11 support and nested-session prototypes |
+| 7 | v0.7–v0.9 | Expand and harden |
+| 8 | v1.0 | Stable release |
 
-```sh
-gh api repos/WhatzGames/Universal-Desktop-Manager/milestones -f title=v0.1 -f description='Foundation and discovery; planned, not released; see docs/development/roadmap.md'
-gh issue edit 2 --repo WhatzGames/Universal-Desktop-Manager --milestone v0.1
-```
+Milestone URLs: https://github.com/WhatzGames/Universal-Desktop-Manager/milestones
+Full scope and acceptance criteria: roadmap.md. PR #1 also belongs to v0.1.
 
-Repeat milestone creation for remaining phases and assignment for issues #3–#9/PR #1.
-Wiki initialization and exact publishing instructions: ../wiki/README.md.
+With explicit user approval, a temporary GitHub Actions workflow with issues:write
+created all eight milestones and assigned issues. Run 40771250991 failed only at its
+final PR-assignment call; the GitHub connector completed that assignment. Verified
+milestone and issue state through GitHub API; removed temporary workflow. No token
+scope expansion, main changes, issue closure or merge occurred.
+
+Wiki is enabled/uninitialized. No Wiki initialization connector; browser signed out.
+Publish-ready user pages and exact manual instructions: ../wiki/README.md.
