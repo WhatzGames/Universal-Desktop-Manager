@@ -1,0 +1,58 @@
+[
+  {
+    "title": "v0.1: Workspace foundation",
+    "body": "Scope: Workspace foundation.\n\nAcceptance: Clean checkout cargo build --workspace --locked succeeds; LICENSE and .gitignore unchanged.\n\nCovered by PR #1; issue #2 is open pending review and merge. Rust 1.99.1 local and Linux CI checks passed. See PROJECT_STATE.md for evidence and remaining validation limits.",
+    "issue_number": 2,
+    "url": "https://github.com/WhatzGames/Universal-Desktop-Manager/issues/2",
+    "milestone": "v0.1"
+  },
+  {
+    "title": "v0.1: Bevy ECS controller",
+    "body": "Scope: Bevy ECS controller.\n\nAcceptance: Headless app loads desktop entities once; ECS unit test passes.\n\nCovered by PR #1; issue #3 is open pending review and merge. Rust 1.99.1 local and Linux CI checks passed. See PROJECT_STATE.md for evidence and remaining validation limits.",
+    "issue_number": 3,
+    "url": "https://github.com/WhatzGames/Universal-Desktop-Manager/issues/3",
+    "milestone": "v0.1"
+  },
+  {
+    "title": "v0.1: Desktop catalog",
+    "body": "Scope: Desktop catalog.\n\nAcceptance: KDE Plasma Wayland is represented even with no installed entry; live switching is false.\n\nCovered by PR #1; issue #4 is open pending review and merge. Rust 1.99.1 local and Linux CI checks passed. See PROJECT_STATE.md for evidence and remaining validation limits.",
+    "issue_number": 4,
+    "url": "https://github.com/WhatzGames/Universal-Desktop-Manager/issues/4",
+    "milestone": "v0.1"
+  },
+  {
+    "title": "v0.1: Distribution detection",
+    "body": "Scope: Distribution detection.\n\nAcceptance: Linux os-release ID, release, architecture and standard package tools are discovered without privilege.\n\nCovered by PR #1; issue #5 is open pending review and merge. Rust 1.99.1 local and Linux CI checks passed. See PROJECT_STATE.md for evidence and remaining validation limits.",
+    "issue_number": 5,
+    "url": "https://github.com/WhatzGames/Universal-Desktop-Manager/issues/5",
+    "milestone": "v0.1"
+  },
+  {
+    "title": "v0.1: Session discovery",
+    "body": "Scope: Session discovery.\n\nAcceptance: Standard Wayland/X11 definitions are inventoried; hidden and malformed entries are covered by tests; Exec is never run.\n\nCovered by PR #1; issue #6 is open pending review and merge. Rust 1.99.1 local and Linux CI checks passed. See PROJECT_STATE.md for evidence and remaining validation limits.",
+    "issue_number": 6,
+    "url": "https://github.com/WhatzGames/Universal-Desktop-Manager/issues/6",
+    "milestone": "v0.1"
+  },
+  {
+    "title": "v0.1: KDE compatibility",
+    "body": "Scope: KDE compatibility.\n\nAcceptance: Debian 13 local APT query distinguishes available, unavailable, unknown and unsupported; no installation or refresh.\n\nCovered by PR #1; issue #7 is open pending review and merge. Rust 1.99.1 local and Linux CI checks passed. See PROJECT_STATE.md for evidence and remaining validation limits.",
+    "issue_number": 7,
+    "url": "https://github.com/WhatzGames/Universal-Desktop-Manager/issues/7",
+    "milestone": "v0.1"
+  },
+  {
+    "title": "v0.1: Continuous integration",
+    "body": "Scope: Continuous integration.\n\nAcceptance: CI runs formatting, Clippy, locked build, tests and report smoke test on Linux.\n\nCovered by PR #1; issue #8 is open pending review and merge. Rust 1.99.1 local and Linux CI checks passed. See PROJECT_STATE.md for evidence and remaining validation limits.",
+    "issue_number": 8,
+    "url": "https://github.com/WhatzGames/Universal-Desktop-Manager/issues/8",
+    "milestone": "v0.1"
+  },
+  {
+    "title": "v0.1: Documentation and session persistence",
+    "body": "Scope: Documentation and session persistence.\n\nAcceptance: Full master plan and roadmap, AGENTS.md, PROJECT_STATE.md, technical docs and publish-ready Wiki are present.\n\nCovered by PR #1; issue #9 is open pending review and merge. Rust 1.99.1 local and Linux CI checks passed. See PROJECT_STATE.md for evidence and remaining validation limits.",
+    "issue_number": 9,
+    "url": "https://github.com/WhatzGames/Universal-Desktop-Manager/issues/9",
+    "milestone": "v0.1"
+  }
+]

@@ -1,0 +1,25 @@
+{
+  "desktops": [
+    {
+      "availability": "unknown",
+      "evidence": "Local APT cache policy for kde-plasma-desktop, exit exit status: 0; cache freshness, Wayland dependencies and installability unverified",
+      "id": "kde-plasma-wayland",
+      "launchability": "unverified: entry presence does not prove executable or graphics readiness",
+      "live_switch_capable": false,
+      "name": "KDE Plasma Wayland",
+      "session_entry_present": false
+    }
+  ],
+  "host": {
+    "architecture": "x86_64",
+    "distribution": "debian",
+    "os": "linux",
+    "package_manager": "apt-cache",
+    "version": "13"
+  },
+  "schema_version": 1,
+  "sessions": [],
+  "warnings": [
+    "Read-only discovery. No installs, session activation or live switching implemented. Session launchability and GPU support are unverified."
+  ]
+}

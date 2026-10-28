@@ -1,0 +1,42 @@
+{
+  "desktops": [
+    {
+      "availability": "unsupported",
+      "evidence": "Package query supports Debian 13 with /usr/bin/apt-cache only; other releases are unvalidated",
+      "id": "kde-plasma-wayland",
+      "launchability": "unverified: entry presence does not prove executable or graphics readiness",
+      "live_switch_capable": false,
+      "name": "KDE Plasma Wayland",
+      "session_entry_present": false
+    }
+  ],
+  "host": {
+    "architecture": "x86_64",
+    "distribution": "cachyos",
+    "os": "linux",
+    "package_manager": "pacman",
+    "version": "unknown"
+  },
+  "schema_version": 1,
+  "sessions": [
+    {
+      "backend": "wayland",
+      "desktop": "Hyprland",
+      "exec": "uwsm start -e -D Hyprland hyprland.desktop",
+      "id": "hyprland-uwsm.desktop",
+      "name": "Hyprland (uwsm-managed)",
+      "try_exec": "uwsm"
+    },
+    {
+      "backend": "wayland",
+      "desktop": "Hyprland",
+      "exec": "/usr/bin/start-hyprland",
+      "id": "hyprland.desktop",
+      "name": "Hyprland",
+      "try_exec": null
+    }
+  ],
+  "warnings": [
+    "Read-only discovery. No installs, session activation or live switching implemented. Session launchability and GPU support are unverified."
+  ]
+}
