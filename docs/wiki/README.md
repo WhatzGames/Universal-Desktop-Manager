@@ -1,21 +1,36 @@
-# Wiki publication
+# Published user manual
 
-Wiki enabled; SSH inspection on 2026-10-28 returned Repository not found, consistent
-with an uninitialized Wiki. Fourteen user pages and a sidebar are ready to publish; they make no release claims.
+Live Wiki: https://github.com/WhatzGames/Universal-Desktop-Manager/wiki
 
-Owner: open https://github.com/WhatzGames/Universal-Desktop-Manager/wiki and click
-Create the first page, name it Home, paste Home.md, then save. This initializes Wiki Git.
-Then (using the configured GitHub SSH alias):
+Owner initialized Home on 2026-10-28. Fourteen user pages plus _Sidebar.md were
+published in signed Wiki commit `ee09dc3f040e119c8e0c00c600bf97ed42455c67`.
+The live Getting Started page and fourteen-page navigation were checked in a browser.
+The Wiki user pages match their reviewed source copies in this directory; this README
+is publication guidance and is not itself a Wiki page. No separate Wiki license adopted.
+
+Both repositories follow My Flow layout:
+
+- Bare Wiki Git data: `<workspace>/bares/Universal-Desktop-Manager.wiki.git`
+- Wiki checkout: `<workspace>/worktrees/Universal-Desktop-Manager-wiki`, branch master
+- SSH remote: `git@github-personal:WhatzGames/Universal-Desktop-Manager.wiki.git`
+- Same author, personal SSH signing key and attribution hooks as the project repository
+
+## Updating an initialized Wiki
+
+Review user-facing edits in docs/wiki with the code PR. From the project checkout,
+inspect the Wiki worktree for unrelated changes and fetch before copying. For an
+authorized publication, copy only the fourteen manual pages and sidebar, not README.md:
 
 ```sh
-git clone git@github-personal:WhatzGames/Universal-Desktop-Manager.wiki.git
-cp docs/wiki/{Home,Getting-Started,Installation,First-Launch,Quick-Start,Installing-Desktops,Switching-Desktops,X11-and-Wayland,Supported-Desktops,KDE-Plasma,Settings,Troubleshooting,Known-Limitations,FAQ,_Sidebar}.md Universal-Desktop-Manager.wiki/
-cd Universal-Desktop-Manager.wiki
-git add '*.md'
-git commit -S -m 'Add initial user manual'
-git push origin master
+git -C ../Universal-Desktop-Manager-wiki status --short
+git -C ../Universal-Desktop-Manager-wiki fetch --all --prune
+cp docs/wiki/{Home,Getting-Started,Installation,First-Launch,Quick-Start,Installing-Desktops,Switching-Desktops,X11-and-Wayland,Supported-Desktops,KDE-Plasma,Settings,Troubleshooting,Known-Limitations,FAQ,_Sidebar}.md ../Universal-Desktop-Manager-wiki/
+git -C ../Universal-Desktop-Manager-wiki diff --check
+git -C ../Universal-Desktop-Manager-wiki add '*.md'
+git -C ../Universal-Desktop-Manager-wiki commit -S -m 'Update user manual'
+git -C ../Universal-Desktop-Manager-wiki push origin master
 ```
 
-Verify the Wiki default branch before pushing if GitHub creates a different branch.
-GitHub requires first-page initialization through its web UI; unavailable Wiki Git
-cannot be initialized by a normal clone. No separate wiki license has been adopted.
+Resolve any upstream divergence before pushing. Verify links and page rendering after
+publication and record the Wiki commit in PROJECT_STATE.md. Keep planned features
+clearly labeled; the current foundation is in PR #1 and is not merged into main.

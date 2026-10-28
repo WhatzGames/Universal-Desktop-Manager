@@ -11,7 +11,7 @@ Implemented: one-member Cargo workspace; pinned Bevy 0.20 app/ECS; headless ECS 
 read-only host and standard session discovery; KDE catalog; Debian 13 local APT query;
 structured JSON report; six tests; CI; agent protocol; verbatim master plan/full roadmap;
 architecture/design/ADR, contribution/security docs and templates. Fourteen user Wiki
-pages plus sidebar are publish-ready, with exact owner initialization steps.
+pages plus sidebar are published in the GitHub Wiki; reviewed copies stay in docs/wiki.
 
 Toolchain: Rust 1.99.1, latest stable confirmed 2026-10-28, pinned in toolchain file,
 workspace and CI. Local macOS aarch64 fmt/Clippy/build/tests/report and fresh-checkout
@@ -34,13 +34,16 @@ LICENSE and .gitignore unchanged; master-plan.md matches supplied source byte-fo
 Commits use My Flow personal SSH signing and attribution hooks; published signatures
 verified on GitHub. Bare repository and implementation worktree follow My Flow layout.
 
-Remaining access limit: Wiki enabled/uninitialized; connector cannot initialize it and
-browser is signed out. The Section 12 publish-ready fallback is complete in docs/wiki.
-No remaining blocker to the initial read-only foundation. Project SPDX choice and a
+Wiki publication complete: https://github.com/WhatzGames/Universal-Desktop-Manager/wiki
+Owner initialized Home; signed Wiki commit ee09dc3f040e119c8e0c00c600bf97ed42455c67
+published all fourteen user pages and sidebar. Remote revision, signature identity,
+source equality and live Getting Started/navigation were verified. Wiki bare repository
+and worktree follow My Flow layout and use the same signing key and attribution hooks.
+Getting Started names the setup branch because PR #1 is still unmerged.
+No remaining blocker to the Section 12 initial setup. Project SPDX choice and a
 release dependency audit remain open; do not infer license terms or publish a release.
 
 Unimplemented/unverified: full Debian desktop dependencies and launchability, GPU
 readiness, installation, GUI, session activation, compositor and live switching/window
 preservation. CachyOS hardware inventory does not validate an Arch package adapter.
-Next: review PR without merging, initialize Wiki using owner steps, then choose a scoped
-next task (Debian desktop compatibility or v0.2 planning) in a disposable environment.
+Next: review PR without merging, then choose a scoped next task (Debian desktop compatibility or v0.2 planning) in a disposable environment.

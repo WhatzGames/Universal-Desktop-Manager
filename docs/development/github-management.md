@@ -1,8 +1,8 @@
 # GitHub management handoff
 
 Verified 2026-10-28: initial main contained LICENSE and .gitignore only, no workflows,
-issues or milestones. Branch metadata reported unprotected; protection endpoint returned
-404 with the local CLI account, so organization rules are not fully audited.
+issues or milestones. Current GitHub API checks report main protected=false and an empty repository
+ruleset list. No protection settings were changed.
 
 Owner granted integration access; earlier 403 errors resolved. PR #1 is open/unmerged:
 https://github.com/WhatzGames/Universal-Desktop-Manager/pull/1
@@ -32,5 +32,7 @@ final PR-assignment call; the GitHub connector completed that assignment. Verifi
 milestone and issue state through GitHub API; removed temporary workflow. No token
 scope expansion, main changes, issue closure or merge occurred.
 
-Wiki is enabled/uninitialized. No Wiki initialization connector; browser signed out.
-Fourteen publish-ready user pages plus sidebar and exact manual instructions: ../wiki/README.md.
+Wiki published: https://github.com/WhatzGames/Universal-Desktop-Manager/wiki
+Fourteen pages plus navigation; signed Wiki commit ee09dc3f040e119c8e0c00c600bf97ed42455c67.
+Live Getting Started and fourteen-page sidebar verified. Source copies and future
+publication procedure: ../wiki/README.md. Owner initialization is no longer required.

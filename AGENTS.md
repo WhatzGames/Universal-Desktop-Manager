@@ -19,4 +19,5 @@ semantic compliance or real hardware compatibility.
 
 Sources of truth: code/tests = behavior; docs/development/roadmap.md = roadmap;
 Issues/Milestones = tasks; PROJECT_STATE.md = current handoff; accepted ADRs = decisions;
-GitHub Wiki = end-user manual (publish-ready source in docs/wiki until initialized).
+GitHub Wiki = published end-user manual; reviewed source copies and publication procedure
+in docs/wiki. Keep those copies synchronized for authorized manual updates.
