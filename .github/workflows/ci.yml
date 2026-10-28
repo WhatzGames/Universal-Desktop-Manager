@@ -15,3 +15,30 @@ jobs:
       - run: cargo build --workspace --locked
       - run: cargo test --workspace --locked
       - run: cargo run --locked -p udm-app
+      - name: Check Debian 13 read-only report
+        run: |
+          docker run --rm --network none --user 65534:65534 \
+            --mount type=bind,src="$PWD/target/debug/udm-app",dst=/udm-app,readonly \
+            debian:13 /udm-app > debian-report.json
+          python3 - <<'PYTHON'
+          import json
+          with open("debian-report.json") as report:
+              data = json.load(report)
+          assert data["host"]["os"] == "linux"
+          assert data["host"]["distribution"] == "debian"
+          assert data["host"]["version"] == "13"
+          assert data["host"]["package_manager"] == "apt-cache"
+          desktop = data["desktops"][0]
+          assert desktop["availability"] in {"available", "unavailable", "unknown"}
+          assert desktop["evidence"].startswith("Local APT cache policy")
+          assert desktop["live_switch_capable"] is False
+          PYTHON
+      - name: Package offline test executable
+        run: tar -czf udm-linux-x86_64-test.tar.gz -C target/debug udm-app
+      - uses: actions/upload-artifact@v4
+        with:
+          name: udm-linux-x86_64-test
+          path: |
+            udm-linux-x86_64-test.tar.gz
+            debian-report.json
+          retention-days: 7
