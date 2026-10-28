@@ -21,6 +21,7 @@ os.environ.update(
     KDE_FULL_SESSION="true",
     KDE_SESSION_VERSION="6",
     QT_QPA_PLATFORM="wayland",
+    QT_QPA_PLATFORMTHEME="kde",
     QT_QUICK_BACKEND="software",
     KWIN_COMPOSE="Q",
 )
@@ -75,7 +76,11 @@ def rendered():
     )
     width, height, colors = map(int, details.split())
     assert (width, height) == (1280, 800)
-    return colors > 20
+    background_colors = subprocess.check_output(
+        ["convert", str(artifacts / "plasma.png"), "-crop", "1280x700+0+0",
+         "-format", "%k", "info:"], text=True, timeout=10,
+    )
+    return colors > 20 and int(background_colors) > 20
 
 
 try:
@@ -87,6 +92,7 @@ try:
     subprocess.run([
         "dbus-update-activation-environment", "DISPLAY", "WAYLAND_DISPLAY", "XDG_RUNTIME_DIR",
         "XDG_SESSION_TYPE", "XDG_CURRENT_DESKTOP", "XDG_MENU_PREFIX", "QT_QPA_PLATFORM",
+        "QT_QPA_PLATFORMTHEME",
         "KDE_FULL_SESSION", "KDE_SESSION_VERSION", "QT_QUICK_BACKEND", "KWIN_COMPOSE",
     ], check=True, timeout=5)
     start("plasmashell", ["plasmashell"])
@@ -97,7 +103,18 @@ try:
     assert "Operation Mode: Wayland" in support
     assert "Compositing is active" in support
     assert "Compositing Type: QPainter" in support, "Expected KWin's CPU compositor"
-    wait_for(rendered, "non-blank rendered desktop")
+    wallpaper = Path("/usr/share/wallpapers/Next/contents/images/1280x800.png")
+    assert wallpaper.is_file(), "Expected installed Breeze wallpaper"
+    configured = dbus("org.kde.plasmashell", "/PlasmaShell", "org.kde.PlasmaShell.evaluateScript", """
+        for (const desktop of desktops()) {
+            desktop.wallpaperPlugin = "org.kde.image";
+            desktop.currentConfigGroup = ["Wallpaper", "org.kde.image", "General"];
+            desktop.writeConfig("Image", "file:///usr/share/wallpapers/Next/contents/images/1280x800.png");
+        }
+        print("wallpaper configured");
+    """)
+    assert "wallpaper configured" in configured
+    wait_for(rendered, "rendered desktop background and panel")
     assert all(process.poll() is None for process in processes)
     (artifacts / "result.json").write_text(json.dumps({
         "status": "passed", "uid": os.getuid(), "renderer": "QPainter",

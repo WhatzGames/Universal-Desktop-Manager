@@ -31,7 +31,9 @@ is outside this test's scope.
 
 Bounded checks require the Wayland socket, a responsive Plasma scripting API reporting
 at least one desktop and panel, active Wayland QPainter compositing, live processes
-and a non-blank 1280x800 screenshot. The seven-day `plasma-wayland-smoke` artifact
+and a 1280x800 screenshot whose desktop background is non-blank. A known installed
+Breeze wallpaper is configured through Plasma's scripting API; the image check excludes
+the panel so clock text alone cannot satisfy it. The seven-day `plasma-wayland-smoke` artifact
 contains the screenshot, process logs, KWin support information and JSON result. Process
 exit or timeout fails the job; the workflow still copies diagnostics from the container.
 
