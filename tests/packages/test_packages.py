@@ -59,6 +59,13 @@ class Packages(unittest.TestCase):
             with self.subTest(change=change.name), self.assertRaises(RuntimeError):
                 m.resolve(Cache([change]))
 
+    def test_local_origin_cannot_hide_behind_trusted_debian_origin(self):
+        candidate = package()
+        candidate.candidate.origins.append(NS(origin="Local", label="Local", archive="",
+                                             site="", component="", trusted=True))
+        with self.assertRaisesRegex(RuntimeError, "Unapproved package origin"):
+            m.resolve(Cache([candidate]))
+
     def test_broken_or_missing_candidate_rejected(self):
         cache = Cache()
         cache.broken_count = 1

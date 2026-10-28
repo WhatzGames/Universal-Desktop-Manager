@@ -37,7 +37,7 @@ packaging/debian/README.md. Existing LICENSE, .gitignore and master-plan.md unch
 
 Official stable Rust manifest still reports 1.99.1, matching toolchain/manifest/CI.
 macOS ARM64 fmt, warning-free Clippy, locked workspace build/tests (7 Rust tests),
-15 Python safety/injected-failure tests and default report smoke test pass.
+16 Python safety/injected-failure tests and default report smoke test pass.
 Native Debian 13 ARM64 simulation as UID 65534: repeated plans identical, package
 inventory unchanged; 798 NEW packages, 364,910,796 download bytes and 1,455,311,872
 installed bytes estimated, zero removals/upgrades/new display managers. Only test

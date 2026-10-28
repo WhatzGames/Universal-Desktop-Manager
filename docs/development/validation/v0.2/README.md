@@ -9,7 +9,7 @@ Branch: feature/v0.2-debian-kde. These results do not satisfy installation accep
   local rustc is 1.99.1. Toolchain/manifest/CI pins remain consistent.
 - macOS aarch64: Cargo formatting, warning-free Clippy, locked build and seven Rust
   tests passed; default report remains read-only (macos-report.json).
-- Fifteen Python safety tests passed without APT or root host modifications:
+- Sixteen Python safety tests passed without APT or root host modifications:
   forbidden transactions/origins, digest/authorization, changed-plan refusal,
   failure and verification phases, interrupted-operation refusal, atomic journal,
   existing service-policy preservation and exception cleanup, Debian wrapped launcher.
@@ -30,6 +30,15 @@ Branch: feature/v0.2-debian-kde. These results do not satisfy installation accep
 The plan belongs to the deleted test container. It is reviewable simulation evidence,
 not an authorization or reusable installation transaction for a different machine.
 Regenerate and review a plan in the actual snapshot VM before requesting installation.
+
+## Source-origin regression
+
+A mixed candidate with both an allowed Debian origin and a local file-repository
+origin reproduced a validation bypass: empty-site origins were discarded. The
+regression failed before the fix. All candidate origins are now checked, so an
+empty/unknown local site cannot hide behind an allowed Debian source. The synthetic
+fixture covers this boundary; native source selection for a hostile repository has
+not been exercised in a VM. Existing official-only simulation evidence is unchanged.
 
 ## CI
 

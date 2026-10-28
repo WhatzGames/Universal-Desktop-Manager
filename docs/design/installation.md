@@ -18,7 +18,9 @@ The entire plan plus dpkg/source/index/config/display-manager fingerprints is ha
 Any changed plan is refused. Every removal/upgrade/reinstall, unknown origin and new
 display manager is refused; recommendations/suggestions are disabled. Native APT checks
 signed metadata and package hashes, and unauthenticated downloads are explicitly disabled.
-The helper never updates metadata, adds repositories or accepts arbitrary commands.
+Every candidate origin is checked, including empty-site local file origins; a local
+source cannot hide behind a simultaneous Debian origin. The helper never updates
+metadata, adds repositories or accepts arbitrary commands.
 
 Service starts/restarts are suppressed by an exclusively created policy-rc.d; an
 existing policy causes failure without replacement. NEEDRESTART_MODE=l prevents

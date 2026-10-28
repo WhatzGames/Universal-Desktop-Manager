@@ -55,7 +55,7 @@ def apt_modules():
 def checked_origin(version):
     origins = [dict(origin=o.origin, label=o.label, archive=o.archive,
                     site=o.site, component=o.component, trusted=o.trusted)
-               for o in version.origins if o.site]
+               for o in version.origins]
     if not origins or any(not o["trusted"] or o["origin"] != "Debian" or
                           o["site"] not in ("deb.debian.org", "security.debian.org") or
                           o["archive"] not in ("stable", "stable-updates", "stable-security",
