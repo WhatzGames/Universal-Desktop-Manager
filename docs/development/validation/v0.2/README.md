@@ -31,6 +31,15 @@ The plan belongs to the deleted test container. It is reviewable simulation evid
 not an authorization or reusable installation transaction for a different machine.
 Regenerate and review a plan in the actual snapshot VM before requesting installation.
 
+## CI
+
+Push and PR CI passed on bba56f1, including the Debian x86_64 native simulation job:
+- https://github.com/WhatzGames/Universal-Desktop-Manager/actions/runs/40780259048
+- https://github.com/WhatzGames/Universal-Desktop-Manager/actions/runs/40780213650
+
+CI evidence artifacts retain the x86_64 plan and package inventories for seven days.
+Neither job installs KDE or validates an active desktop.
+
 ## Remaining acceptance blocker
 
 No disposable Debian 13 desktop VM with snapshots is configured. Podman's appliance

@@ -13,6 +13,7 @@ v0.2 branch: `feature/v0.2-debian-kde`, separate worktree
 Issues: [implementation #10](https://github.com/WhatzGames/Universal-Desktop-Manager/issues/10),
 [VM acceptance #11](https://github.com/WhatzGames/Universal-Desktop-Manager/issues/11),
 [milestone v0.2](https://github.com/WhatzGames/Universal-Desktop-Manager/milestone/2).
+[Draft PR #13](https://github.com/WhatzGames/Universal-Desktop-Manager/pull/13) is open.
 Keep the v0.2 PR unmerged; no release or v0.3 session activation.
 
 ## Implemented candidate
@@ -41,6 +42,10 @@ Native Debian 13 ARM64 simulation as UID 65534: repeated plans identical, packag
 inventory unchanged; 798 NEW packages, 364,910,796 download bytes and 1,455,311,872
 installed bytes estimated, zero removals/upgrades/new display managers. Only test
 prerequisite python3-apt was provisioned. KDE was NOT installed. Container removed.
+GitHub push and PR CI both passed on bba56f1, including native Debian x86_64
+simulation and the Linux report job:
+https://github.com/WhatzGames/Universal-Desktop-Manager/actions/runs/40780259048
+https://github.com/WhatzGames/Universal-Desktop-Manager/actions/runs/40780213650
 Full evidence, digest, image identity, before/after inventories and limitations:
 docs/development/validation/v0.2/. Separate CI job repeats unprivileged simulation.
 
@@ -64,9 +69,10 @@ never enable its internet or use it for Debian installation testing.
 ## Documentation/publication
 
 Fourteen-page Wiki existed at signed commit ee09dc3f040e119c8e0c00c600bf97ed42455c67.
-v0.2 source updates correct merged-foundation status and distinguish simulation from
-unvalidated installation. Keep the managed Wiki checkout synchronized and record its
-publication revision. Personal SSH signing and My Flow attribution hooks are retained.
+Signed Wiki update e0a3763 is published on master; all fourteen pages and sidebar
+match docs/wiki source copies. It corrects merged-foundation status and distinguishes
+simulation from unvalidated installation. GitHub confirms implementation commit
+bba56f10f6428d88177d1213d4180a6763b06468 as Verified. Personal SSH signing and My Flow attribution hooks are retained.
 GitHub CLI's credential has no repository push permission; connected GitHub API and
 personal SSH transport are used for authorized repository updates. Branch protections
 could not be read with the CLI credential (404); do not infer that none exist.
