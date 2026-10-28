@@ -6,8 +6,6 @@ from pathlib import Path
 import subprocess
 import time
 
-from PIL import Image
-
 assert os.getuid() != 0, "Run the desktop as an unprivileged user"
 
 artifacts = Path("/tmp/plasma-artifacts")
@@ -19,6 +17,7 @@ os.environ.update(
     WAYLAND_DISPLAY="wayland-smoke",
     XDG_SESSION_TYPE="wayland",
     XDG_CURRENT_DESKTOP="KDE",
+    XDG_MENU_PREFIX="plasma-",
     KDE_FULL_SESSION="true",
     KDE_SESSION_VERSION="6",
     QT_QPA_PLATFORM="wayland",
@@ -70,10 +69,13 @@ def shell_ready():
 def rendered():
     subprocess.run(["import", "-display", ":99", "-window", "root",
                     str(artifacts / "plasma.png")], check=True, timeout=10)
-    with Image.open(artifacts / "plasma.png") as screenshot:
-        assert screenshot.size == (1280, 800)
-        colors = screenshot.convert("RGB").getcolors(maxcolors=20)
-        return colors is None
+    details = subprocess.check_output(
+        ["identify", "-format", "%w %h %k", str(artifacts / "plasma.png")],
+        text=True, timeout=10,
+    )
+    width, height, colors = map(int, details.split())
+    assert (width, height) == (1280, 800)
+    return colors > 20
 
 
 try:
@@ -82,6 +84,11 @@ try:
     start("kwin", ["kwin_wayland", "--x11-display", ":99", "--socket", "wayland-smoke",
                    "--width", "1280", "--height", "800", "--no-lockscreen"])
     wait_for(lambda: (runtime / "wayland-smoke").is_socket(), "KWin Wayland socket")
+    subprocess.run([
+        "dbus-update-activation-environment", "DISPLAY", "WAYLAND_DISPLAY", "XDG_RUNTIME_DIR",
+        "XDG_SESSION_TYPE", "XDG_CURRENT_DESKTOP", "XDG_MENU_PREFIX", "QT_QPA_PLATFORM",
+        "KDE_FULL_SESSION", "KDE_SESSION_VERSION", "LIBGL_ALWAYS_SOFTWARE", "GALLIUM_DRIVER",
+    ], check=True, timeout=5)
     start("plasmashell", ["plasmashell"])
     wait_for(shell_ready, "Plasma desktop and panel")
     support = dbus("org.kde.KWin", "/KWin", "org.kde.KWin.supportInformation")
@@ -95,6 +102,12 @@ try:
     }, indent=2) + "\n")
     print("Plasma Wayland smoke test passed:", layout, flush=True)
 finally:
+    if processes and processes[0].poll() is None and not (artifacts / "plasma.png").exists():
+        try:
+            subprocess.run(["import", "-display", ":99", "-window", "root",
+                            str(artifacts / "plasma.png")], check=True, timeout=5)
+        except (OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired):
+            pass
     for process in reversed(processes):
         if process.poll() is None:
             process.terminate()
