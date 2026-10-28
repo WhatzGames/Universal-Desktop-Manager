@@ -5,7 +5,7 @@ Live Wiki: https://github.com/WhatzGames/Universal-Desktop-Manager/wiki
 Owner initialized Home on 2026-10-28. Fourteen user pages plus _Sidebar.md were
 published in signed Wiki commit `ee09dc3f040e119c8e0c00c600bf97ed42455c67`.
 The live Getting Started page and fourteen-page navigation were checked in a browser.
-The v0.2 user updates are published in signed Wiki commit `e0a3763`; all pages match
+The v0.2 user updates are published in signed Wiki commits `e0a3763` and `f5bb5ac`; all pages match
 the source copies in draft PR #13. this README
 is publication guidance and is not itself a Wiki page. No separate Wiki license adopted.
 

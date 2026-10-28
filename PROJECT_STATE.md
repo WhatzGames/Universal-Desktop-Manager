@@ -69,7 +69,7 @@ never enable its internet or use it for Debian installation testing.
 ## Documentation/publication
 
 Fourteen-page Wiki existed at signed commit ee09dc3f040e119c8e0c00c600bf97ed42455c67.
-Signed Wiki update e0a3763 is published on master; all fourteen pages and sidebar
+Signed Wiki update f5bb5ac (following e0a3763) is published on master; all fourteen pages and sidebar
 match docs/wiki source copies. It corrects merged-foundation status and distinguishes
 simulation from unvalidated installation. GitHub confirms implementation commit
 bba56f10f6428d88177d1213d4180a6763b06468 as Verified. Personal SSH signing and My Flow attribution hooks are retained.

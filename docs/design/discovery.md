@@ -21,3 +21,7 @@ query currently waits for process exit, so a broken local tool can delay the rep
 
 Availability, entry presence, launchability and live-switch capability are separate.
 Live-switch capability is always false. No user sessions or packages are modified.
+
+The explicit v0.2 package workflow separately resolves dependencies and checks
+installed packages/launcher/session definition; it does not change this default
+report contract. See [installation](installation.md) for its validation limits.
