@@ -1,0 +1,28 @@
+{
+  "cpu_model": "Westmere-v1,phys-bits=40,enforce",
+  "qemu_sha256": "d3c1a558ad220e77a4412048c8d96b44f8c2b41c7ad2a4ecfe522a4b122fe067",
+  "qemu_version": "QEMU emulator version 10.0.13 (Debian 1:10.0.13+ds-0+deb13u1)\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\n",
+  "host_architecture": "x86_64",
+  "schema_version": 1,
+  "source_revision": "0b37612cb8fd6ae0f3bdd85841be5f4488c7766e",
+  "plan_digest": "ed20b81bb265c6549f47ecd5b978ac1affe0b79e694ed25da8f1e62381266fa9",
+  "snapshot_name": "reviewed",
+  "snapshot_restore_verified": true,
+  "uuid": "38c7714f-507b-4e37-a1cb-4f27eeb3516f",
+  "image_url": "https://cloud.debian.org/images/cloud/trixie/latest/debian-13-generic-amd64.qcow2",
+  "image_sha512": "5bd891c6e62d01639f52a5587b72a4607421e445732214be787dba6043cf9797a6ff90bed982aada6a6c7e619f1f956d961c4fad76757171abd607920aac098a",
+  "acceleration": "kvm",
+  "acceleration_probe": {
+    "selected": "kvm",
+    "probe_returncode": 0,
+    "probe_stderr": ""
+  },
+  "prepare_seconds": 119.715001022,
+  "files": {
+    "guest.qcow2": "a2aa3f66c02f70b589511c3ca5e4bc512c85f3fcdbf1dc98149ace06fcd9cb40",
+    "source.iso": "0273a54eb8f2e561424d131540f9ee0bcc7f8deb2c8c8ae5b5e9df1bf9505fab",
+    "seed.iso": "73a73c96408b00325435b6c7920abbc1638963a4a4227465f52f5beea523d7d2",
+    "uuid": "8a0a54debbf585ef539c1d539b3931a077f73918e00f0cefe8cc8417c29d7d86",
+    "baseline.json": "cc88ab8d339d4fba8be57d36b7bb585431bfd32070ed6d50154a7b2e358f9e3e"
+  }
+}

@@ -19,6 +19,8 @@ Preparation took 116.434 seconds, including original snapshot restore verificati
 
 The common enforced CPU baseline retains guest kernel defaults. Its recorded report includes **spec_store_bypass: Vulnerable** and Spectre v2 retpolines with STIBP disabled. The v2 CPU trial refused unavailable spec-ctrl support; no feature-enforcement check was removed. This disposable public-data guest contains no supplied credentials; it is not production security validation. Host mitigations were not changed.
 
+Current continuation: [corrected observer and identical approved transaction](corrected/README.md).
+
 ## Exact approval scope
 
 Approve only the above source, preparation run, manifest and transaction, using copies of this reviewed GitHub-hosted guest. The suite runs the real CLI → pkexec → restricted helper installation, intentional stale-plan/download/dpkg/interruption/post-commit-verification failures, snapshot recovery, original desktop continuity and isolated Plasma readiness. Maintainer scripts run privileged; policy-rc.d is not a sandbox. Full suite results and duration remain unverified.
