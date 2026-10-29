@@ -49,3 +49,8 @@ uninstall dependencies, downgrade or automatically rerun repair commands.
 Verification checks the installed target packages, executable launcher and a
 matching Wayland session definition. It does not start a session or establish GPU
 readiness. Installation and v0.3 session activation remain separate.
+
+A [prepared VM review packet](../../docs/development/validation/v0.2-vm/README.md)
+now records real XFCE/LightDM baseline and restored KVM/TCG snapshots. This is
+preparation evidence only. Do not execute its install/failure stage until a human
+approves the exact snapshot manifest and complete transaction digest.

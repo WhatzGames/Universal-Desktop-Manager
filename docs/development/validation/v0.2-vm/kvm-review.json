@@ -1,0 +1,27 @@
+{
+  "qemu_sha256": "d3c1a558ad220e77a4412048c8d96b44f8c2b41c7ad2a4ecfe522a4b122fe067",
+  "qemu_version": "QEMU emulator version 10.0.13 (Debian 1:10.0.13+ds-0+deb13u1)\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\n",
+  "host_architecture": "x86_64",
+  "schema_version": 1,
+  "source_revision": "fc9df23f06b5b79c06a7259bc9f0358ae388acc8",
+  "plan_digest": "f958050ea5fdaf430c5ecec486d6b14529d02e9c6791e0c2850973071b8a6e3f",
+  "snapshot_name": "reviewed",
+  "snapshot_restore_verified": true,
+  "uuid": "9226415a-9a66-4157-89a1-ae8e5b3b6546",
+  "image_url": "https://cloud.debian.org/images/cloud/trixie/latest/debian-13-generic-amd64.qcow2",
+  "image_sha512": "5bd891c6e62d01639f52a5587b72a4607421e445732214be787dba6043cf9797a6ff90bed982aada6a6c7e619f1f956d961c4fad76757171abd607920aac098a",
+  "acceleration": "kvm",
+  "acceleration_probe": {
+    "selected": "kvm",
+    "probe_returncode": 0,
+    "probe_stderr": ""
+  },
+  "prepare_seconds": 154.61411755,
+  "files": {
+    "guest.qcow2": "92f13de8e58a2c4308b5df0fbce1fddbb8c205025bffe401684dfd785ad59084",
+    "source.iso": "baa179125f52dd91c6a2a8ec78c20c8bbfe34dcac4f0a3cc2b55d63611517741",
+    "seed.iso": "89463b50bce113e27b73b5f7e3ee75c302ab534e3d4282d31f22fde4e406f833",
+    "uuid": "5df66ebf5a618de1bf4711546c407181d5ef4a4de473f97c74540b52bc8819cc",
+    "baseline.json": "94911323ddfd0d5f9890bf249a6d5d3bb39c4533597fae3b1f0a19f10babbee3"
+  }
+}

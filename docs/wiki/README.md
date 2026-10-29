@@ -38,3 +38,6 @@ clearly labeled; the foundation from PR #1 is merged, while v0.2 installation ac
 
 Signed Wiki commit `bb46dc8` publishes the snapshot approval and installation
 limitations updates from integration PR #14. Installation acceptance remains open.
+
+Signed Wiki commit `a13db2c` records verified real Debian guest preparation and
+restoration from PR #14; actual KDE installation remains unapproved/unvalidated.

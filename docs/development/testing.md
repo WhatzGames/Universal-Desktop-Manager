@@ -89,5 +89,7 @@ installation requires a newly reviewed VM-specific plan and explicit approval.
 
 [Real VM protocol, approval gate and limits](../../tests/vm/README.md). Preparation
 and acceptance are separate manual operations; the existing container job remains
-a fast component check. Treat the new harness as unvalidated until recorded guest
-assertions and review artifacts exist. Keep issue #11 and milestone v0.2 open.
+a fast component check. Real guest preparation/restore and default Polkit denial passed on hosted KVM
+and TCG; [exact review artifacts](validation/v0.2-vm/README.md) are retained.
+Real KDE commit/failure/continuity/component acceptance is still behind human
+approval. Keep issue #11 and milestone v0.2 open.

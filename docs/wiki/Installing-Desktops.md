@@ -19,7 +19,8 @@ requires a new review. Package installation does not select or start Plasma.
 A successful check does not establish graphics readiness or live switching.
 See [Troubleshooting](Troubleshooting) for failures and recovery limits.
 
-A separate snapshot-VM CI candidate is being developed. Its preparation stage
+A separate snapshot-VM CI candidate has prepared and restored a real Debian 13
+XFCE desktop. KDE installation still requires approval and remains unvalidated. Its preparation stage
 records the original desktop and exact package transaction. Installation requires
 a separate explicit approval tied to that snapshot, source revision and transaction
 digest. Passing the existing Plasma container check does not validate installation

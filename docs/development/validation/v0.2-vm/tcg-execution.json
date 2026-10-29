@@ -1,0 +1,10 @@
+{
+  "acceleration": {
+    "selected": "tcg",
+    "reason": "No accessible KVM device inside tooling container"
+  },
+  "host_architecture": "x86_64",
+  "qemu_version": "QEMU emulator version 10.0.13 (Debian 1:10.0.13+ds-0+deb13u1)\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\n",
+  "started_unix": 1793307512.1799164,
+  "restore": true
+}

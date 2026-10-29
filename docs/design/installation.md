@@ -44,4 +44,6 @@ unconfigured packages; administrator recovery or a VM snapshot is the fallback.
 The [snapshot VM CI candidate](../../tests/vm/README.md) preserves a running guest
 across a digest-bound manual approval gate. Its CI Polkit rule is limited to the
 reviewed helper transaction; it is not the deployment policy or an interactive
-authentication test. Installation acceptance remains pending actual guest evidence.
+authentication test. Real KVM/TCG guest preparation, default Polkit denial and RAM/disk restoration
+are [validated](../development/validation/v0.2-vm/README.md). Installation acceptance
+remains pending explicit transaction approval and actual commit/failure evidence.

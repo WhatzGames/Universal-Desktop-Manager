@@ -36,3 +36,8 @@ CI integration candidate: preserve RAM/disk and exact source/transaction in revi
 artifacts, then require a separate digest-bound manual dispatch before any KDE
 commit. Revalidate snapshot files, original desktop identities and guest transaction.
 See [protocol and remaining acceptance limits](../../tests/vm/README.md).
+
+Preparation and exact running-snapshot restoration passed on hosted KVM and TCG
+on fc9df23. The [review packet](../development/validation/v0.2-vm/README.md) retains
+the identical complete transaction and distinct VM manifests. Positive authorization
+and native installation acceptance remain unapproved/unverified.

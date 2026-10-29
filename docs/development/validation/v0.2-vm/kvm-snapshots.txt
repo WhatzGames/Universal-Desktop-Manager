@@ -1,0 +1,3 @@
+Snapshot list:
+ID      TAG               VM_SIZE                DATE        VM_CLOCK     ICOUNT
+1       reviewed         1.42 GiB 2026-10-29 20:54:08  0000:01:56.458         --

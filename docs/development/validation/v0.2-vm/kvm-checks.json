@@ -1,0 +1,10 @@
+{
+  "baseline_restored": true,
+  "transaction_restored": true,
+  "inventory_restored": true,
+  "polkit_denied": true,
+  "inventory_unchanged_on_denial": true,
+  "original_baseline_sha256": "94911323ddfd0d5f9890bf249a6d5d3bb39c4533597fae3b1f0a19f10babbee3",
+  "restored_evidence_sha256": "94911323ddfd0d5f9890bf249a6d5d3bb39c4533597fae3b1f0a19f10babbee3",
+  "inventory_sha256": "3900244deb73cdf87acb7140fc0f1290f01db8b9c96d3405a503e5aa089465ed"
+}

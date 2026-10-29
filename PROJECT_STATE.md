@@ -1,106 +1,131 @@
 # Current project state
 
-Verified baseline: 2026-10-28. Integration work started: 2026-10-29. Active milestone: v0.2 — KDE installation, Debian 13 only.
-This chat's persistent goal continues after v0.1; installation acceptance is not complete.
+Verified: 2026-10-29. Active persistent goal: snapshot-based Debian 13 VM CI for
+v0.2. **Preparation is validated; real KDE installation acceptance is not complete.**
 
-## Base and work
+## Branches and review
 
-PR #1 is MERGED (live GitHub check), squash main
-`3bca2623e3cabf15bc8341f2d060aa482aceed15`. Foundation issues #2–#9 are closed.
-The original setup worktree/branch remains untouched.
-v0.2 branch: `feature/v0.2-debian-kde`, separate worktree
-`/Users/obedkooijman/CodexProjects/worktrees/Universal-Desktop-Manager-v0.2-kde`.
-Issues: [implementation #10](https://github.com/WhatzGames/Universal-Desktop-Manager/issues/10),
-[VM acceptance #11](https://github.com/WhatzGames/Universal-Desktop-Manager/issues/11),
-[milestone v0.2](https://github.com/WhatzGames/Universal-Desktop-Manager/milestone/2).
-[Draft PR #13](https://github.com/WhatzGames/Universal-Desktop-Manager/pull/13) is open.
-Keep the v0.2 PR unmerged; no release or v0.3 session activation.
+- Foundation PR #1 is merged; issues #2–#9 are closed.
+- PR #12 is merged as main `2ae133afc1af808b6a6d4d0354d206a16cb842b0`.
+- Draft [PR #13](https://github.com/WhatzGames/Universal-Desktop-Manager/pull/13)
+  remains at `67165a29fea157ea48926b3a5a96e68e1c510057`, including mixed-origin rejection.
+  Its branch/worktree and the original setup worktree were preserved.
+- Draft [PR #14](https://github.com/WhatzGames/Universal-Desktop-Manager/pull/14)
+  is stacked on PR #13's branch. Integration worktree:
+  `/Users/obedkooijman/CodexProjects/worktrees/Universal-Desktop-Manager-snapshot-vm`,
+  branch `ci/debian13-snapshot-vm`. It merges main without rewriting PR #13.
+- Validated executable CI source: `fc9df23f06b5b79c06a7259bc9f0358ae388acc8`,
+  confirmed GitHub Verified. Frozen review ref: `ci/debian13-vm-review-fc9df23`.
+  Later evidence/handoff-only commits do not change the source of the reviewed VMs.
+
+Do not merge #13/#14, publish a release, close #10/#11 or complete milestone v0.2
+without actual acceptance evidence. LICENSE/SPDX terms and Rust 1.99.1 pins are unchanged.
 
 ## Implemented candidate
 
-Default Rust/Bevy discovery remains read-only. Explicit package CLI dispatches to a
-restricted root-owned isolated-Python helper backed by Debian's native python3-apt.
-Fixed KDE targets; resolution, full transaction review JSON, origin/version/dependency/
-conflict/size metadata; SHA-256-bound review and locked re-resolution; Polkit admin
-authorization; no UI commands/paths/package names; no repository additions or refresh.
-All removals/upgrades/reinstalls and new display managers are rejected. Temporary
-exclusive service-start policy preserves existing administrator policy by refusing it.
-Durable atomic/fsynced operation records distinguish failure/interruption from ready;
-manual native recovery guidance, no automatic rollback. Verify actual target packages,
-clean dpkg audit, launcher and Debian wrapped Wayland session definition. GPU readiness
-remains unverified. No session is started or switched.
+Read-only default report plus explicit package CLI and root-owned isolated-Python
+helper using Debian python3-apt. Fixed KDE targets, complete review JSON, SHA256-bound
+locked re-resolution, trusted origins, Polkit, no arbitrary UI commands/repositories,
+no removals/upgrades/reinstalls/new display managers, durable atomic/fsynced operation
+records and manual native recovery guidance. Verify target packages, dpkg audit,
+launcher and Debian's wrapped Wayland session. No session activation/live switching.
+See installation design, ADR 0002 and packaging/debian/README.md.
 
-Design/limits: docs/design/installation.md, docs/adr/0002-debian-installation.md and
-packaging/debian/README.md. Existing LICENSE, .gitignore and master-plan.md unchanged.
+`tests/vm/` now provisions a real disposable Debian 13 XFCE/LightDM guest with
+systemd/logind/Polkit, QGA/QMP control and a RAM/disk snapshot. Preparation records
+original process/session/display-manager identity, full exact transaction and source/
+snapshot hashes, tests default Polkit denial, then restores and compares baseline,
+inventory and complete transaction. Guest passwords are locked, no SSH keys are
+generated and no GitHub credentials enter the guest. The cloud image's mirror+file
+sources correctly fail strict origin validation; provisioning retains their original
+definitions and uses explicit official Debian HTTPS sources before planning.
+
+The two-stage manual workflow requires exact source, preparation run, manifest and
+plan digests before install, validates downloaded snapshot/QEMU identity and guest
+state, then uses the actual Rust CLI → pkexec → installed helper. A temporary test
+Polkit rule is limited to the exact helper command/digest and desktop user. It does
+not validate the deployed policy's interactive administrator password prompt.
+Each destructive case restores the reviewed snapshot. Native failure/success and
+isolated real KWin/plasmashell tests are implemented but NOT RUN until approval.
+The faster PR #12 container component smoke job is retained.
 
 ## Verified evidence
 
-Official stable Rust manifest still reports 1.99.1, matching toolchain/manifest/CI.
-macOS ARM64 fmt, warning-free Clippy, locked workspace build/tests (7 Rust tests),
-16 Python safety/injected-failure tests and default report smoke test pass.
-Native Debian 13 ARM64 simulation as UID 65534: repeated plans identical, package
-inventory unchanged; 798 NEW packages, 364,910,796 download bytes and 1,455,311,872
-installed bytes estimated, zero removals/upgrades/new display managers. Only test
-prerequisite python3-apt was provisioned. KDE was NOT installed. Container removed.
-GitHub push and PR CI both passed on bba56f1, including native Debian x86_64
-simulation and the Linux report job:
-https://github.com/WhatzGames/Universal-Desktop-Manager/actions/runs/40780259048
-https://github.com/WhatzGames/Universal-Desktop-Manager/actions/runs/40780213650
-Full evidence, digest, image identity, before/after inventories and limitations:
-docs/development/validation/v0.2/. Separate CI job repeats unprivileged simulation.
+[Complete review packet, exact 579-package transaction, identities, screenshots and
+limitations](docs/development/validation/v0.2-vm/README.md).
 
-## Acceptance blocker and next action
+- Hosted KVM preparation and RAM/disk restore passed in **154.614 seconds**:
+  https://github.com/WhatzGames/Universal-Desktop-Manager/actions/runs/40952610168
+- Separate hosted TCG preparation and restore passed in **426.476 seconds**:
+  https://github.com/WhatzGames/Universal-Desktop-Manager/actions/runs/40952610041
+- Both produce identical transaction/inventory; all seven KDE targets proposed,
+  579 new packages, 275,013,144 download bytes, 989,224,960 additional installed bytes
+  estimated, no removals/upgrades/new display managers, trusted official Debian origins.
+- Full transaction digest:
+  `f958050ea5fdaf430c5ecec486d6b14529d02e9c6791e0c2850973071b8a6e3f`.
+- TCG review manifest SHA256:
+  `095cbefa5861fb779d72a8e433fe8cb27e73adf0c4d5b4c8d633b3ab772345df`.
+  KVM manifest SHA256:
+  `24888a508b6575c42e8de9d9bfae490d5e0bce3f6b7161f8255b975ed6bcc621`.
+  Approval must select one exact snapshot, not just the shared transaction digest.
+- Default Polkit denied CLI/pkexec installation, no operation JSON was created,
+  inventory and original baseline were unchanged. Original XFCE screenshots inspected.
+- Local earlier c26d598 ARM64 QEMU TCG guest prepared a desktop/plan/denial/snapshot
+  in 450.467 seconds; that older run is not the final approval candidate.
+- macOS fmt, warning-free Clippy, locked build/test (7 Rust tests), read-only report,
+  16 helper tests; 5 VM-focused regression/boundary tests pass. Official Rust stable
+  manifest fetched 2026-10-29 still reports 1.99.1.
+- Linux Cargo/helper/VM tests and retained real Plasma container PR CI pass on fc9df23:
+  https://github.com/WhatzGames/Universal-Desktop-Manager/actions/runs/40952617549
 
-No disposable Debian 13 desktop VM with snapshots is configured. Podman's appliance
-and Debian container are not installation acceptance environments. Actual KDE install,
-Polkit prompt/denial, real dpkg/download interruption recovery and preservation of an
-existing graphical session/display manager remain UNVERIFIED. Maintainer scripts run
-as root; policy-rc.d is not a sandbox. Do not use on the user's primary desktop.
+Full source/snapshot artifacts retain the reviewed guest for seven days in CI;
+local evidence is under `target/hosted-fc9df23-{kvm,tcg}-evidence/`. Complete immutable snapshot
+copies are retained under `target/hosted-fc9df23-{kvm,tcg}-snapshot/`; all KVM files
+were hash-validated and all TCG files validated on a clone before local replay.
+Never substitute another guest or weaken QEMU/source/digest checks. No KDE was installed.
+TCG is feasible for measured preparation; full suite runtime is still unmeasured.
+No dedicated runner was needed for these runs, but hosted nested virtualization is
+not officially supported and later KVM availability is not guaranteed.
 
-Next: provide a disposable Debian 13 desktop VM, snapshot it, record original session
-and display manager, provision reviewed helper prerequisites, generate a VM-specific
-plan and present its exact transaction for explicit installation approval. The saved
-container plan is review evidence, not authorization for another machine. Keep #11
-and milestone open until real success/failure acceptance evidence exists.
+## Approval boundary and remaining acceptance
 
-miix320 is LAN-only, offline CachyOS, not Debian. It was not used for this milestone;
-never enable its internet or use it for Debian installation testing.
+**No exact VM transaction is approved yet.** Review the full packet and obtain
+explicit human approval before any real KDE commit or destructive case. Implemented
+acceptance cases: stale digest, isolated-network download failure, native dpkg hook
+failure, observed-dpkg process interruption with blocked retry, native commit followed
+by helper verification failure, success plus isolated software-rendered Plasma, and
+reviewed final snapshot recovery. Native package repair is never automated.
 
-## Documentation/publication
+Actual approved installation, positive Polkit authorization, native failure/journal/
+recovery assertions, original desktop survival through installation and guest Plasma
+readiness remain UNVERIFIED. Maintainer scripts are privileged; policy-rc.d is not a
+sandbox. Interactive auth_admin prompt, partially configured maintainer-script failure,
+full guest power loss, physical GPU/input and general native window migration are
+separate limitations. No v0.3 activation, logout or display-manager restart is invoked.
 
-Fourteen-page Wiki existed at signed commit ee09dc3f040e119c8e0c00c600bf97ed42455c67.
-Signed Wiki update f5bb5ac (following e0a3763) is published on master; all fourteen pages and sidebar
-match docs/wiki source copies. It corrects merged-foundation status and distinguishes
-simulation from unvalidated installation. GitHub confirms implementation commit
-bba56f10f6428d88177d1213d4180a6763b06468 as Verified. Personal SSH signing and My Flow attribution hooks are retained.
-GitHub CLI's credential has no repository push permission; connected GitHub API and
-personal SSH transport are used for authorized repository updates. Branch protections
-could not be read with the CLI credential (404); do not infer that none exist.
+The CLI credential lacks workflow-dispatch permission (403), and the new standalone
+workflow is not registered on main. The registered ci.yml calls the reusable workflow;
+scoped integration pushes prepare only. After exact approval an authorized Actions
+operator can dispatch ci.yml at the frozen review ref using the packet's exact inputs.
+The exact hosted TCG snapshot also passed a local restore-only calibration in
+69.626 seconds using matching amd64 QEMU tooling on the existing ARM64 Podman appliance
+(emulated amd64 userland). Baseline, complete plan and inventory match; no install
+command or authorization ran. This calibrated local route can run the real suite
+only after explicit approval of the TCG manifest and transaction. Use the immutable
+original snapshot, not the calibration copy; no account permission expansion is needed. Generic workflow access is not installation
+approval. Keep #11 and milestone v0.2 open.
 
-## Snapshot VM CI integration (in progress)
+miix320 is offline LAN-only CachyOS. It was not used as a Debian VM and its internet
+was not enabled. No host package was installed.
 
-Separate branch `ci/debian13-snapshot-vm`, worktree
-`/Users/obedkooijman/CodexProjects/worktrees/Universal-Desktop-Manager-snapshot-vm`.
-Live PR #12 is MERGED as main 2ae133a; PR #13 remains draft at 67165a2.
-The integration merges main into a child of that exact PR #13 head; its origin
-security correction and both original branches remain intact. No PR is merged here.
+## Documentation and tracking
 
-`tests/vm/` and the manual Debian VM workflow are an implementation candidate:
-real QEMU Debian XFCE/LightDM guest, running RAM/disk snapshot, exact transaction
-review artifacts, separate digest-bound human approval, real pkexec/helper path,
-snapshot-isolated success/failure cases and independent Plasma component verification.
-See tests/vm/README.md for the precise gate, evidence and limits. New preparation
-and native acceptance evidence are still pending; no unseen transaction is approved.
-Local macOS fmt, Clippy, locked build/test (7 Rust tests), report smoke and all 16
-helper tests pass. Two new approval-boundary tests pass. Official stable Rust manifest
-was fetched on 2026-10-29 and reports 1.99.1; pins remain unchanged.
-Container-scoped Debian QEMU tooling builds; no host packages were installed.
-
-Draft integration PR: https://github.com/WhatzGames/Universal-Desktop-Manager/pull/14
-(targets PR #13's branch; no merge). Published source 32904de is GitHub Verified.
-The new workflow is not on default main, so the existing CI workflow calls it;
-scoped integration-branch pushes can prepare only. Accept remains a separate
-explicit digest-bound workflow_dispatch. CLI dispatch lacks repository admin rights;
-no permission expansion was attempted. Hosted preparation run 40949359230 is in
-progress; it is not installation acceptance. Published Wiki commit bb46dc8 updates
-the two user-facing approval/limitation pages and matches reviewed source copies.
+Issues [#10](https://github.com/WhatzGames/Universal-Desktop-Manager/issues/10) and
+[#11](https://github.com/WhatzGames/Universal-Desktop-Manager/issues/11), milestone
+[v0.2](https://github.com/WhatzGames/Universal-Desktop-Manager/milestone/2), and draft
+PR #14 track this candidate. Technical protocol: tests/vm/README.md. Historical
+container-only simulation evidence remains in docs/development/validation/v0.2/.
+Wiki source pages and published manual distinguish preparation from installation;
+signed a13db2c publishes the verified preparation/restore status while keeping
+installation unapproved. Personal SSH signing and
+My Flow attribution hooks are retained. No permission scope was broadened.
