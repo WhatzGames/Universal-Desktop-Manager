@@ -24,6 +24,7 @@ def identity(pid):
 
 def baseline():
     assert Path('/var/lib/udm-ci-provisioned').exists()
+    assert not list(Path('/etc/ssh').glob('ssh_host_*')), 'Unexpected guest SSH keys'
     assert run('systemctl', 'is-active', 'lightdm').stdout.strip() == 'active'
     processes = {}
     for name in ('xfce4-session', 'xfwm4', 'xfdesktop', 'xfce4-panel'):
@@ -91,9 +92,17 @@ def evidence():
         p = Path(path)
         if p.exists():
             logs[path] = p.read_text(errors='replace')
-    return dict(records=records(), native_logs=logs, inventory=run('dpkg-query', '-W').stdout,
+    continuity = {}
+    try:
+        continuity.update(baseline=baseline(), screenshot=screenshot())
+    except Exception as error:
+        continuity['continuity_error'] = str(error)
+    return dict(records=records(), native_logs=logs,
+                polkit_journal=run('journalctl', '-u', 'polkit.service', '--no-pager', check=False).stdout,
+                service_guard=Path('/usr/sbin/policy-rc.d').read_text() if Path('/usr/sbin/policy-rc.d').exists() else None,
+                inventory=run('dpkg-query', '-W').stdout,
                 audit=run('dpkg', '--audit', check=False).stdout,
-                baseline=baseline(), screenshot=screenshot())
+                **continuity)
 
 
 def main():
@@ -211,4 +220,13 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except Exception as error:
+        # Retain native evidence even when an acceptance assertion fails.
+        try:
+            failure = evidence()
+        except Exception as capture_error:
+            failure = dict(capture_error=str(capture_error))
+        print(json.dumps(dict(harness_error=str(error), evidence=failure)))
+        sys.exit(1)

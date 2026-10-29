@@ -18,3 +18,9 @@ requires a new review. Package installation does not select or start Plasma.
 `udm-app packages verify` checks installed KDE packages, launcher and session entry.
 A successful check does not establish graphics readiness or live switching.
 See [Troubleshooting](Troubleshooting) for failures and recovery limits.
+
+A separate snapshot-VM CI candidate is being developed. Its preparation stage
+records the original desktop and exact package transaction. Installation requires
+a separate explicit approval tied to that snapshot, source revision and transaction
+digest. Passing the existing Plasma container check does not validate installation
+safety, interactive authorization or preservation of your current desktop.

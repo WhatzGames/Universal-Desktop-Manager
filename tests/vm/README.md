@@ -96,7 +96,8 @@ are mandatory and can fail even if Cargo or container CI passes.
 ## Acceleration and reproduction
 
 GitHub [does not officially support nested virtualization](https://docs.github.com/en/actions/concepts/runners/github-hosted-runners).
-The workflow exposes only usable `/dev/kvm` to the tooling container when present;
+Acceptance also requires the reviewed QEMU binary hash, host architecture and
+acceleration mode; tooling changes require a fresh preparation/review. The workflow exposes only usable `/dev/kvm` to the tooling container when present;
 otherwise it uses QEMU TCG. The QEMU command uses KVM without fallback if the device
 exists but cannot initialize, so initialization errors fail honestly. `review.json`
 records actual selected acceleration and full preparation duration; serial logs retain

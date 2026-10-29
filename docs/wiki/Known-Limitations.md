@@ -8,3 +8,9 @@ Other distributions have unsupported package queries. Session entries can be sta
 Xwayland lets X11 apps use a Wayland host; it does not migrate windows between desktops.
 Future nested desktop sessions retain applications in their original session. Native
 login switching may require logout; UDM promises no universal window migration.
+
+A separate snapshot-VM CI candidate is being developed. Its preparation stage
+records the original desktop and exact package transaction. Installation requires
+a separate explicit approval tied to that snapshot, source revision and transaction
+digest. Passing the existing Plasma container check does not validate installation
+safety, interactive authorization or preservation of your current desktop.

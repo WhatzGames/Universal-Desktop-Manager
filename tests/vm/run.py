@@ -68,6 +68,11 @@ class VM:
         if restore:
             command += ['-loadvm', 'reviewed']
         self.process = subprocess.Popen(command, stdout=self.log, stderr=subprocess.STDOUT)
+        execution = dict(acceleration=self.accel, host_architecture=os.uname().machine,
+                         qemu_version=subprocess.check_output(['qemu-system-x86_64', '--version'], text=True),
+                         started_unix=time.time(), restore=restore)
+        write(STATE / 'execution.json', execution)
+        print(json.dumps(execution), flush=True)
 
     def qmp(self, command, **args):
         return rpc(STATE / 'qmp.sock', command, args, qmp=True)
@@ -85,7 +90,9 @@ class VM:
                 (STATE / f'{operation}-stdout.log').write_text(out)
                 (STATE / f'{operation}-stderr.log').write_text(err)
                 assert not result.get('out-truncated') and not result.get('err-truncated'), 'QGA output truncated'
-                assert result.get('exitcode') == 0, f'{operation} failed: {err[-4000:]}'
+                if result.get('exitcode') != 0:
+                    write(STATE / f'{operation}-failure.json', json.loads(out) if out else {'stderr': err})
+                    raise RuntimeError(f'{operation} failed: {err[-4000:]}')
                 return json.loads(out)
             time.sleep(2)
         raise TimeoutError(operation)
@@ -125,17 +132,21 @@ def export(name, result):
 
 
 def validate_review(manifest, expected_manifest, expected_plan, expected_source):
-    assert sha(STATE / 'review.json') == expected_manifest, 'Review manifest differs'
-    assert manifest['source_revision'] == expected_source, 'Source revision differs'
-    assert manifest['plan_digest'] == expected_plan, 'Transaction digest differs'
-    assert manifest['snapshot_name'] == 'reviewed'
-    assert set(manifest['files']) == {'guest.qcow2', 'source.iso', 'seed.iso', 'uuid', 'baseline.json'}
+    def require(condition, message):
+        if not condition:
+            raise ValueError(message)
+
+    require(sha(STATE / 'review.json') == expected_manifest, 'Review manifest differs')
+    require(manifest['source_revision'] == expected_source, 'Source revision differs')
+    require(manifest['plan_digest'] == expected_plan, 'Transaction digest differs')
+    require(manifest['snapshot_name'] == 'reviewed', 'Snapshot name differs')
+    required = {'guest.qcow2', 'source.iso', 'seed.iso', 'uuid', 'baseline.json'}
+    require(set(manifest['files']) == required, 'Snapshot file inventory differs')
     for name, digest in manifest['files'].items():
-        assert name in ('guest.qcow2', 'source.iso', 'seed.iso', 'uuid', 'baseline.json'), name
-        assert sha(STATE / name) == digest, f'{name} differs'
+        require(sha(STATE / name) == digest, f'{name} differs')
     review = json.loads((STATE / 'baseline.json').read_text())['review']
     actual = hashlib.sha256(json.dumps(review['plan'], sort_keys=True, separators=(',', ':')).encode()).hexdigest()
-    assert actual == review['digest'] == expected_plan
+    require(actual == review['digest'] == expected_plan, 'Complete transaction differs')
 
 
 def prepare(args):
@@ -163,7 +174,7 @@ def prepare(args):
     (seed / 'meta-data').write_text('instance-id: udm-' + (STATE / 'uuid').read_text() + '\nlocal-hostname: udm-ci\n')
     script = base64.b64encode((ROOT / 'tests/vm/provision.sh').read_bytes()).decode()
     (seed / 'user-data').write_text('#cloud-config\nssh_pwauth: false\ndisable_root: true\n'
-        'users: []\nwrite_files:\n  - path: /root/udm-provision.sh\n    permissions: "0700"\n'
+        'users: []\nssh_genkeytypes: []\nwrite_files:\n  - path: /root/udm-provision.sh\n    permissions: "0700"\n'
         f'    encoding: b64\n    content: {script}\n'
         'runcmd:\n  - [sh, /root/udm-provision.sh]\n')
     subprocess.run(['genisoimage', '-quiet', '-output', str(STATE / 'seed.iso'), '-volid', 'cidata', '-joliet', '-rock', str(seed)], check=True)
@@ -186,7 +197,9 @@ def prepare(args):
     snapshot_info = subprocess.check_output(['qemu-img', 'snapshot', '-l', str(STATE / 'guest.qcow2')], text=True)
     assert 'reviewed' in snapshot_info
     (STATE / 'snapshots.txt').write_text(snapshot_info)
-    manifest = dict(schema_version=1, source_revision=args.source, plan_digest=baseline['review']['digest'],
+    manifest = dict(qemu_sha256=sha('/usr/bin/qemu-system-x86_64'),
+                    qemu_version=subprocess.check_output(['qemu-system-x86_64', '--version'], text=True),
+                    host_architecture=os.uname().machine, schema_version=1, source_revision=args.source, plan_digest=baseline['review']['digest'],
                     snapshot_name='reviewed', uuid=(STATE / 'uuid').read_text(), image_url=url + image,
                     image_sha512=expected[0], acceleration=vm.accel, prepare_seconds=time.monotonic() - started,
                     files={name: sha(STATE / name) for name in ('guest.qcow2', 'source.iso', 'seed.iso', 'uuid', 'baseline.json')})
@@ -197,6 +210,11 @@ def prepare(args):
 def accept(args):
     manifest = json.loads((STATE / 'review.json').read_text())
     validate_review(manifest, args.review_sha256, args.plan_digest, args.source)
+    if manifest['qemu_sha256'] != sha('/usr/bin/qemu-system-x86_64') or manifest['host_architecture'] != os.uname().machine:
+        raise ValueError('Snapshot requires the reviewed QEMU binary and host architecture')
+    actual_accel = 'kvm' if os.access('/dev/kvm', os.R_OK | os.W_OK) else 'tcg'
+    if manifest['acceleration'] != actual_accel:
+        raise ValueError('Snapshot acceleration differs; prepare and review again')
     # Never mutate the approved disk: each destructive case gets an independent copy.
     original = STATE / 'guest.qcow2'
     reviewed = STATE / 'reviewed.qcow2'

@@ -35,3 +35,6 @@ git -C ../Universal-Desktop-Manager-wiki push origin master
 Resolve any upstream divergence before pushing. Verify links and page rendering after
 publication and record the Wiki commit in PROJECT_STATE.md. Keep planned features
 clearly labeled; the foundation from PR #1 is merged, while v0.2 installation acceptance remains pending.
+
+Signed Wiki commit `bb46dc8` publishes the snapshot approval and installation
+limitations updates from integration PR #14. Installation acceptance remains open.

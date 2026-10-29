@@ -18,7 +18,9 @@ Source: [complete master plan](master-plan.md). These phases are plans, not rele
 
 Active implementation milestone after merged v0.1. Debian 13 native simulation and
 safety tests are implemented; real installation acceptance remains pending an approved
-snapshot VM. See [evidence](validation/v0.2/README.md). No release claim.
+snapshot VM. A separate [VM CI candidate](../../tests/vm/README.md) is under
+validation and preserves an exact-transaction approval gate. Keep #10/#11 and the
+v0.2 milestone open until acceptance evidence exists. See [evidence](validation/v0.2/README.md). No release claim.
 
 - Native distribution package adapter (one distro first), transaction simulation, dependency/conflict review.
 - Privileged minimal helper + Polkit, authorized install, journal and failure handling.

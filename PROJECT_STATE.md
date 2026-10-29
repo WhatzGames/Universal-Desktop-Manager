@@ -95,3 +95,12 @@ Local macOS fmt, Clippy, locked build/test (7 Rust tests), report smoke and all 
 helper tests pass. Two new approval-boundary tests pass. Official stable Rust manifest
 was fetched on 2026-10-29 and reports 1.99.1; pins remain unchanged.
 Container-scoped Debian QEMU tooling builds; no host packages were installed.
+
+Draft integration PR: https://github.com/WhatzGames/Universal-Desktop-Manager/pull/14
+(targets PR #13's branch; no merge). Published source 32904de is GitHub Verified.
+The new workflow is not on default main, so the existing CI workflow calls it;
+scoped integration-branch pushes can prepare only. Accept remains a separate
+explicit digest-bound workflow_dispatch. CLI dispatch lacks repository admin rights;
+no permission expansion was attempted. Hosted preparation run 40949359230 is in
+progress; it is not installation acceptance. Published Wiki commit bb46dc8 updates
+the two user-facing approval/limitation pages and matches reviewed source copies.

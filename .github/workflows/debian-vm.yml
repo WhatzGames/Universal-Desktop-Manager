@@ -47,6 +47,9 @@ jobs:
     # Only a deliberate human workflow_dispatch can reach the install path.
     runs-on: ${{ inputs.runner }}
     timeout-minutes: 120
+    concurrency:
+      group: udm-snapshot-${{ github.ref }}-${{ inputs.stage }}
+      cancel-in-progress: ${{ inputs.stage == 'prepare' }}
     steps:
       - uses: actions/checkout@v4
         with:

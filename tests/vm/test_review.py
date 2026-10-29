@@ -28,10 +28,10 @@ class Review(unittest.TestCase):
             for review, transaction, source in (('', digest, 'a' * 40),
                                                 (approved, '0' * 64, 'a' * 40),
                                                 (approved, digest, 'b' * 40)):
-                with self.assertRaises(AssertionError):
+                with self.assertRaises(ValueError):
                     vm.validate_review(manifest, review, transaction, source)
             (root / 'guest.qcow2').write_text('changed')
-            with self.assertRaises(AssertionError):
+            with self.assertRaises(ValueError):
                 vm.validate_review(manifest, approved, digest, 'a' * 40)
 
     def test_rejects_rehashed_manifest_with_changed_transaction(self):
@@ -39,10 +39,13 @@ class Review(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             vm.STATE = root = Path(directory)
             vm.write(root / 'baseline.json', {'review': {'plan': {}, 'digest': '0' * 64}})
+            for name in ('guest.qcow2', 'source.iso', 'seed.iso', 'uuid'):
+                (root / name).write_text(name)
             manifest = dict(source_revision='s', plan_digest='0' * 64, snapshot_name='reviewed',
-                            files={'baseline.json': vm.sha(root / 'baseline.json')})
+                            files={name: vm.sha(root / name) for name in
+                                   ('guest.qcow2', 'source.iso', 'seed.iso', 'uuid', 'baseline.json')})
             vm.write(root / 'review.json', manifest)
-            with self.assertRaises(AssertionError):
+            with self.assertRaises(ValueError):
                 vm.validate_review(manifest, vm.sha(root / 'review.json'), '0' * 64, 's')
 
 

@@ -3,9 +3,16 @@
 set -eu
 export DEBIAN_FRONTEND=noninteractive
 apt-get update
+# Start the original desktop only after all session files and autologin exist.
+test ! -e /usr/sbin/policy-rc.d && test ! -L /usr/sbin/policy-rc.d
+(set -C; printf '#!/bin/sh\nexit 101\n' > /usr/sbin/policy-rc.d)
+chmod 0755 /usr/sbin/policy-rc.d
+trap 'rm -f /usr/sbin/policy-rc.d' EXIT
 apt-get install -y --no-install-recommends qemu-guest-agent python3-apt polkitd pkexec \
     xfce4 lightdm lightdm-gtk-greeter dbus-x11 xvfb imagemagick libglib2.0-bin \
     fonts-dejavu-core x11-utils xserver-xorg-core xserver-xorg-input-libinput xauth x11-xserver-utils
+rm /usr/sbin/policy-rc.d
+trap - EXIT
 # Fixed native dpkg test hook is part of the reviewed baseline; disabled by default.
 cat > /usr/local/sbin/udm-ci-dpkg-hook <<'HOOK'
 #!/bin/sh
@@ -44,7 +51,7 @@ printf '/dev/disk/by-label/UDMSOURCE /source iso9660 ro 0 0\n' >> /etc/fstab
 install -D -o root -g root -m 0755 /source/packaging/debian/udm_packages.py /usr/libexec/udm-packages
 install -D -o root -g root -m 0644 /source/packaging/polkit/org.whatzgames.udm.install.policy /usr/share/polkit-1/actions/org.whatzgames.udm.install.policy
 install -o root -g root -m 0755 /source/udm-app /usr/local/bin/udm-app
-systemctl enable --now qemu-guest-agent
+systemctl start qemu-guest-agent
 systemctl set-default graphical.target
 systemctl start lightdm
 # Record provisioning completion separately from graphical readiness.
