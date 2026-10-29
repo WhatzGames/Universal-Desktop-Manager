@@ -10,7 +10,8 @@ sources = Path('/etc/apt/sources.list.d')
 if any(p.name != 'debian.sources' for p in sources.iterdir() if p.is_file()):
     raise RuntimeError('Unexpected image repositories; inspect before provisioning')
 legacy = Path('/etc/apt/sources.list')
-if legacy.exists() and legacy.read_text().strip():
+if legacy.exists() and any(line.strip() and not line.lstrip().startswith('#')
+                           for line in legacy.read_text().splitlines()):
     raise RuntimeError('Unexpected legacy repositories; inspect before provisioning')
 evidence = Path('/var/lib/udm-ci')
 evidence.mkdir()
