@@ -65,6 +65,8 @@ def capture():
     return dict(baseline=baseline(), review=plan(),
                 inventory=run('dpkg-query', '-W').stdout, screenshot=screenshot(),
                 os_release=Path('/etc/os-release').read_text(),
+                cpu_vulnerabilities={p.name: p.read_text().strip() for p in
+                                     Path('/sys/devices/system/cpu/vulnerabilities').glob('*') if p.is_file()},
                 image_repositories=Path('/var/lib/udm-ci/image-debian.sources').read_text(),
                 reviewed_repositories=Path('/etc/apt/sources.list.d/debian.sources').read_text(),
                 dpkg_audit=run('dpkg', '--audit').stdout)

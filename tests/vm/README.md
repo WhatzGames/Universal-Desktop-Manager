@@ -142,7 +142,7 @@ reviewing and explicitly approving its exact manifest and transaction digests.
 
 The original host-passthrough KVM snapshot failed an independent Intel-to-AMD runner
 restore before installation. [Evidence](../../docs/development/validation/v0.2-vm/kvm-portability-failure/README.md).
-KVM now uses `Westmere-v2,phys-bits=40,enforce`, records that exact CPU model in the
+KVM now uses `Westmere-v1,phys-bits=40,enforce`, records that exact CPU model in the
 manifest and requires it on acceptance. Unsupported features fail initialization.
 A replacement must pass preparation and cross-runner restoration before approval;
 no universal hardware-migration claim follows. TCG remains an explicitly requested
