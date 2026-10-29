@@ -176,3 +176,18 @@ added it). Push approval remains the selected execution route. The fixed v2 mode
 trial 40970661765 correctly refused an unavailable spec-ctrl feature before boot.
 The next common-baseline v1 candidate retains feature enforcement and unchanged
 kernel mitigation defaults, recording the guest mitigation reports for review.
+
+## Replacement KVM proof — current approval candidate
+
+Fixed enforced CPU source fa95a619c62e5692661d0991a855249186ae4138 passed
+preparation 40971706077 (116.434 seconds) and independent read-only restore
+40972477946 (9.236 seconds). Baseline process/session identities, full transaction
+and inventory match. [Current exact review](docs/development/validation/v0.2-vm/kvm-fixed/README.md).
+Manifest 7be97c3b7bcaa0a50cd4d1a39cff98dc6105f5a19d2010caad4d07aa6a91aef8;
+transaction ed20b81bb265c6549f47ecd5b978ac1affe0b79e694ed25da8f1e62381266fa9.
+Package selection and estimates match the earlier 579-package plan; two InRelease
+state fingerprints changed. The old digest cannot approve the new snapshot.
+Guest mitigation report includes spec_store_bypass Vulnerable and Spectre v2
+retpolines/STIBP disabled; public-data disposable guest only, no production claim.
+KVM is the current route; TCG remains fallback. No true approval, install or native
+failure/recovery acceptance has run. Issues #10/#11 and milestone v0.2 remain open.
