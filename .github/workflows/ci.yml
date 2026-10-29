@@ -42,3 +42,25 @@ jobs:
             udm-linux-x86_64-test.tar.gz
             debian-report.json
           retention-days: 7
+  plasma-wayland-smoke:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build disposable Debian 13 Plasma test image
+        run: docker build -t udm-plasma-smoke tests/plasma
+      - name: Run unprivileged Plasma startup smoke test
+        run: |
+          container=$(docker create --network none udm-plasma-smoke)
+          status=0
+          docker start --attach "$container" || status=$?
+          docker cp "$container:/tmp/plasma-artifacts" plasma-artifacts
+          docker rm "$container"
+          exit "$status"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: plasma-wayland-smoke
+          path: plasma-artifacts
+          retention-days: 7

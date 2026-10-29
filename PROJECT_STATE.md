@@ -1,10 +1,11 @@
 # Current project state
 
-Verified: 2026-10-28. Scope: Section 12 initial setup and v0.1 foundation validation.
-PR: https://github.com/WhatzGames/Universal-Desktop-Manager/pull/1 (open, unmerged).
-Branch: setup/v0.1-foundation. No release or merge has occurred.
+Verified: 2026-10-29. Scope: foundation complete; isolated Plasma CI validation follow-up.
+Foundation PR #1 was merged by the owner as 3bca2623e3cabf15bc8341f2d060aa482aceed15.
+Active PR: https://github.com/WhatzGames/Universal-Desktop-Manager/pull/12 (open, unmerged).
+Branch: ci/plasma-wayland-smoke. No release has been published.
 v0.1 milestone: https://github.com/WhatzGames/Universal-Desktop-Manager/milestone/1
-Issues #2–#9 are open, assigned to v0.1 and implemented by PR #1. Eight roadmap
+Issues #2–#9 are covered by the merged foundation PR #1 and assigned to v0.1. Eight roadmap
 milestones through v1.0 exist; v0.7–v0.9 are grouped. No temporary setup workflow remains.
 
 Implemented: one-member Cargo workspace; pinned Bevy 0.20 app/ECS; headless ECS plugin;
@@ -46,11 +47,20 @@ Owner initialized Home; signed Wiki commit ee09dc3f040e119c8e0c00c600bf97ed42455
 published all fourteen user pages and sidebar. Remote revision, signature identity,
 source equality and live Getting Started/navigation were verified. Wiki bare repository
 and worktree follow My Flow layout and use the same signing key and attribution hooks.
-Getting Started names the setup branch because PR #1 is still unmerged.
 No remaining blocker to the Section 12 initial setup. Project SPDX choice and a
 release dependency audit remain open; do not infer license terms or publish a release.
 
-Unimplemented/unverified: full Debian desktop dependencies and launchability, GPU
-readiness, installation, GUI, session activation, compositor and live switching/window
-preservation. CachyOS hardware inventory does not validate an Arch package adapter.
-Next: review PR without merging, then choose a scoped next task (Debian desktop compatibility or v0.2 planning) in a disposable environment.
+Plasma CI verified on source 4b3d6642ec9adb307ae345f0cee1a237872e8635:
+https://github.com/WhatzGames/Universal-Desktop-Manager/actions/runs/40782930364
+The PR job passed real Debian 13 KWin Wayland and plasmashell startup as UID 1000,
+with runtime networking disabled, active QPainter software compositing, one desktop
+and one panel. A 1280x800 screenshot was visually inspected: Breeze wallpaper and
+panel rendered. The automated background check excludes the panel. Seven-day CI
+artifacts contain screenshot, logs, support information and result.json. Local fmt,
+Clippy, locked build, six tests and read-only report also passed.
+
+Unimplemented/unverified: full desktop login/session services, physical GPU/input,
+UDM installation, GUI, session activation and live switching/window preservation.
+CachyOS inventory does not validate an Arch package adapter. Next: review PR #12
+without merging. v0.2 installation work proceeds separately; installation and
+login-service integration still require disposable-VM validation.
