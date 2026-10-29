@@ -2,6 +2,8 @@
 
 Ordinary pushes run normal CI only. Expensive VM preparation requires an integration
 branch commit whose first line starts with `[vm-prepare] ` (or explicit manual prepare).
+The separate TCG experiment requires `[vm-prepare-tcg] `; it is not run with normal
+KVM preparation.
 This marker never authorizes installation.
 
 Installation has a separate, fail-closed push gate:
@@ -17,7 +19,8 @@ Installation has a separate, fail-closed push gate:
 6. The preparation run succeeded in this repository using the stated source and an
    allowed preparation workflow. Its small review artifact must match the approved
    manifest SHA, transaction, source, restored-snapshot proof and acceleration before
-   the expensive VM job is scheduled.
+   the expensive VM job is scheduled. KVM manifests must use the fixed portable CPU
+   model; the original host-passthrough KVM snapshot is rejected.
 7. The record is not a semantic repeat of the previous approved record; reruns of
    the push workflow cannot repeat installation. Running acceptance is never cancelled
    by a newer push; the approval workflow is serialized.

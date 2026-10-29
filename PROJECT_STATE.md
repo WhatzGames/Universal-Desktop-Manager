@@ -157,3 +157,16 @@ The user selected GitHub-only execution. An eventual signed true approval push
 uses the existing SSH transport and frozen guest source, so CLI dispatch permission
 and local VM execution are no longer needed for acceptance. Real install remains
 unapproved and unverified; #11 and v0.2 remain open.
+
+## KVM proposal correction — independent runner failure
+
+Read-only KVM cross-runner test 40969898313 rejected the original host-bound saved
+register state: initial guest Intel Xeon 8573C, new runner AMD EPYC 7763. No guest
+capture, authorization or installation ran. Old KVM manifest 24888a... is withdrawn
+for hosted push acceptance, and the gate rejects it. Same-host restore evidence did
+not prove cross-host portability. [Failure evidence](docs/development/validation/v0.2-vm/kvm-portability-failure/README.md).
+Replacement KVM preparation uses a fixed versioned Westmere-v2 model, fixed 40-bit
+physical width and enforced feature support, recording/checking the model in the
+manifest. A fresh candidate and independent restore are required before approval.
+TCG remains fallback-only; its separate experiment now requires [vm-prepare-tcg].
+No exact package transaction is approved; no true approval record exists.

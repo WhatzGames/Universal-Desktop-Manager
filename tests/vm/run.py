@@ -15,6 +15,8 @@ import uuid
 
 ROOT = Path('/source')
 STATE = Path('/state')
+# Keep saved CPU state independent of the hosted runner's Intel/AMD feature set.
+KVM_CPU = 'Westmere-v2,phys-bits=40,enforce'
 
 
 def sha(path):
@@ -69,8 +71,9 @@ class VM:
         self.log = (STATE / 'serial.log').open('ab')
         self.acceleration = acceleration()
         self.accel = self.acceleration['selected']
+        self.cpu_model = KVM_CPU if self.accel == 'kvm' else 'max'
         command = ['qemu-system-x86_64', '-machine', f'q35,accel={self.accel}',
-                   '-cpu', 'host' if self.accel == 'kvm' else 'max', '-m', '4096', '-smp', '2',
+                   '-cpu', self.cpu_model, '-m', '4096', '-smp', '2',
                    '-uuid', (STATE / 'uuid').read_text().strip(),
                    '-drive', f'file={STATE}/guest.qcow2,if=virtio,format=qcow2',
                    '-drive', f'file={STATE}/seed.iso,media=cdrom,readonly=on',
@@ -83,7 +86,7 @@ class VM:
         if restore:
             command += ['-loadvm', 'reviewed']
         self.process = subprocess.Popen(command, stdout=self.log, stderr=subprocess.STDOUT)
-        execution = dict(acceleration=self.acceleration, host_architecture=os.uname().machine,
+        execution = dict(cpu_model=self.cpu_model, acceleration=self.acceleration, host_architecture=os.uname().machine,
                          qemu_version=subprocess.check_output(['qemu-system-x86_64', '--version'], text=True),
                          started_unix=time.time(), restore=restore)
         write(STATE / 'execution.json', execution)
@@ -220,7 +223,7 @@ def prepare(args):
     snapshot_info = subprocess.check_output(['qemu-img', 'snapshot', '-l', str(STATE / 'guest.qcow2')], text=True)
     assert 'reviewed' in snapshot_info
     (STATE / 'snapshots.txt').write_text(snapshot_info)
-    manifest = dict(qemu_sha256=sha('/usr/bin/qemu-system-x86_64'),
+    manifest = dict(cpu_model=vm.cpu_model, qemu_sha256=sha('/usr/bin/qemu-system-x86_64'),
                     qemu_version=subprocess.check_output(['qemu-system-x86_64', '--version'], text=True),
                     host_architecture=os.uname().machine, schema_version=1, source_revision=args.source, plan_digest=baseline['review']['digest'],
                     snapshot_name='reviewed', snapshot_restore_verified=True, uuid=(STATE / 'uuid').read_text(), image_url=url + image,
@@ -236,6 +239,9 @@ def accept(args):
     if manifest['qemu_sha256'] != sha('/usr/bin/qemu-system-x86_64') or manifest['host_architecture'] != os.uname().machine:
         raise ValueError('Snapshot requires the reviewed QEMU binary and host architecture')
     actual_accel = acceleration()['selected']
+    expected_cpu = KVM_CPU if actual_accel == 'kvm' else 'max'
+    if manifest.get('cpu_model') != expected_cpu:
+        raise ValueError('Snapshot CPU model differs; prepare and review again')
     if manifest['acceleration'] != actual_accel:
         raise ValueError('Snapshot acceleration differs; prepare and review again')
     # Never mutate the approved disk: each destructive case gets an independent copy.

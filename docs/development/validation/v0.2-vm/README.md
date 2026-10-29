@@ -1,6 +1,10 @@
 # Debian 13 running-snapshot review — 2026-10-29
 
-**Preparation passed. No KDE installation is approved or executed.**
+**Historical preparation passed. No KDE installation is approved or executed.**
+
+The original KVM candidate below is **withdrawn** for cross-runner use after a real
+Intel-to-AMD restore failure. [Evidence and replacement work](kvm-portability-failure/README.md).
+Its same-runner success does not prove portability. TCG evidence remains valid.
 Draft [PR #14](https://github.com/WhatzGames/Universal-Desktop-Manager/pull/14) stacks
 on draft PR #13 at 67165a2, preserving the mixed-origin fix and merging main 2ae133a
 from merged PR #12. Neither #13 nor #14 was merged.
