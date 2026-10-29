@@ -89,5 +89,15 @@ class Acceleration(unittest.TestCase):
                 self.assertEqual(measured['probe_returncode'], code)
 
 
+class Source(unittest.TestCase):
+    def test_rejects_abbreviated_or_mistyped_source_before_provisioning(self):
+        from unittest.mock import patch
+        for source in ('8566addd', 'g' * 40, ''):
+            with patch.object(vm, 'prepare') as prepare, patch('sys.argv', ['run.py', 'prepare', '--source', source]):
+                with self.assertRaises(ValueError):
+                    vm.main()
+                prepare.assert_not_called()
+
+
 if __name__ == '__main__':
     unittest.main()

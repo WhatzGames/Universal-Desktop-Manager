@@ -284,6 +284,8 @@ def main():
     parser.add_argument('--review-sha256')
     parser.add_argument('--plan-digest')
     args = parser.parse_args()
+    if len(args.source) != 40 or any(c not in '0123456789abcdef' for c in args.source):
+        raise ValueError('A full exact 40-character source commit SHA is required')
     if args.stage == 'accept':
         assert args.review_sha256 and args.plan_digest, 'Explicit reviewed digests required'
         accept(args)
