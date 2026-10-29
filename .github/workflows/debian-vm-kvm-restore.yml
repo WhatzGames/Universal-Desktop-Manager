@@ -14,13 +14,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: fc9df23f06b5b79c06a7259bc9f0358ae388acc8
+          ref: fa95a619c62e5692661d0991a855249186ae4138
           persist-credentials: false
       - uses: actions/download-artifact@v4
         with:
           name: debian13-reviewed-snapshot
           path: vm-state
-          run-id: 40952610168
+          run-id: 40971706077
           github-token: ${{ github.token }}
       - run: docker build -t udm-vm-tooling tests/vm
       - name: Restore original running guest without installation
@@ -37,11 +37,12 @@ jobs:
           spec.loader.exec_module(runner)
           manifest = json.loads((runner.STATE / 'review.json').read_text())
           runner.validate_review(manifest,
-              '24888a508b6575c42e8de9d9bfae490d5e0bce3f6b7161f8255b975ed6bcc621',
-              'f958050ea5fdaf430c5ecec486d6b14529d02e9c6791e0c2850973071b8a6e3f',
-              'fc9df23f06b5b79c06a7259bc9f0358ae388acc8')
+              '7be97c3b7bcaa0a50cd4d1a39cff98dc6105f5a19d2010caad4d07aa6a91aef8',
+              'ed20b81bb265c6549f47ecd5b978ac1affe0b79e694ed25da8f1e62381266fa9',
+              'fa95a619c62e5692661d0991a855249186ae4138')
           assert manifest['qemu_sha256'] == runner.sha('/usr/bin/qemu-system-x86_64')
           assert manifest['host_architecture'] == os.uname().machine
+          assert manifest['cpu_model'] == runner.KVM_CPU
           assert manifest['acceleration'] == runner.acceleration()['selected'] == 'kvm'
           baseline = json.loads((runner.STATE / 'baseline.json').read_text())
           started = time.monotonic()
