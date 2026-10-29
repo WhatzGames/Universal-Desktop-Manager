@@ -11,6 +11,7 @@ jobs:
         with:
           components: rustfmt, clippy
       - run: python3 -m unittest discover -s tests/packages -v
+      - run: python3 -m unittest discover -s tests/vm -v
       - run: cargo fmt --check
       - run: cargo clippy --workspace --all-targets --locked -- -D warnings
       - run: cargo build --workspace --locked

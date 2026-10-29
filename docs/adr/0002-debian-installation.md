@@ -31,3 +31,8 @@ Sources: [python-apt cache API](https://apt-team.pages.debian.net/python-apt/lib
 [APT locking](https://apt-team.pages.debian.net/python-apt/library/apt_pkg.html#locking),
 [Debian 13 KDE metapackage](https://packages.debian.org/trixie/kde-plasma-desktop),
 [Plasma workspace](https://packages.debian.org/trixie/plasma-workspace).
+
+CI integration candidate: preserve RAM/disk and exact source/transaction in review
+artifacts, then require a separate digest-bound manual dispatch before any KDE
+commit. Revalidate snapshot files, original desktop identities and guest transaction.
+See [protocol and remaining acceptance limits](../../tests/vm/README.md).

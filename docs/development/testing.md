@@ -84,3 +84,10 @@ identical before/after package inventory. It never installs KDE.
 
 [Evidence and snapshot-VM acceptance blocker](validation/v0.2/README.md). Real
 installation requires a newly reviewed VM-specific plan and explicit approval.
+
+## Snapshot VM CI candidate
+
+[Real VM protocol, approval gate and limits](../../tests/vm/README.md). Preparation
+and acceptance are separate manual operations; the existing container job remains
+a fast component check. Treat the new harness as unvalidated until recorded guest
+assertions and review artifacts exist. Keep issue #11 and milestone v0.2 open.

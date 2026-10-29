@@ -1,6 +1,6 @@
 # Current project state
 
-Verified: 2026-10-28. Active milestone: v0.2 — KDE installation, Debian 13 only.
+Verified baseline: 2026-10-28. Integration work started: 2026-10-29. Active milestone: v0.2 — KDE installation, Debian 13 only.
 This chat's persistent goal continues after v0.1; installation acceptance is not complete.
 
 ## Base and work
@@ -76,3 +76,22 @@ bba56f10f6428d88177d1213d4180a6763b06468 as Verified. Personal SSH signing and M
 GitHub CLI's credential has no repository push permission; connected GitHub API and
 personal SSH transport are used for authorized repository updates. Branch protections
 could not be read with the CLI credential (404); do not infer that none exist.
+
+## Snapshot VM CI integration (in progress)
+
+Separate branch `ci/debian13-snapshot-vm`, worktree
+`/Users/obedkooijman/CodexProjects/worktrees/Universal-Desktop-Manager-snapshot-vm`.
+Live PR #12 is MERGED as main 2ae133a; PR #13 remains draft at 67165a2.
+The integration merges main into a child of that exact PR #13 head; its origin
+security correction and both original branches remain intact. No PR is merged here.
+
+`tests/vm/` and the manual Debian VM workflow are an implementation candidate:
+real QEMU Debian XFCE/LightDM guest, running RAM/disk snapshot, exact transaction
+review artifacts, separate digest-bound human approval, real pkexec/helper path,
+snapshot-isolated success/failure cases and independent Plasma component verification.
+See tests/vm/README.md for the precise gate, evidence and limits. New preparation
+and native acceptance evidence are still pending; no unseen transaction is approved.
+Local macOS fmt, Clippy, locked build/test (7 Rust tests), report smoke and all 16
+helper tests pass. Two new approval-boundary tests pass. Official stable Rust manifest
+was fetched on 2026-10-29 and reports 1.99.1; pins remain unchanged.
+Container-scoped Debian QEMU tooling builds; no host packages were installed.
