@@ -19,3 +19,10 @@ model and physical-address width, with required-feature enforcement; its prepara
 and independent-runner restore must pass before requesting new approval.
 
 No KDE installation ran. The existing TCG preparation/restore evidence is unaffected.
+
+The first fixed-model trial (run 40970661765) also failed before boot: Westmere-v2
+requests spec-ctrl, which the AMD hosted runner does not expose. Feature enforcement
+correctly rejected it. The next candidate uses the common Westmere-v1 feature set
+with enforcement retained, fixed physical width and default kernel mitigations
+unchanged; guest-reported vulnerability/mitigation state is captured for review.
+This is an isolated public-data test guest, not a production security recommendation.

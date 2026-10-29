@@ -16,7 +16,7 @@ import uuid
 ROOT = Path('/source')
 STATE = Path('/state')
 # Keep saved CPU state independent of the hosted runner's Intel/AMD feature set.
-KVM_CPU = 'Westmere-v2,phys-bits=40,enforce'
+KVM_CPU = 'Westmere-v1,phys-bits=40,enforce'
 
 
 def sha(path):
