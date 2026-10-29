@@ -155,6 +155,7 @@ def validate_review(manifest, expected_manifest, expected_plan, expected_source)
     require(manifest['source_revision'] == expected_source, 'Source revision differs')
     require(manifest['plan_digest'] == expected_plan, 'Transaction digest differs')
     require(manifest['snapshot_name'] == 'reviewed', 'Snapshot name differs')
+    require(manifest.get('snapshot_restore_verified') is True, 'Snapshot restore was not verified')
     required = {'guest.qcow2', 'source.iso', 'seed.iso', 'uuid', 'baseline.json'}
     require(set(manifest['files']) == required, 'Snapshot file inventory differs')
     for name, digest in manifest['files'].items():
@@ -209,13 +210,20 @@ def prepare(args):
         assert not saved.strip(), saved
     finally:
         vm.close()
+    restored_vm = VM(restore=True)
+    try:
+        restored = export('snapshot-restore', restored_vm.ready(180))
+        for field in ('baseline', 'review', 'inventory'):
+            assert restored[field] == baseline[field], f'Snapshot restore changed {field}'
+    finally:
+        restored_vm.close()
     snapshot_info = subprocess.check_output(['qemu-img', 'snapshot', '-l', str(STATE / 'guest.qcow2')], text=True)
     assert 'reviewed' in snapshot_info
     (STATE / 'snapshots.txt').write_text(snapshot_info)
     manifest = dict(qemu_sha256=sha('/usr/bin/qemu-system-x86_64'),
                     qemu_version=subprocess.check_output(['qemu-system-x86_64', '--version'], text=True),
                     host_architecture=os.uname().machine, schema_version=1, source_revision=args.source, plan_digest=baseline['review']['digest'],
-                    snapshot_name='reviewed', uuid=(STATE / 'uuid').read_text(), image_url=url + image,
+                    snapshot_name='reviewed', snapshot_restore_verified=True, uuid=(STATE / 'uuid').read_text(), image_url=url + image,
                     image_sha512=expected[0], acceleration=vm.accel, acceleration_probe=vm.acceleration, prepare_seconds=time.monotonic() - started,
                     files={name: sha(STATE / name) for name in ('guest.qcow2', 'source.iso', 'seed.iso', 'uuid', 'baseline.json')})
     write(STATE / 'review.json', manifest)

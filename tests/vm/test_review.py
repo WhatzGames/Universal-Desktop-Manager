@@ -19,7 +19,7 @@ class Review(unittest.TestCase):
             vm.write(root / 'baseline.json', {'review': {'plan': plan, 'digest': digest}})
             for name in ('guest.qcow2', 'source.iso', 'seed.iso', 'uuid'):
                 (root / name).write_text(name)
-            manifest = dict(source_revision='a' * 40, plan_digest=digest, snapshot_name='reviewed',
+            manifest = dict(source_revision='a' * 40, plan_digest=digest, snapshot_name='reviewed', snapshot_restore_verified=True,
                             files={name: vm.sha(root / name) for name in
                                    ('guest.qcow2', 'source.iso', 'seed.iso', 'uuid', 'baseline.json')})
             vm.write(root / 'review.json', manifest)
@@ -41,7 +41,7 @@ class Review(unittest.TestCase):
             vm.write(root / 'baseline.json', {'review': {'plan': {}, 'digest': '0' * 64}})
             for name in ('guest.qcow2', 'source.iso', 'seed.iso', 'uuid'):
                 (root / name).write_text(name)
-            manifest = dict(source_revision='s', plan_digest='0' * 64, snapshot_name='reviewed',
+            manifest = dict(source_revision='s', plan_digest='0' * 64, snapshot_name='reviewed', snapshot_restore_verified=True,
                             files={name: vm.sha(root / name) for name in
                                    ('guest.qcow2', 'source.iso', 'seed.iso', 'uuid', 'baseline.json')})
             vm.write(root / 'review.json', manifest)

@@ -33,7 +33,9 @@ local X11 logind session, active LightDM, clean dpkg audit and a rendered screen
 It generates the complete exact UDM plan as the desktop user and tests default Polkit
 denial without package mutation. `savevm reviewed` captures guest RAM plus qcow2 disk,
 retaining the boot, process start times, logind session and machine identity across the
-gate. There are no external backing files. The immutable seven-day snapshot artifact
+gate. Before publishing review artifacts, preparation restores that snapshot and
+requires the same running baseline, complete transaction and package inventory.
+Acceptance rejects a manifest lacking this restore verification. There are no external backing files. The immutable seven-day snapshot artifact
 contains the disk, source/seed ISOs, VM UUID, full baseline and review manifest.
 
 Review **baseline.json** (all package versions, architectures, origins, dependencies,
