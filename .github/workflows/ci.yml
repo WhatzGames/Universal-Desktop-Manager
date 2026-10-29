@@ -111,14 +111,14 @@ jobs:
           retention-days: 7
 
   snapshot-vm:
-    if: github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/ci/debian13-snapshot-vm')
     uses: ./.github/workflows/debian-vm.yml
     permissions:
       contents: read
       actions: read
     with:
-      stage: ${{ inputs.stage }}
+      stage: ${{ inputs.stage || 'prepare' }}
       review_run: ${{ inputs.review_run }}
       review_sha256: ${{ inputs.review_sha256 }}
       plan_digest: ${{ inputs.plan_digest }}
-      runner: ${{ inputs.runner }}
+      runner: ${{ inputs.runner || 'ubuntu-24.04' }}

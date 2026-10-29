@@ -3,13 +3,16 @@
 This harness is under validation. A written workflow is not installation acceptance.
 It supplements the fast, isolated Plasma container smoke job from merged PR #12 and
 uses the restricted helper from draft PR #13, including origin fix 67165a2. The
-integration branch merges main without rewriting PR #13. Both PRs remain unmerged
-unless the owner chooses otherwise; #12 is already merged.
+integration branch merges main without rewriting PR #13. PR #13 and this integration PR remain unmerged.
 
 ## Review and approval
 
-Run `.github/workflows/debian-vm.yml` with `stage=prepare` at the reviewed integration
-revision. Preparation builds the Rust CLI and container-scoped QEMU tooling, downloads
+Run the existing `ci.yml` dispatch entry with `stage=prepare` at the reviewed
+integration revision (it calls `debian-vm.yml`). During development, pushes to the
+exact `ci/debian13-snapshot-vm` branch also run preparation only; they cannot approve
+or enter acceptance. The new workflow is not yet registered on main, and the CLI
+credential cannot dispatch workflows. The scoped push entry enables hosted
+preparation without changing main or granting permissions. Preparation builds the Rust CLI and container-scoped QEMU tooling, downloads
 the official Debian generic amd64 image over HTTPS, checks Debian's published SHA512,
 and records the image checksum and URL. The checksum is retrieved over Debian HTTPS;
 there is no independent image-signature verification in this candidate. APT uses
