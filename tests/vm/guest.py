@@ -13,8 +13,11 @@ import time
 
 
 def run(*args, check=True):
-    return subprocess.run(args, text=True, stdout=subprocess.PIPE,
-                          stderr=subprocess.PIPE, check=check, timeout=3600)
+    result = subprocess.run(args, text=True, stdout=subprocess.PIPE,
+                            stderr=subprocess.PIPE, check=False, timeout=3600)
+    if check and result.returncode != 0:
+        raise RuntimeError(f'{args[0]} exited {result.returncode}: {result.stdout} {result.stderr}')
+    return result
 
 
 def identity(pid):
@@ -37,8 +40,9 @@ def baseline():
         sid = line.split()[0]
         fields = dict(line.split('=', 1) for line in run('loginctl', 'show-session', sid,
                       '-p', 'Name', '-p', 'Active', '-p', 'Type', '-p', 'Remote').stdout.splitlines())
-        if fields.get('Name') == 'desktop' and fields.get('Active') == 'yes':
-            assert fields['Type'] == 'x11' and fields['Remote'] == 'no'
+        # logind also reports the per-user manager; only a local X11 session qualifies.
+        if (fields.get('Name') == 'desktop' and fields.get('Active') == 'yes'
+                and fields.get('Type') == 'x11' and fields.get('Remote') == 'no'):
             active.append(sid)
     assert active, sessions
     return dict(boot_id=Path('/proc/sys/kernel/random/boot_id').read_text().strip(),
@@ -61,6 +65,8 @@ def capture():
     return dict(baseline=baseline(), review=plan(),
                 inventory=run('dpkg-query', '-W').stdout, screenshot=screenshot(),
                 os_release=Path('/etc/os-release').read_text(),
+                image_repositories=Path('/var/lib/udm-ci/image-debian.sources').read_text(),
+                reviewed_repositories=Path('/etc/apt/sources.list.d/debian.sources').read_text(),
                 dpkg_audit=run('dpkg', '--audit').stdout)
 
 

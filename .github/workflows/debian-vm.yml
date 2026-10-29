@@ -98,7 +98,7 @@ jobs:
           mkdir -p vm-state
           # Device exposure is limited to KVM; no host display, guest SSH or privileged container.
           device=()
-          if test -r /dev/kvm && test -w /dev/kvm; then device=(--device /dev/kvm); fi
+          if test -c /dev/kvm; then device=(--device /dev/kvm); fi
           docker run --rm "${device[@]}" --mount type=bind,src="$PWD",dst=/source,readonly \
             --mount type=bind,src="$PWD/vm-state",dst=/state \
             udm-vm-tooling "$STAGE" --source "$GITHUB_SHA" \

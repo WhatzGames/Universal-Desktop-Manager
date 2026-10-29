@@ -2,6 +2,32 @@
 # Runs only in the disposable cloud guest, before any KDE transaction is approved.
 set -eu
 export DEBIAN_FRONTEND=noninteractive
+# Cloud mirror+file origins have an empty site; keep the helper's strict policy.
+# Normalize only this disposable guest to explicit official Debian HTTPS sources.
+python3 - <<'SOURCES'
+from pathlib import Path
+sources = Path('/etc/apt/sources.list.d')
+if any(p.name != 'debian.sources' for p in sources.iterdir() if p.is_file()):
+    raise RuntimeError('Unexpected image repositories; inspect before provisioning')
+legacy = Path('/etc/apt/sources.list')
+if legacy.exists() and legacy.read_text().strip():
+    raise RuntimeError('Unexpected legacy repositories; inspect before provisioning')
+evidence = Path('/var/lib/udm-ci')
+evidence.mkdir()
+(evidence / 'image-debian.sources').write_text((sources / 'debian.sources').read_text())
+(sources / 'debian.sources').write_text("""Types: deb
+URIs: https://deb.debian.org/debian
+Suites: trixie trixie-updates
+Components: main
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
+
+Types: deb
+URIs: https://security.debian.org/debian-security
+Suites: trixie-security
+Components: main
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
+""")
+SOURCES
 apt-get update
 # Start the original desktop only after all session files and autologin exist.
 test ! -e /usr/sbin/policy-rc.d && test ! -L /usr/sbin/policy-rc.d

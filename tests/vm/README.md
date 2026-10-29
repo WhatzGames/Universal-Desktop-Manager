@@ -16,7 +16,11 @@ preparation without changing main or granting permissions. Preparation builds th
 the official Debian generic amd64 image over HTTPS, checks Debian's published SHA512,
 and records the image checksum and URL. The checksum is retrieved over Debian HTTPS;
 there is no independent image-signature verification in this candidate. APT uses
-Debian's signed indexes and trusted package origins. No host packages are installed.
+Debian's signed indexes and trusted package origins. The cloud image's mirror+file
+source definitions yield empty origin sites and are correctly rejected by the helper.
+Provisioning saves those definitions, then narrows the disposable guest to explicit
+official Debian HTTPS trixie/updates/security sources before refreshing indexes. No
+backports or unknown repository is added; the helper's origin policy is unchanged. No host packages are installed.
 
 Cloud-init provisions only the original XFCE desktop, LightDM, systemd/logind,
 Polkit, python3-apt, guest agent and test dependencies. There are no guest passwords,
@@ -97,9 +101,9 @@ are mandatory and can fail even if Cargo or container CI passes.
 
 GitHub [does not officially support nested virtualization](https://docs.github.com/en/actions/concepts/runners/github-hosted-runners).
 Acceptance also requires the reviewed QEMU binary hash, host architecture and
-acceleration mode; tooling changes require a fresh preparation/review. The workflow exposes only usable `/dev/kvm` to the tooling container when present;
-otherwise it uses QEMU TCG. The QEMU command uses KVM without fallback if the device
-exists but cannot initialize, so initialization errors fail honestly. `review.json`
+acceleration mode; tooling changes require a fresh preparation/review. The workflow exposes only the KVM device to the tooling container when present.
+A bounded real QEMU initialization probe must succeed before selecting KVM; otherwise
+the guest uses TCG and records the probe error. Host device permissions are not changed. `review.json`
 records actual selected acceleration and full preparation duration; serial logs retain
 boot/provisioning progress. Default bounds: 60-minute preparation, 120-minute job.
 TCG performance must be measured before claiming hosted-runner feasibility. Select

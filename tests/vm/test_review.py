@@ -49,5 +49,45 @@ class Review(unittest.TestCase):
                 vm.validate_review(manifest, vm.sha(root / 'review.json'), '0' * 64, 's')
 
 
+class Sessions(unittest.TestCase):
+    def test_logind_user_manager_does_not_count_as_graphical_session(self):
+        from types import SimpleNamespace
+        from unittest.mock import patch
+        spec = importlib.util.spec_from_file_location('vm_guest', Path(__file__).with_name('guest.py'))
+        guest = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(guest)
+
+        def command(*args):
+            if args[:2] == ('systemctl', 'is-active'):
+                output = 'active'
+            elif args[0] == 'pgrep' or args[:2] == ('systemctl', 'show'):
+                output = '42'
+            elif args[:2] == ('loginctl', 'list-sessions'):
+                output = '2 desktop manager\n1 desktop seat0\n'
+            else:
+                kind = 'unspecified' if args[2] == '2' else 'x11'
+                output = f'Name=desktop\nActive=yes\nRemote=no\nType={kind}\n'
+            return SimpleNamespace(stdout=output)
+
+        with patch.object(guest, 'run', side_effect=command), patch.object(guest, 'identity', return_value={'pid': 42}), patch.object(guest, 'Path') as path:
+            path.return_value.exists.return_value = True
+            path.return_value.glob.return_value = []
+            path.return_value.read_text.return_value = 'baseline'
+            self.assertEqual(guest.baseline()['sessions'], ['1'])
+
+
+class Acceleration(unittest.TestCase):
+    def test_requires_a_successful_kvm_probe(self):
+        from types import SimpleNamespace
+        from unittest.mock import patch
+        with patch.object(vm.os, 'access', return_value=False):
+            self.assertEqual(vm.acceleration()['selected'], 'tcg')
+        for code, selected in ((0, 'kvm'), (1, 'tcg')):
+            with patch.object(vm.os, 'access', return_value=True), patch.object(vm.subprocess, 'run', return_value=SimpleNamespace(returncode=code, stderr='probe evidence')):
+                measured = vm.acceleration()
+                self.assertEqual(measured['selected'], selected)
+                self.assertEqual(measured['probe_returncode'], code)
+
+
 if __name__ == '__main__':
     unittest.main()

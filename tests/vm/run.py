@@ -50,10 +50,25 @@ def rpc(path, command, arguments=None, qmp=False):
                 return response['return']
 
 
+def acceleration():
+    if not os.access('/dev/kvm', os.R_OK | os.W_OK):
+        return dict(selected='tcg', reason='No accessible KVM device inside tooling container')
+    try:
+        probe = subprocess.run(['qemu-system-x86_64', '-machine', 'q35,accel=kvm',
+                                '-cpu', 'host', '-m', '128', '-nodefaults', '-display', 'none',
+                                '-S', '-qmp', 'stdio'], text=True, capture_output=True, timeout=15,
+                               input='{"execute":"qmp_capabilities"}\n{"execute":"quit"}\n')
+        return dict(selected='kvm' if probe.returncode == 0 else 'tcg',
+                    probe_returncode=probe.returncode, probe_stderr=probe.stderr)
+    except subprocess.TimeoutExpired:
+        return dict(selected='tcg', reason='KVM initialization probe timed out')
+
+
 class VM:
     def __init__(self, restore=False):
         self.log = (STATE / 'serial.log').open('ab')
-        self.accel = 'kvm' if os.access('/dev/kvm', os.R_OK | os.W_OK) else 'tcg'
+        self.acceleration = acceleration()
+        self.accel = self.acceleration['selected']
         command = ['qemu-system-x86_64', '-machine', f'q35,accel={self.accel}',
                    '-cpu', 'host' if self.accel == 'kvm' else 'max', '-m', '4096', '-smp', '2',
                    '-uuid', (STATE / 'uuid').read_text().strip(),
@@ -68,7 +83,7 @@ class VM:
         if restore:
             command += ['-loadvm', 'reviewed']
         self.process = subprocess.Popen(command, stdout=self.log, stderr=subprocess.STDOUT)
-        execution = dict(acceleration=self.accel, host_architecture=os.uname().machine,
+        execution = dict(acceleration=self.acceleration, host_architecture=os.uname().machine,
                          qemu_version=subprocess.check_output(['qemu-system-x86_64', '--version'], text=True),
                          started_unix=time.time(), restore=restore)
         write(STATE / 'execution.json', execution)
@@ -201,7 +216,7 @@ def prepare(args):
                     qemu_version=subprocess.check_output(['qemu-system-x86_64', '--version'], text=True),
                     host_architecture=os.uname().machine, schema_version=1, source_revision=args.source, plan_digest=baseline['review']['digest'],
                     snapshot_name='reviewed', uuid=(STATE / 'uuid').read_text(), image_url=url + image,
-                    image_sha512=expected[0], acceleration=vm.accel, prepare_seconds=time.monotonic() - started,
+                    image_sha512=expected[0], acceleration=vm.accel, acceleration_probe=vm.acceleration, prepare_seconds=time.monotonic() - started,
                     files={name: sha(STATE / name) for name in ('guest.qcow2', 'source.iso', 'seed.iso', 'uuid', 'baseline.json')})
     write(STATE / 'review.json', manifest)
     print(json.dumps(dict(review_sha256=sha(STATE / 'review.json'), **manifest), indent=2))
@@ -212,7 +227,7 @@ def accept(args):
     validate_review(manifest, args.review_sha256, args.plan_digest, args.source)
     if manifest['qemu_sha256'] != sha('/usr/bin/qemu-system-x86_64') or manifest['host_architecture'] != os.uname().machine:
         raise ValueError('Snapshot requires the reviewed QEMU binary and host architecture')
-    actual_accel = 'kvm' if os.access('/dev/kvm', os.R_OK | os.W_OK) else 'tcg'
+    actual_accel = acceleration()['selected']
     if manifest['acceleration'] != actual_accel:
         raise ValueError('Snapshot acceleration differs; prepare and review again')
     # Never mutate the approved disk: each destructive case gets an independent copy.
