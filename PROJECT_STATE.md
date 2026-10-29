@@ -191,3 +191,18 @@ Guest mitigation report includes spec_store_bypass Vulnerable and Spectre v2
 retpolines/STIBP disabled; public-data disposable guest only, no production claim.
 KVM is the current route; TCG remains fallback. No true approval, install or native
 failure/recovery acceptance has run. Issues #10/#11 and milestone v0.2 remain open.
+
+Exact human approval was received for the replacement KVM suite and Wiki update.
+Verified signed owner approval-only commit e3439bea37bc644b498a92d60582e2cce0e11c07
+passed the push gate; acceptance run 40973063920 is running. Do not treat this as
+validated installation until the case results and native evidence are inspected.
+Wiki update cab5058 was explicitly authorized and published; it records the current
+preparation proof and guest limitation. No local/host package operation is authorized.
+
+First approved run 40973063920 stopped at the interruption observer after stale,
+download-failure and dpkg pre-invoke failure passed. No operation record existed
+when interruption fired; read-only dpkg --audit during planning was not excluded.
+The observer now requires exact installing digest, process group and mutation
+arguments; 13 VM tests pass. The human reaffirmed approval to finish the same suite
+after this correction. Preserve the exact ed20 transaction and scope; no workflow
+rerun or automatic native repair. Fresh source/snapshot preparation follows.

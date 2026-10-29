@@ -1,6 +1,6 @@
 # Fixed CPU KVM review candidate
 
-Preparation and independent-runner restore passed. **Installation is unapproved and has not run.** This candidate replaces the withdrawn host-passthrough KVM snapshot. TCG is fallback-only.
+Preparation and independent-runner restore passed. **The human approved this exact KVM suite; the first acceptance attempt stopped at an interruption-observer defect and is not validated.** This candidate replaces the withdrawn host-passthrough KVM snapshot. TCG is fallback-only.
 
 | Identity | Exact value |
 |---|---|
@@ -23,4 +23,4 @@ The common enforced CPU baseline retains guest kernel defaults. Its recorded rep
 
 Approve only the above source, preparation run, manifest and transaction, using copies of this reviewed GitHub-hosted guest. The suite runs the real CLI → pkexec → restricted helper installation, intentional stale-plan/download/dpkg/interruption/post-commit-verification failures, snapshot recovery, original desktop continuity and isolated Plasma readiness. Maintainer scripts run privileged; policy-rc.d is not a sandbox. Full suite results and duration remain unverified.
 
-The [strict signed push gate](../../../../../.ci/README.md) requires one owner-signed approval-only commit on the existing dedicated branch. Ordinary pushes cannot install; repeat records and workflow reruns are rejected. Approval does not authorize local installation, host package changes, native package repair, primary-session activation or display-manager restart. No true approval record has been published. Review artifacts expire after seven days; missing or changed artifacts require a new review.
+The [strict signed push gate](../../../../../.ci/README.md) requires one owner-signed approval-only commit on the existing dedicated branch. Ordinary pushes cannot install; repeat records and workflow reruns are rejected. Approval does not authorize local installation, host package changes, native package repair, primary-session activation or display-manager restart. The human approved the exact scope on 2026-10-30 (Europe/Berlin). Verified owner commit `e3439bea37bc644b498a92d60582e2cce0e11c07` changes only the approval JSON. The gate passed in [acceptance run 40973063920](https://github.com/WhatzGames/Universal-Desktop-Manager/actions/runs/40973063920); [approval identity](approval.json). [First attempt evidence](first-acceptance/README.md). This is not a passing installation result. Review artifacts expire after seven days; missing or changed artifacts require a new review.

@@ -118,5 +118,28 @@ class CpuModel(unittest.TestCase):
             vm.STATE = old_state
 
 
+class Interruption(unittest.TestCase):
+    def test_ignores_planning_audit_and_unrelated_processes(self):
+        from unittest.mock import patch
+        spec = importlib.util.spec_from_file_location('vm_guest', Path(__file__).with_name('guest.py'))
+        guest = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(guest)
+        digest = 'a' * 64
+        with tempfile.TemporaryDirectory() as directory:
+            comm = Path(directory) / '42' / 'comm'
+            comm.parent.mkdir()
+            comm.write_text('dpkg\n')
+            cmd = comm.parent / 'cmdline'
+            for phase, args, group, expected in (
+                ('installing', b'dpkg\0--audit\0', 7, False),
+                ('planned', b'dpkg\0--unpack\0pkg.deb\0', 7, False),
+                ('installing', b'dpkg\0--unpack\0pkg.deb\0', 8, False),
+                ('installing', b'dpkg\0--unpack\0pkg.deb\0', 7, True),
+            ):
+                cmd.write_bytes(args)
+                with patch.object(guest, 'records', return_value=[dict(digest=digest, phase=phase)]), patch.object(guest.Path, 'glob', return_value=[comm]), patch.object(guest.os, 'getpgid', return_value=group):
+                    self.assertEqual(bool(guest.installing_dpkg(digest, 7)), expected)
+
+
 if __name__ == '__main__':
     unittest.main()

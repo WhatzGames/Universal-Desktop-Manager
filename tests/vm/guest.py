@@ -94,6 +94,24 @@ def records():
     return [json.loads(Path(p).read_text()) for p in glob.glob('/var/lib/udm/operations/*.json')]
 
 
+
+def installing_dpkg(digest, group):
+    # Planning also runs dpkg --audit; interrupt only this approved native mutation.
+    if not any(r['digest'] == digest and r['phase'] == 'installing' for r in records()):
+        return []
+    found = []
+    for proc in Path('/proc').glob('[0-9]*/comm'):
+        try:
+            pid = int(proc.parent.name)
+            args = (proc.parent / 'cmdline').read_bytes().split(b'\0')
+            if (proc.read_text().strip() == 'dpkg' and os.getpgid(pid) == group and
+                    any(arg in (b'--unpack', b'--configure', b'--triggers-only', b'--install', b'-i') for arg in args)):
+                found.append(dict(pid=pid, command=[a.decode(errors='replace') for a in args if a]))
+        except (FileNotFoundError, ProcessLookupError):
+            pass
+    return found
+
+
 def evidence():
     logs = {}
     for path in ('/var/log/dpkg.log', '/var/log/apt/term.log', '/var/log/apt/history.log'):
@@ -161,33 +179,30 @@ def main():
                 deadline = time.monotonic() + 1800
                 observed = []
                 while time.monotonic() < deadline and process.poll() is None:
-                    for proc in Path('/proc').glob('[0-9]*/comm'):
-                        try:
-                            if proc.read_text().strip() == 'dpkg':
-                                observed.append(int(proc.parent.name))
-                        except FileNotFoundError:
-                            pass
+                    observed = installing_dpkg(approved, process.pid)
                     if observed:
                         # Kill the native package process during its real operation.
-                        for pid in observed:
-                            os.kill(pid, signal.SIGSTOP)
+                        for native in observed:
+                            os.kill(native['pid'], signal.SIGSTOP)
                         os.killpg(process.pid, signal.SIGKILL)
-                        for pid in observed:
+                        for native in observed:
                             try:
-                                os.kill(pid, signal.SIGKILL)
+                                os.kill(native['pid'], signal.SIGKILL)
                             except ProcessLookupError:
                                 pass
                         break
                     time.sleep(0.01)
-                assert observed, 'No native dpkg operation observed; interruption not tested'
+                assert observed, 'No journaled mutating dpkg operation observed; interruption not tested'
                 process.wait(timeout=30)
-                assert any(r['phase'] in ('installing', 'verifying') for r in records())
+                assert any(r['digest'] == approved and r['phase'] == 'installing' for r in records()), 'Interrupted native operation lost its installing journal'
                 retry = install(approved)
                 assert retry.returncode != 0 and 'Interrupted operation' in retry.stderr
                 failed = retry
             else:
                 failed = install(approved)
             result = evidence()
+            if operation == 'interruption':
+                result['interrupted_dpkg'] = observed
             result.update(returncode=failed.returncode, stdout=failed.stdout, stderr=failed.stderr)
             assert failed.returncode != 0
             assert result['records'], 'Native failure did not reach the helper journal'
