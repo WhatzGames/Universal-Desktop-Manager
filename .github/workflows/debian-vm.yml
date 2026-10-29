@@ -14,6 +14,10 @@ on:
       plan_digest:
         type: string
         default: ''
+      software_only:
+        description: Force QEMU software emulation for measured fallback validation
+        type: boolean
+        default: false
       runner:
         type: string
         default: ubuntu-24.04
@@ -33,6 +37,10 @@ on:
       plan_digest:
         description: For accept only, exact approved UDM transaction digest
         type: string
+      software_only:
+        description: Force QEMU software emulation for measured fallback validation
+        type: boolean
+        default: false
       runner:
         description: Hosted is experimental TCG unless measured KVM is usable; dedicated runner must be disposable
         type: choice
@@ -48,7 +56,7 @@ jobs:
     runs-on: ${{ inputs.runner }}
     timeout-minutes: 120
     concurrency:
-      group: udm-snapshot-${{ github.ref }}-${{ inputs.stage }}
+      group: udm-snapshot-${{ github.ref }}-${{ inputs.stage }}-${{ inputs.software_only }}
       cancel-in-progress: ${{ inputs.stage == 'prepare' }}
     steps:
       - uses: actions/checkout@v4
@@ -72,7 +80,7 @@ jobs:
           assert run['conclusion'] == 'success'
           assert run['event'] == 'workflow_dispatch' or (run['event'] == 'push' and run['head_branch'] == 'ci/debian13-snapshot-vm')
           assert run['head_sha'] == os.environ['GITHUB_SHA']
-          assert run['path'] in ('.github/workflows/ci.yml', '.github/workflows/debian-vm.yml')
+          assert run['path'] in ('.github/workflows/ci.yml', '.github/workflows/debian-vm.yml', '.github/workflows/debian-vm-tcg.yml')
           assert run['head_repository']['full_name'] == repo
           assert str(run['id']) != os.environ['GITHUB_RUN_ID']
           PY
@@ -92,13 +100,14 @@ jobs:
       - name: Measure runner acceleration and run real guest
         env:
           STAGE: ${{ inputs.stage }}
+          SOFTWARE_ONLY: ${{ inputs.software_only }}
           REVIEW_SHA256: ${{ inputs.review_sha256 }}
           PLAN_DIGEST: ${{ inputs.plan_digest }}
         run: |
           mkdir -p vm-state
           # Device exposure is limited to KVM; no host display, guest SSH or privileged container.
           device=()
-          if test -c /dev/kvm; then device=(--device /dev/kvm); fi
+          if test "$SOFTWARE_ONLY" != true && test -c /dev/kvm; then device=(--device /dev/kvm); fi
           docker run --rm "${device[@]}" --mount type=bind,src="$PWD",dst=/source,readonly \
             --mount type=bind,src="$PWD/vm-state",dst=/state \
             udm-vm-tooling "$STAGE" --source "$GITHUB_SHA" \

@@ -108,6 +108,11 @@ A bounded real QEMU initialization probe must succeed before selecting KVM; othe
 the guest uses TCG and records the probe error. Host device permissions are not changed. `review.json`
 records actual selected acceleration and full preparation duration; serial logs retain
 boot/provisioning progress. Default bounds: 60-minute preparation, 120-minute job.
+The separate `debian-vm-tcg.yml` preparation-only workflow forces TCG on a hosted
+Linux runner, retaining its own snapshot and timings independently of accelerated CI.
+A failure there is a measured fallback limitation; the ordinary accelerated preparation
+can still publish its review artifacts. Set `software_only=true` on an explicitly
+approved accept dispatch only when reviewing that TCG run.
 TCG performance must be measured before claiming hosted-runner feasibility. Select
 `udm-disposable-kvm` only on an explicitly configured disposable Linux runner with
 Docker, at least 8 GiB RAM and adequate artifact/disk capacity; do not attach a primary

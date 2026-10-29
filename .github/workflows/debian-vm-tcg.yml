@@ -1,0 +1,14 @@
+name: Debian 13 TCG feasibility
+on:
+  push:
+    branches: [ci/debian13-snapshot-vm]
+permissions:
+  contents: read
+  actions: read
+jobs:
+  software-emulation:
+    uses: ./.github/workflows/debian-vm.yml
+    with:
+      stage: prepare
+      runner: ubuntu-24.04
+      software_only: true
