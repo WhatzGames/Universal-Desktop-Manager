@@ -93,3 +93,11 @@ a fast component check. Real guest preparation/restore and default Polkit denial
 and TCG; [exact review artifacts](validation/v0.2-vm/README.md) are retained.
 Real KDE commit/failure/continuity/component acceptance is still behind human
 approval. Keep issue #11 and milestone v0.2 open.
+
+## Push approval filtering
+
+[Strict signed single-file approval gate](../../.ci/README.md) and
+[real GitHub denial/non-trigger evidence](validation/v0.2-vm/push-gate/README.md).
+Ordinary integration pushes skip VM preparation; `[vm-prepare] ` opts in explicitly.
+Only a separate exact approved record can schedule installation. Positive native
+acceptance is still gated; the expected false-record workflow failure is a denial test.
