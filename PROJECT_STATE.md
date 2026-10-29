@@ -206,3 +206,11 @@ The observer now requires exact installing digest, process group and mutation
 arguments; 13 VM tests pass. The human reaffirmed approval to finish the same suite
 after this correction. Preserve the exact ed20 transaction and scope; no workflow
 rerun or automatic native repair. Fresh source/snapshot preparation follows.
+
+Continuation 40974425288 installed all 579 approved packages successfully inside
+the interruption case: ready journal, clean audit/verification, zero removals or
+changed existing versions, original XFCE/LightDM identities preserved. Its process-
+group filter missed native dpkg, so interruption/remaining suite are NOT passed.
+Observer now follows exact parent ancestry across process-group changes and kills
+the helper before native dpkg; regression tests cover audit/foreign processes and
+ancestry. 14 VM tests pass. Same approved transaction/scope only.

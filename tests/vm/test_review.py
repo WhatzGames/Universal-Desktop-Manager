@@ -130,15 +130,30 @@ class Interruption(unittest.TestCase):
             comm.parent.mkdir()
             comm.write_text('dpkg\n')
             cmd = comm.parent / 'cmdline'
-            for phase, args, group, expected in (
-                ('installing', b'dpkg\0--audit\0', 7, False),
-                ('planned', b'dpkg\0--unpack\0pkg.deb\0', 7, False),
-                ('installing', b'dpkg\0--unpack\0pkg.deb\0', 8, False),
-                ('installing', b'dpkg\0--unpack\0pkg.deb\0', 7, True),
+            for phase, args, descendant, expected in (
+                ('installing', b'dpkg\0--audit\0', True, False),
+                ('planned', b'dpkg\0--unpack\0pkg.deb\0', True, False),
+                ('installing', b'dpkg\0--unpack\0pkg.deb\0', False, False),
+                ('installing', b'dpkg\0--unpack\0pkg.deb\0', True, True),
             ):
                 cmd.write_bytes(args)
-                with patch.object(guest, 'records', return_value=[dict(digest=digest, phase=phase)]), patch.object(guest.Path, 'glob', return_value=[comm]), patch.object(guest.os, 'getpgid', return_value=group):
+                with patch.object(guest, 'records', return_value=[dict(digest=digest, phase=phase)]), patch.object(guest.Path, 'glob', return_value=[comm]), patch.object(guest, 'process_ancestors', return_value=[42, 7] if descendant else []):
                     self.assertEqual(bool(guest.installing_dpkg(digest, 7)), expected)
+
+
+    def test_parent_chain_does_not_depend_on_process_groups(self):
+        from unittest.mock import patch
+        spec = importlib.util.spec_from_file_location('vm_guest', Path(__file__).with_name('guest.py'))
+        guest = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(guest)
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            for pid, parent in ((42, 21), (21, 7), (7, 1)):
+                (root / str(pid)).mkdir()
+                (root / str(pid) / 'stat').write_text(f'{pid} (name with spaces) S {parent} 999 999')
+            with patch.object(guest, 'Path', side_effect=lambda name: root / name.removeprefix('/proc/')):
+                self.assertEqual(guest.process_ancestors(42, 7), [42, 21, 7])
+                self.assertEqual(guest.process_ancestors(42, 8), [])
 
 
 if __name__ == '__main__':

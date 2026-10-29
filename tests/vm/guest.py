@@ -94,8 +94,17 @@ def records():
     return [json.loads(Path(p).read_text()) for p in glob.glob('/var/lib/udm/operations/*.json')]
 
 
+def process_ancestors(pid, root):
+    lineage = []
+    while pid > 1 and pid not in lineage:
+        lineage.append(pid)
+        if pid == root:
+            return lineage
+        pid = int(Path(f'/proc/{pid}/stat').read_text().rsplit(')', 1)[1].split()[1])
+    return []
 
-def installing_dpkg(digest, group):
+
+def installing_dpkg(digest, root):
     # Planning also runs dpkg --audit; interrupt only this approved native mutation.
     if not any(r['digest'] == digest and r['phase'] == 'installing' for r in records()):
         return []
@@ -104,9 +113,11 @@ def installing_dpkg(digest, group):
         try:
             pid = int(proc.parent.name)
             args = (proc.parent / 'cmdline').read_bytes().split(b'\0')
-            if (proc.read_text().strip() == 'dpkg' and os.getpgid(pid) == group and
+            if (proc.read_text().strip() == 'dpkg' and
                     any(arg in (b'--unpack', b'--configure', b'--triggers-only', b'--install', b'-i') for arg in args)):
-                found.append(dict(pid=pid, command=[a.decode(errors='replace') for a in args if a]))
+                lineage = process_ancestors(pid, root)
+                if lineage:
+                    found.append(dict(pid=pid, ancestors=lineage[1:], command=[a.decode(errors='replace') for a in args if a]))
         except (FileNotFoundError, ProcessLookupError):
             pass
     return found
@@ -184,7 +195,13 @@ def main():
                         # Kill the native package process during its real operation.
                         for native in observed:
                             os.kill(native['pid'], signal.SIGSTOP)
-                        os.killpg(process.pid, signal.SIGKILL)
+                        # Native APT/dpkg can change process groups; kill the exact parent chain.
+                        for native in observed:
+                            for pid in reversed(native['ancestors']):
+                                try:
+                                    os.kill(pid, signal.SIGKILL)
+                                except ProcessLookupError:
+                                    pass
                         for native in observed:
                             try:
                                 os.kill(native['pid'], signal.SIGKILL)
