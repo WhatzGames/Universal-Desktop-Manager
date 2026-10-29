@@ -1,0 +1,63 @@
+{
+  "baseline": {
+    "boot_id": "f8e5b7e3-8ec9-4de9-9018-27c9808d0f0d",
+    "machine_id": "93724d46b9124230a49a2ff622af9d72",
+    "processes": {
+      "xfce4-session": [
+        {
+          "pid": 4373,
+          "start": "6486"
+        }
+      ],
+      "xfwm4": [
+        {
+          "pid": 4442,
+          "start": "6499"
+        }
+      ],
+      "xfdesktop": [
+        {
+          "pid": 4465,
+          "start": "6557"
+        }
+      ],
+      "xfce4-panel": [
+        {
+          "pid": 4451,
+          "start": "6548"
+        }
+      ]
+    },
+    "display_manager": {
+      "pid": 4331,
+      "start": "6442"
+    },
+    "sessions": [
+      "1"
+    ],
+    "dm_config": "/usr/sbin/lightdm\n"
+  },
+  "os_release": "PRETTY_NAME=\"Debian GNU/Linux 13 (trixie)\"\nNAME=\"Debian GNU/Linux\"\nVERSION_ID=\"13\"\nVERSION=\"13 (trixie)\"\nVERSION_CODENAME=trixie\nDEBIAN_VERSION_FULL=13.7\nID=debian\nHOME_URL=\"https://www.debian.org/\"\nSUPPORT_URL=\"https://www.debian.org/support\"\nBUG_REPORT_URL=\"https://bugs.debian.org/\"\n",
+  "cpu_vulnerabilities": {
+    "spectre_v2": "Mitigation: Retpolines; STIBP: disabled; RSB filling; PBRSB-eIBRS: Not affected; BHI: Not affected",
+    "indirect_target_selection": "Not affected",
+    "itlb_multihit": "Not affected",
+    "vmscape": "Not affected",
+    "mmio_stale_data": "Not affected",
+    "mds": "Not affected",
+    "reg_file_data_sampling": "Not affected",
+    "tsa": "Not affected",
+    "l1tf": "Not affected",
+    "spec_store_bypass": "Vulnerable",
+    "tsx_async_abort": "Not affected",
+    "spectre_v1": "Mitigation: usercopy/swapgs barriers and __user pointer sanitization",
+    "gather_data_sampling": "Not affected",
+    "retbleed": "Not affected",
+    "spec_rstack_overflow": "Not affected",
+    "srbds": "Not affected",
+    "meltdown": "Not affected"
+  },
+  "image_repositories": "Types: deb deb-src\nURIs: mirror+file:///etc/apt/mirrors/debian.list\nSuites: trixie trixie-updates trixie-backports\nComponents: main\nSigned-By: /usr/share/keyrings/debian-archive-keyring.gpg\n\nTypes: deb deb-src\nURIs: mirror+file:///etc/apt/mirrors/debian-security.list\nSuites: trixie-security\nComponents: main\nSigned-By: /usr/share/keyrings/debian-archive-keyring.gpg\n",
+  "reviewed_repositories": "Types: deb\nURIs: https://deb.debian.org/debian\nSuites: trixie trixie-updates\nComponents: main\nSigned-By: /usr/share/keyrings/debian-archive-keyring.gpg\n\nTypes: deb\nURIs: https://security.debian.org/debian-security\nSuites: trixie-security\nComponents: main\nSigned-By: /usr/share/keyrings/debian-archive-keyring.gpg\n",
+  "dpkg_audit": ""
+}

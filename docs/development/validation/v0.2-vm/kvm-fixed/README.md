@@ -19,7 +19,7 @@ Preparation took 116.434 seconds, including original snapshot restore verificati
 
 The common enforced CPU baseline retains guest kernel defaults. Its recorded report includes **spec_store_bypass: Vulnerable** and Spectre v2 retpolines with STIBP disabled. The v2 CPU trial refused unavailable spec-ctrl support; no feature-enforcement check was removed. This disposable public-data guest contains no supplied credentials; it is not production security validation. Host mitigations were not changed.
 
-Current continuation: [corrected observer and identical approved transaction](corrected/README.md).
+Current continuation: [native ancestry correction and identical approved transaction](ancestry-corrected/README.md). Earlier observer candidate: [corrected/](corrected/README.md).
 
 ## Exact approval scope
 
