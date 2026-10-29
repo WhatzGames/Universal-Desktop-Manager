@@ -75,10 +75,11 @@ Each destructive case starts from a separate copy of the reviewed running snapsh
 - Interruption: observe a real dpkg process and kill its operation process group and
   dpkg; require a durable interrupted record and blocked retry. No observed dpkg
   process means failure, never a simulated pass.
-- Verification failure: after a real successful installation, make the disposable
-  guest launcher non-executable and require verify to report not ready. This tests
-  post-install detection; helper journal verification failure is covered separately
-  by the existing injected unit test, not claimed as a native maintainer-script case.
+- Verification failure: a fixed, pre-provisioned native dpkg post-invoke hook makes
+  the installed launcher non-executable only when its reviewed test marker is enabled.
+  Require actual APT commit success followed by helper verification failure, clean
+  dpkg audit and a durable failed operation retaining that verification. No helper
+  implementation is replaced or mocked, and the snapshot is restored afterward.
 - Success: require actual target verification, one ready operation with approved
   digest, clean dpkg audit, executable launcher and Debian wrapped Wayland session.
   Run PR #12's real KWin/plasmashell QPainter test under another user with private

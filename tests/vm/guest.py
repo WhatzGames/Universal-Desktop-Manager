@@ -143,6 +143,8 @@ def main():
         try:
             if operation == 'dpkg-failure':
                 Path('/run/udm-ci-dpkg-fail').touch()
+            if operation == 'verification-failure':
+                Path('/run/udm-ci-verification-fail').touch()
             if operation == 'download-failure':
                 # No repository/config changes: use a separate network namespace with no uplink.
                 # pkexec remains real, while APT's download fails honestly.
@@ -185,18 +187,16 @@ def main():
                 failed = install(approved)
             result = evidence()
             result.update(returncode=failed.returncode, stdout=failed.stdout, stderr=failed.stderr)
+            assert failed.returncode != 0
+            assert result['records'], 'Native failure did not reach the helper journal'
+            if operation != 'interruption':
+                assert result['records'][-1]['phase'] == 'failed'
             if operation == 'verification-failure':
-                assert failed.returncode == 0
-                # Corrupt only the disposable guest's installed launcher, then verify honestly.
-                Path('/usr/bin/startplasma-wayland').chmod(0o644)
-                verification = json.loads(run('/usr/local/bin/udm-app', 'packages', 'verify').stdout)
+                verification = result['records'][-1]['verification']
                 assert not verification['ready'] and not verification['launcher_executable']
+                assert verification['dpkg_audit_clean']
+                assert 'Package commit succeeded but KDE verification failed' in failed.stderr
                 result['verification'] = verification
-            else:
-                assert failed.returncode != 0
-                assert result['records'], 'Native failure did not reach the helper journal'
-                if operation != 'interruption':
-                    assert result['records'][-1]['phase'] == 'failed'
         finally:
             Path('/etc/polkit-1/rules.d/00-udm-ci.rules').unlink(missing_ok=True)
     elif operation == 'install':

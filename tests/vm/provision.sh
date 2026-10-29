@@ -47,9 +47,12 @@ if test -e /run/udm-ci-dpkg-fail; then
     echo 'UDM CI deliberate native dpkg pre-invoke failure' >&2
     exit 42
 fi
+if test -e /run/udm-ci-verification-fail && test -f /usr/bin/startplasma-wayland; then
+    chmod 0644 /usr/bin/startplasma-wayland
+fi
 HOOK
 chmod 0755 /usr/local/sbin/udm-ci-dpkg-hook
-printf 'pre-invoke=/usr/local/sbin/udm-ci-dpkg-hook\n' > /etc/dpkg/dpkg.cfg.d/udm-ci
+printf 'pre-invoke=/usr/local/sbin/udm-ci-dpkg-hook\npost-invoke=/usr/local/sbin/udm-ci-dpkg-hook\n' > /etc/dpkg/dpkg.cfg.d/udm-ci
 printf 'Acquire::Retries "0";\nAcquire::http::Timeout "10";\nAcquire::https::Timeout "10";\n' > /etc/apt/apt.conf.d/99-udm-ci-timeouts
 apt-get clean
 useradd -m -s /bin/bash desktop
