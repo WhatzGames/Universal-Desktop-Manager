@@ -1,5 +1,22 @@
 name: Debian 13 snapshot VM review
 on:
+  workflow_call:
+    inputs:
+      stage:
+        required: true
+        type: string
+      review_run:
+        type: string
+        default: ''
+      review_sha256:
+        type: string
+        default: ''
+      plan_digest:
+        type: string
+        default: ''
+      runner:
+        type: string
+        default: ubuntu-24.04
   workflow_dispatch:
     inputs:
       stage:
@@ -26,6 +43,7 @@ permissions:
   actions: read
 jobs:
   vm:
+    if: github.event_name == 'workflow_dispatch'
     # Only a deliberate human workflow_dispatch can reach the install path.
     runs-on: ${{ inputs.runner }}
     timeout-minutes: 120
@@ -50,7 +68,7 @@ jobs:
           run = json.loads(subprocess.check_output(['gh', 'api', f'repos/{repo}/actions/runs/{os.environ["REVIEW_RUN"]}']))
           assert run['conclusion'] == 'success' and run['event'] == 'workflow_dispatch'
           assert run['head_sha'] == os.environ['GITHUB_SHA']
-          assert run['path'] == '.github/workflows/debian-vm.yml'
+          assert run['path'] in ('.github/workflows/ci.yml', '.github/workflows/debian-vm.yml')
           assert run['head_repository']['full_name'] == repo
           assert str(run['id']) != os.environ['GITHUB_RUN_ID']
           PY

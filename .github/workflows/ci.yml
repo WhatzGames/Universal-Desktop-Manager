@@ -1,5 +1,28 @@
 name: CI
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      stage:
+        description: VM preparation or explicit approval of the exact reviewed snapshot transaction
+        type: choice
+        options: [prepare, accept]
+        default: prepare
+      review_run:
+        description: Accept only - successful preparation run ID at this source revision
+        type: string
+      review_sha256:
+        description: Accept only - approved review.json SHA256
+        type: string
+      plan_digest:
+        description: Accept only - approved complete UDM transaction digest
+        type: string
+      runner:
+        description: Disposable VM runner
+        type: choice
+        options: [ubuntu-24.04, udm-disposable-kvm]
+        default: ubuntu-24.04
 permissions:
   contents: read
 jobs:
@@ -86,3 +109,16 @@ jobs:
           name: plasma-wayland-smoke
           path: plasma-artifacts
           retention-days: 7
+
+  snapshot-vm:
+    if: github.event_name == 'workflow_dispatch'
+    uses: ./.github/workflows/debian-vm.yml
+    permissions:
+      contents: read
+      actions: read
+    with:
+      stage: ${{ inputs.stage }}
+      review_run: ${{ inputs.review_run }}
+      review_sha256: ${{ inputs.review_sha256 }}
+      plan_digest: ${{ inputs.plan_digest }}
+      runner: ${{ inputs.runner }}
