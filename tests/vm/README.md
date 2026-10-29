@@ -9,8 +9,9 @@ integration branch merges main without rewriting PR #13. PR #13 and this integra
 
 Run the existing `ci.yml` dispatch entry with `stage=prepare` at the reviewed
 integration revision (it calls `debian-vm.yml`). During development, pushes to the
-exact `ci/debian13-snapshot-vm` branch also run preparation only; they cannot approve
-or enter acceptance. The new workflow is not yet registered on main, and the CLI
+exact `ci/debian13-snapshot-vm` branch run preparation only when the commit title
+starts with `[vm-prepare] `; ordinary pushes do not provision VMs. This marker
+cannot approve or enter acceptance. The new workflow is not yet registered on main, and the CLI
 credential cannot dispatch workflows. The scoped push entry enables hosted
 preparation without changing main or granting permissions. Preparation builds the Rust CLI and container-scoped QEMU tooling, downloads
 the official Debian generic amd64 image over HTTPS, checks Debian's published SHA512,
@@ -47,9 +48,12 @@ unseen transaction or reuse a digest from the older container simulation.
 A separate deliberate `stage=accept` workflow dispatch with `review_run`,
 `review_sha256` and `plan_digest` is the explicit administrator approval of that exact
 snapshot transaction and the destructive disposable-guest tests described below.
-Generic permission to run CI is not that approval. No automatic dispatch or PR event
-can install. Missing digests, wrong revision/run provenance, changed files or changed
-guest transaction fail closed. This is the digest-bound manual workflow alternative
+Generic permission to run CI is not that approval. No ordinary push, automatic dispatch or PR event
+can install. The separate [signed push-approval gate](../../.ci/README.md) can also
+carry explicit exact-transaction approval without a dispatch token; it rejects
+branch creation/force pushes, unrelated changes, unsigned/wrong-owner commits,
+repeated records and workflow reruns before scheduling a VM. The example remains false. Missing digests, wrong revision/run provenance, changed files or changed
+guest transaction fail closed. Both explicit entry points preserve the digest-bound review alternative
 to a protected GitHub environment; it does not assume required reviewers are configured.
 Only authorized repository Actions operators can dispatch it. Keep that permission
 restricted to humans authorized to approve installation.

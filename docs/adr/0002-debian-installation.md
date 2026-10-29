@@ -41,3 +41,8 @@ Preparation and exact running-snapshot restoration passed on hosted KVM and TCG
 on fc9df23. The [review packet](../development/validation/v0.2-vm/README.md) retains
 the identical complete transaction and distinct VM manifests. Positive authorization
 and native installation acceptance remain unapproved/unverified.
+
+A narrowly filtered push can carry the same explicit approval: one signed owner
+commit changes only the dedicated approval record and names its exact manifest.
+Approval-commit identity is distinct from the frozen guest source; both are checked.
+No active approval is bundled with this mechanism. See [.ci/README.md](../../.ci/README.md).

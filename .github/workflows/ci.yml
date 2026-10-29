@@ -115,7 +115,7 @@ jobs:
           retention-days: 7
 
   snapshot-vm:
-    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/ci/debian13-snapshot-vm')
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/ci/debian13-snapshot-vm' && startsWith(github.event.head_commit.message, '[vm-prepare] '))
     uses: ./.github/workflows/debian-vm.yml
     permissions:
       contents: read

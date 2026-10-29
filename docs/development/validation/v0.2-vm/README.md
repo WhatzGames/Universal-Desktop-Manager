@@ -145,3 +145,12 @@ maintainer-script failure, native package repair, full guest power loss and phys
 GPU/input remain separate limitations. Issues #10/#11 and milestone v0.2 stay open.
 No host package was installed, the PR #13/setup worktrees were preserved, and offline CachyOS
 miix320 was not used or given internet access.
+
+## GitHub-only push route
+
+The [dedicated signed push gate](../../../../.ci/README.md) avoids workflow-dispatch
+credential changes and local execution. Publishing the gate is not approval. The
+example is false, and no true record is included on the integration branch. The
+approval commit must name this exact manifest/source/run/transaction and pass all
+branch, path, signing, owner, single-commit and repeat/rerun checks. It checks out
+the frozen guest source rather than treating the approval commit as a new snapshot.

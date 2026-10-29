@@ -2,6 +2,12 @@ name: Debian 13 snapshot VM review
 on:
   workflow_call:
     inputs:
+      source_revision:
+        type: string
+        default: ''
+      approval_commit:
+        type: string
+        default: ''
       stage:
         required: true
         type: string
@@ -51,8 +57,8 @@ permissions:
   actions: read
 jobs:
   vm:
-    if: inputs.stage == 'prepare' || github.event_name == 'workflow_dispatch'
-    # Only a deliberate human workflow_dispatch can reach the install path.
+    if: inputs.stage == 'prepare' || github.event_name == 'workflow_dispatch' || (inputs.stage == 'accept' && github.event_name == 'push' && github.ref == 'refs/heads/ci/debian13-install-approved' && inputs.approval_commit == github.sha && github.run_attempt == 1)
+    # Push acceptance receives only outputs from the signed approval validation job.
     runs-on: ${{ inputs.runner }}
     timeout-minutes: 120
     concurrency:
@@ -62,6 +68,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+          ref: ${{ inputs.source_revision || github.sha }}
       - name: Validate explicit approval inputs and preparation provenance
         if: inputs.stage == 'accept'
         env:
@@ -69,9 +76,19 @@ jobs:
           REVIEW_RUN: ${{ inputs.review_run }}
           REVIEW_SHA256: ${{ inputs.review_sha256 }}
           PLAN_DIGEST: ${{ inputs.plan_digest }}
+          REVIEW_SOURCE: ${{ inputs.source_revision || github.sha }}
+          APPROVAL_COMMIT: ${{ inputs.approval_commit }}
         run: |
           python3 - <<'PY'
           import json, os, re, subprocess
+          if os.environ['APPROVAL_COMMIT']:
+              assert os.environ['GITHUB_EVENT_NAME'] == 'push'
+              assert os.environ['GITHUB_REF'] == 'refs/heads/ci/debian13-install-approved'
+              assert os.environ['APPROVAL_COMMIT'] == os.environ['GITHUB_SHA']
+              assert os.environ['GITHUB_RUN_ATTEMPT'] == '1'
+          else:
+              assert os.environ['REVIEW_SOURCE'] == os.environ['GITHUB_SHA']
+          assert re.fullmatch('[0-9a-f]{40}', os.environ['REVIEW_SOURCE'])
           assert os.environ['REVIEW_RUN'].isdigit()
           for field in ('REVIEW_SHA256', 'PLAN_DIGEST'):
               assert re.fullmatch('[0-9a-f]{64}', os.environ[field]), f'Missing exact approval: {field}'
@@ -79,7 +96,7 @@ jobs:
           run = json.loads(subprocess.check_output(['gh', 'api', f'repos/{repo}/actions/runs/{os.environ["REVIEW_RUN"]}']))
           assert run['conclusion'] == 'success'
           assert run['event'] == 'workflow_dispatch' or (run['event'] == 'push' and run['head_branch'] == 'ci/debian13-snapshot-vm')
-          assert run['head_sha'] == os.environ['GITHUB_SHA']
+          assert run['head_sha'] == os.environ['REVIEW_SOURCE']
           assert run['path'] in ('.github/workflows/ci.yml', '.github/workflows/debian-vm.yml', '.github/workflows/debian-vm-tcg.yml')
           assert run['head_repository']['full_name'] == repo
           assert str(run['id']) != os.environ['GITHUB_RUN_ID']
@@ -100,6 +117,7 @@ jobs:
       - name: Measure runner acceleration and run real guest
         env:
           STAGE: ${{ inputs.stage }}
+          REVIEW_SOURCE: ${{ inputs.source_revision || github.sha }}
           SOFTWARE_ONLY: ${{ inputs.software_only }}
           REVIEW_SHA256: ${{ inputs.review_sha256 }}
           PLAN_DIGEST: ${{ inputs.plan_digest }}
@@ -110,7 +128,7 @@ jobs:
           if test "$SOFTWARE_ONLY" != true && test -c /dev/kvm; then device=(--device /dev/kvm); fi
           docker run --rm "${device[@]}" --mount type=bind,src="$PWD",dst=/source,readonly \
             --mount type=bind,src="$PWD/vm-state",dst=/state \
-            udm-vm-tooling "$STAGE" --source "$GITHUB_SHA" \
+            udm-vm-tooling "$STAGE" --source "$REVIEW_SOURCE" \
             --review-sha256 "$REVIEW_SHA256" --plan-digest "$PLAN_DIGEST"
       - name: Publish exact review identity
         if: inputs.stage == 'prepare'

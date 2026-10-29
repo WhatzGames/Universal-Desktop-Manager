@@ -47,3 +47,8 @@ reviewed helper transaction; it is not the deployment policy or an interactive
 authentication test. Real KVM/TCG guest preparation, default Polkit denial and RAM/disk restoration
 are [validated](../development/validation/v0.2-vm/README.md). Installation acceptance
 remains pending explicit transaction approval and actual commit/failure evidence.
+
+The [signed push approval gate](../../.ci/README.md) is a second explicit entry
+point for GitHub-only execution. It validates a single-file signed owner approval
+and the small immutable review artifact before scheduling VM acceptance. Ordinary
+pushes and workflow reruns cannot authorize a package commit.

@@ -129,3 +129,17 @@ Wiki source pages and published manual distinguish preparation from installation
 signed a13db2c publishes the verified preparation/restore status while keeping
 installation unapproved. Personal SSH signing and
 My Flow attribution hooks are retained. No permission scope was broadened.
+
+## Narrow push approval path (implementation)
+
+The user selected GitHub-only push execution with strict overtrigger protection.
+`.ci/README.md` specifies the dedicated existing branch + single approval-file
+change + one non-forced signed owner commit + exact manifest commit title. JSON
+must explicitly approve exact source/run/manifest/transaction/mode; small review
+artifacts are validated before scheduling the expensive VM. Semantic repeats and
+workflow reruns cannot install. No true approval record is published by the
+integration branch. Choosing this mechanism is not approval of the 579-package plan.
+The reusable workflow executes the reviewed source independently of the newer
+approval commit; prior fc9df23 snapshots remain the candidate. Ordinary integration
+pushes no longer provision VMs: `[vm-prepare] ` is required for push preparation.
+Native acceptance remains unapproved and not run.
