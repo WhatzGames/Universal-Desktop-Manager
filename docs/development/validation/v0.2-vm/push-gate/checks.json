@@ -1,0 +1,22 @@
+{
+  "gate_source": "6b4559a46263974bff2dd949db725a6732c98d93",
+  "negative_commit": "9798688afc7de1bece8e11a7b49e24fb72b902e8",
+  "negative_run": 40965706342,
+  "expected_rejection": "Transaction is not explicitly approved",
+  "negative_jobs": {
+    "approval": "failure",
+    "acceptance": "skipped"
+  },
+  "ordinary_push_commit": "d2b8ec810e96f0928a0885d67d9a00e6d6ccb1b2",
+  "ordinary_push_runs": [
+    {
+      "conclusion": "success",
+      "databaseId": 40965924225,
+      "headSha": "d2b8ec810e96f0928a0885d67d9a00e6d6ccb1b2",
+      "status": "completed",
+      "workflowName": "CI"
+    }
+  ],
+  "approval_workflow_not_triggered_by_ordinary_push": true,
+  "installation_executed": false
+}

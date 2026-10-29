@@ -61,6 +61,8 @@ def check_review(record, run, manifest_bytes, repository):
     require(manifest.get('plan_digest') == record['plan_digest'], 'Manifest transaction differs')
     require(manifest.get('snapshot_restore_verified') is True, 'Snapshot restoration was not verified')
     require(manifest.get('acceleration') == ('tcg' if record['software_only'] else 'kvm'), 'Snapshot acceleration differs')
+    if not record['software_only']:
+        require(manifest.get('cpu_model') == 'Westmere-v2,phys-bits=40,enforce', 'Host-bound KVM snapshot is not portable; prepare again')
 
 
 def main():

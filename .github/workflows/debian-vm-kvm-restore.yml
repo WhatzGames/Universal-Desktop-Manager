@@ -1,0 +1,70 @@
+name: Read-only KVM snapshot portability
+on:
+  push:
+    branches: [ci/debian13-snapshot-vm]
+    paths: [.github/workflows/debian-vm-kvm-restore.yml]
+permissions:
+  contents: read
+  actions: read
+jobs:
+  restore-only:
+    if: startsWith(github.event.head_commit.message, '[vm-kvm-restore] ')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fc9df23f06b5b79c06a7259bc9f0358ae388acc8
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: debian13-reviewed-snapshot
+          path: vm-state
+          run-id: 40952610168
+          github-token: ${{ github.token }}
+      - run: docker build -t udm-vm-tooling tests/vm
+      - name: Restore original running guest without installation
+        run: |
+          test -c /dev/kvm
+          lscpu > vm-state/runner-cpu.txt
+          docker run --rm -i --device /dev/kvm --entrypoint /usr/bin/python3 \
+            --mount type=bind,src="$PWD",dst=/source,readonly \
+            --mount type=bind,src="$PWD/vm-state",dst=/state udm-vm-tooling - <<'PY'
+          import importlib.util, json, os, time
+          from pathlib import Path
+          spec = importlib.util.spec_from_file_location('runner', '/source/tests/vm/run.py')
+          runner = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(runner)
+          manifest = json.loads((runner.STATE / 'review.json').read_text())
+          runner.validate_review(manifest,
+              '24888a508b6575c42e8de9d9bfae490d5e0bce3f6b7161f8255b975ed6bcc621',
+              'f958050ea5fdaf430c5ecec486d6b14529d02e9c6791e0c2850973071b8a6e3f',
+              'fc9df23f06b5b79c06a7259bc9f0358ae388acc8')
+          assert manifest['qemu_sha256'] == runner.sha('/usr/bin/qemu-system-x86_64')
+          assert manifest['host_architecture'] == os.uname().machine
+          assert manifest['acceleration'] == runner.acceleration()['selected'] == 'kvm'
+          baseline = json.loads((runner.STATE / 'baseline.json').read_text())
+          started = time.monotonic()
+          vm = runner.VM(restore=True)
+          try:
+              restored = runner.export('cross-run-restored', vm.ready(180))
+              assert all(restored[key] == baseline[key] for key in ('baseline', 'review', 'inventory'))
+              result = dict(passed=True, elapsed_seconds=time.monotonic() - started,
+                            source=manifest['source_revision'], scope='Read-only KVM restore/capture; no authorization or install')
+              runner.write(runner.STATE / 'cross-run-check.json', result)
+              print(json.dumps(result), flush=True)
+          finally:
+              vm.close()
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: kvm-cross-run-restore
+          path: |
+            vm-state/*check.json
+            vm-state/*restored.json
+            vm-state/*.png
+            vm-state/*.log
+            vm-state/runner-cpu.txt
+            vm-state/execution.json
+          retention-days: 7

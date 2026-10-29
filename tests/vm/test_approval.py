@@ -80,5 +80,16 @@ class Approval(unittest.TestCase):
             gate.check_review({**self.record, 'plan_digest': '0' * 64}, run, manifest, 'WhatzGames/Universal-Desktop-Manager')
 
 
+    def test_old_host_passthrough_kvm_snapshot_is_rejected(self):
+        record = {**self.record, 'software_only': False,
+                  'review_sha256': '24888a508b6575c42e8de9d9bfae490d5e0bce3f6b7161f8255b975ed6bcc621'}
+        manifest = Path('docs/development/validation/v0.2-vm/kvm-review.json').read_bytes()
+        run = dict(conclusion='success', head_sha=record['source_revision'],
+                   head_repository={'full_name': 'WhatzGames/Universal-Desktop-Manager'},
+                   event='push', head_branch='ci/debian13-snapshot-vm', path='.github/workflows/ci.yml')
+        with self.assertRaisesRegex(ValueError, 'Host-bound KVM'):
+            gate.check_review(record, run, manifest, 'WhatzGames/Universal-Desktop-Manager')
+
+
 if __name__ == '__main__':
     unittest.main()

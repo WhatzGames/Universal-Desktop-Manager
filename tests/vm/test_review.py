@@ -99,5 +99,24 @@ class Source(unittest.TestCase):
                 prepare.assert_not_called()
 
 
+class CpuModel(unittest.TestCase):
+    def test_kvm_uses_fixed_migration_model_instead_of_host_passthrough(self):
+        from unittest.mock import patch
+        old_state = vm.STATE
+        try:
+            with tempfile.TemporaryDirectory() as directory:
+                vm.STATE = Path(directory)
+                (vm.STATE / 'uuid').write_text('9226415a-9a66-4157-89a1-ae8e5b3b6546')
+                for acceleration, cpu in (('kvm', vm.KVM_CPU), ('tcg', 'max')):
+                    with patch.object(vm, 'acceleration', return_value={'selected': acceleration}), patch.object(vm.subprocess, 'Popen') as popen, patch.object(vm.subprocess, 'check_output', return_value='QEMU test version'):
+                        instance = vm.VM()
+                        command = popen.call_args.args[0]
+                        self.assertEqual(command[command.index('-cpu') + 1], cpu)
+                        self.assertNotEqual(cpu, 'host')
+                        instance.log.close()
+        finally:
+            vm.STATE = old_state
+
+
 if __name__ == '__main__':
     unittest.main()

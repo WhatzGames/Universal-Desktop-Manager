@@ -130,7 +130,7 @@ signed a13db2c publishes the verified preparation/restore status while keeping
 installation unapproved. Personal SSH signing and
 My Flow attribution hooks are retained. No permission scope was broadened.
 
-## Narrow push approval path (implementation)
+## Narrow push approval path (validated denial/filtering)
 
 The user selected GitHub-only push execution with strict overtrigger protection.
 `.ci/README.md` specifies the dedicated existing branch + single approval-file
@@ -143,3 +143,30 @@ The reusable workflow executes the reviewed source independently of the newer
 approval commit; prior fc9df23 snapshots remain the candidate. Ordinary integration
 pushes no longer provision VMs: `[vm-prepare] ` is required for push preparation.
 Native acceptance remains unapproved and not run.
+
+Gate source 6b4559a is GitHub Verified; integration CI 40965589506 passes with
+heavy VM work skipped for an ordinary push. Dedicated branch/worktree
+`ci/debian13-install-approved` / `Universal-Desktop-Manager-install-approved` is
+bootstrapped. Its false-record test 40965706342 is an EXPECTED denial: approval
+fails specifically for approved:false and acceptance is skipped. A subsequent
+documentation-only push (40965924225) creates only normal CI, no approval workflow.
+[Gate evidence](docs/development/validation/v0.2-vm/push-gate/README.md).
+All required Cargo checks/report, 7 Rust tests, 16 helper tests and 10 VM-focused
+tests pass. The actual watched record remains false; no true approval is published.
+The user selected GitHub-only execution. An eventual signed true approval push
+uses the existing SSH transport and frozen guest source, so CLI dispatch permission
+and local VM execution are no longer needed for acceptance. Real install remains
+unapproved and unverified; #11 and v0.2 remain open.
+
+## KVM proposal correction — independent runner failure
+
+Read-only KVM cross-runner test 40969898313 rejected the original host-bound saved
+register state: initial guest Intel Xeon 8573C, new runner AMD EPYC 7763. No guest
+capture, authorization or installation ran. Old KVM manifest 24888a... is withdrawn
+for hosted push acceptance, and the gate rejects it. Same-host restore evidence did
+not prove cross-host portability. [Failure evidence](docs/development/validation/v0.2-vm/kvm-portability-failure/README.md).
+Replacement KVM preparation uses a fixed versioned Westmere-v2 model, fixed 40-bit
+physical width and enforced feature support, recording/checking the model in the
+manifest. A fresh candidate and independent restore are required before approval.
+TCG remains fallback-only; its separate experiment now requires [vm-prepare-tcg].
+No exact package transaction is approved; no true approval record exists.

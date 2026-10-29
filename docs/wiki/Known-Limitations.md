@@ -15,3 +15,7 @@ records the original desktop and exact package transaction. Installation require
 a separate explicit approval tied to that snapshot, source revision and transaction
 digest. Passing the existing Plasma container check does not validate installation
 safety, interactive authorization or preservation of your current desktop.
+
+Developer VM installation tests can run entirely on GitHub after explicit approval
+of the reviewed transaction and snapshot. Ordinary pushes do not install packages;
+actual installation acceptance is still pending.

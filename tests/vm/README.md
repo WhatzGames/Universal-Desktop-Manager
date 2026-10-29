@@ -137,3 +137,13 @@ docker run --rm --mount type=bind,src="$PWD",dst=/source,readonly \
 
 Add `--device /dev/kvm` only after checking acceleration. Never run `accept` before
 reviewing and explicitly approving its exact manifest and transaction digests.
+
+## KVM running-state portability correction
+
+The original host-passthrough KVM snapshot failed an independent Intel-to-AMD runner
+restore before installation. [Evidence](../../docs/development/validation/v0.2-vm/kvm-portability-failure/README.md).
+KVM now uses `Westmere-v2,phys-bits=40,enforce`, records that exact CPU model in the
+manifest and requires it on acceptance. Unsupported features fail initialization.
+A replacement must pass preparation and cross-runner restoration before approval;
+no universal hardware-migration claim follows. TCG remains an explicitly requested
+fallback experiment (`[vm-prepare-tcg] `), not part of normal KVM preparation.
