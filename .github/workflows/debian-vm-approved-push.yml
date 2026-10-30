@@ -1,0 +1,44 @@
+name: Approved Debian 13 VM installation
+on:
+  push:
+    branches: [ci/debian13-install-approved]
+    paths: [.ci/debian13-approval.json]
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: debian13-push-approval
+  cancel-in-progress: false
+jobs:
+  approval:
+    if: github.run_attempt == 1
+    runs-on: ubuntu-24.04
+    outputs:
+      source_revision: ${{ steps.validate.outputs.source_revision }}
+      review_run: ${{ steps.validate.outputs.review_run }}
+      review_sha256: ${{ steps.validate.outputs.review_sha256 }}
+      plan_digest: ${{ steps.validate.outputs.plan_digest }}
+      software_only: ${{ steps.validate.outputs.software_only }}
+      approval_commit: ${{ steps.validate.outputs.approval_commit }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+      - id: validate
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 tests/vm/approval.py
+  acceptance:
+    needs: approval
+    if: github.run_attempt == 1 && needs.approval.outputs.approval_commit == github.sha
+    uses: ./.github/workflows/debian-vm.yml
+    with:
+      stage: accept
+      runner: ubuntu-24.04
+      source_revision: ${{ needs.approval.outputs.source_revision }}
+      approval_commit: ${{ needs.approval.outputs.approval_commit }}
+      review_run: ${{ needs.approval.outputs.review_run }}
+      review_sha256: ${{ needs.approval.outputs.review_sha256 }}
+      plan_digest: ${{ needs.approval.outputs.plan_digest }}
+      software_only: ${{ needs.approval.outputs.software_only == 'true' }}

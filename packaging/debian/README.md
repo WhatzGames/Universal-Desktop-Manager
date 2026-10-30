@@ -1,8 +1,13 @@
 # Debian 13 package helper (v0.2 development)
 
+This page describes the existing Python-backed candidate. The required product
+architecture is Rust for the application and privileged helper; the Python helper
+is the current prototype. [Package-helper architecture](../../docs/adr/0002-debian-installation.md).
+The commands below document current behavior, not completed Rust migration.
+
 Prerequisites on the disposable Debian 13 VM: system Python 3, `python3-apt`,
 `polkitd` and `pkexec`. These are system dependencies, not pip dependencies.
-Do not provision this helper on a primary desktop while VM acceptance is pending.
+This remains experimental; the passing disposable VM suite is not primary-desktop support.
 
 Build UDM using the pinned Rust toolchain. An administrator installs the reviewed
 helper and policy, with root-owned parents and no group/world write permissions:
@@ -49,3 +54,10 @@ uninstall dependencies, downgrade or automatically rerun repair commands.
 Verification checks the installed target packages, executable launcher and a
 matching Wayland session definition. It does not start a session or establish GPU
 readiness. Installation and v0.3 session activation remain separate.
+
+VM preparation uploads its full package plan, manifest, original desktop captures
+and snapshot as GitHub Actions artifacts. Review those artifacts before approving
+an exact transaction. Installation/failure logs stay with the run; retrieve them
+with gh run view or gh run download. Do not commit run outputs to the repository.
+Interactive password prompting, native repair and physical hardware require separate
+validation. Every new transaction still requires exact human approval.

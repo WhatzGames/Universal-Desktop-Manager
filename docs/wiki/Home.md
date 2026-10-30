@@ -4,7 +4,7 @@ UDM is experimental, with no packaged release. The v0.1 foundation is merged in
 [PR #1](https://github.com/WhatzGames/Universal-Desktop-Manager/pull/1).
 Its default command prints a read-only report of host basics, standard session
 entries and KDE status. v0.2 adds an experimental Debian 13 package workflow;
-installation acceptance in a snapshot VM is still pending.
+the approved disposable VM installation/failure/recovery suite passed. This is not a supported release.
 
 Start with [Getting Started](Getting-Started), [First Launch](First-Launch) and
 [Quick Start](Quick-Start). See [Installing Desktops](Installing-Desktops),

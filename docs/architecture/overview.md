@@ -21,5 +21,6 @@ See [ADR](../adr/0001-foundation.md), [design](../design/discovery.md), and
 The v0.2 candidate adds `packages` CLI dispatch and a separate Debian Python APT
 helper. Native dependency resolution stays in Debian's binding; Polkit is the
 privilege boundary. See [ADR 0002](../adr/0002-debian-installation.md) and
-[installation design](../design/installation.md). Snapshot-VM installation and
-actual desktop continuity are unverified. No compositor or session runtime was added.
+[installation design](../design/installation.md). The approved disposable Debian 13 snapshot suite passed real installation and
+original desktop continuity, documented failure/recovery and isolated Plasma checks.
+[VM test protocol and limits](../../tests/vm/README.md). No compositor or session runtime was added.

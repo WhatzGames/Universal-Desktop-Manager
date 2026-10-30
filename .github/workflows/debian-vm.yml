@@ -1,0 +1,178 @@
+name: Debian 13 snapshot VM review
+on:
+  workflow_call:
+    inputs:
+      source_revision:
+        type: string
+        default: ''
+      approval_commit:
+        type: string
+        default: ''
+      stage:
+        required: true
+        type: string
+      review_run:
+        type: string
+        default: ''
+      review_sha256:
+        type: string
+        default: ''
+      plan_digest:
+        type: string
+        default: ''
+      software_only:
+        description: Force QEMU software emulation for measured fallback validation
+        type: boolean
+        default: false
+      runner:
+        type: string
+        default: ubuntu-24.04
+  workflow_dispatch:
+    inputs:
+      stage:
+        description: Prepare review artifacts or explicitly approve and accept that exact transaction
+        required: true
+        type: choice
+        options: [prepare, accept]
+      review_run:
+        description: For accept only, successful preparation run ID at this exact source revision
+        type: string
+      review_sha256:
+        description: For accept only, SHA256 of reviewed review.json (binds snapshot and complete transaction)
+        type: string
+      plan_digest:
+        description: For accept only, exact approved UDM transaction digest
+        type: string
+      software_only:
+        description: Force QEMU software emulation for measured fallback validation
+        type: boolean
+        default: false
+      runner:
+        description: Hosted is experimental TCG unless measured KVM is usable; dedicated runner must be disposable
+        type: choice
+        options: [ubuntu-24.04, udm-disposable-kvm]
+        default: ubuntu-24.04
+permissions:
+  contents: read
+  actions: read
+jobs:
+  vm:
+    if: inputs.stage == 'prepare' || github.event_name == 'workflow_dispatch' || (inputs.stage == 'accept' && github.event_name == 'push' && github.ref == 'refs/heads/ci/debian13-install-approved' && inputs.approval_commit == github.sha && github.run_attempt == 1)
+    # Push acceptance receives only outputs from the signed approval validation job.
+    runs-on: ${{ inputs.runner }}
+    timeout-minutes: 120
+    concurrency:
+      group: udm-snapshot-${{ github.ref }}-${{ inputs.stage }}-${{ inputs.software_only }}
+      cancel-in-progress: ${{ inputs.stage == 'prepare' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          ref: ${{ inputs.source_revision || github.sha }}
+      - name: Validate explicit approval inputs and preparation provenance
+        if: inputs.stage == 'accept'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REVIEW_RUN: ${{ inputs.review_run }}
+          REVIEW_SHA256: ${{ inputs.review_sha256 }}
+          PLAN_DIGEST: ${{ inputs.plan_digest }}
+          REVIEW_SOURCE: ${{ inputs.source_revision || github.sha }}
+          APPROVAL_COMMIT: ${{ inputs.approval_commit }}
+        run: |
+          python3 - <<'PY'
+          import json, os, re, subprocess
+          if os.environ['APPROVAL_COMMIT']:
+              assert os.environ['GITHUB_EVENT_NAME'] == 'push'
+              assert os.environ['GITHUB_REF'] == 'refs/heads/ci/debian13-install-approved'
+              assert os.environ['APPROVAL_COMMIT'] == os.environ['GITHUB_SHA']
+              assert os.environ['GITHUB_RUN_ATTEMPT'] == '1'
+          else:
+              assert os.environ['REVIEW_SOURCE'] == os.environ['GITHUB_SHA']
+          assert re.fullmatch('[0-9a-f]{40}', os.environ['REVIEW_SOURCE'])
+          assert os.environ['REVIEW_RUN'].isdigit()
+          for field in ('REVIEW_SHA256', 'PLAN_DIGEST'):
+              assert re.fullmatch('[0-9a-f]{64}', os.environ[field]), f'Missing exact approval: {field}'
+          repo = os.environ['GITHUB_REPOSITORY']
+          run = json.loads(subprocess.check_output(['gh', 'api', f'repos/{repo}/actions/runs/{os.environ["REVIEW_RUN"]}']))
+          assert run['conclusion'] == 'success'
+          assert run['event'] == 'workflow_dispatch' or (run['event'] == 'push' and run['head_branch'] == 'ci/debian13-snapshot-vm')
+          assert run['head_sha'] == os.environ['REVIEW_SOURCE']
+          assert run['path'] in ('.github/workflows/ci.yml', '.github/workflows/debian-vm.yml', '.github/workflows/debian-vm-tcg.yml')
+          assert run['head_repository']['full_name'] == repo
+          assert str(run['id']) != os.environ['GITHUB_RUN_ID']
+          PY
+      - uses: actions/download-artifact@v4
+        if: inputs.stage == 'accept'
+        with:
+          name: debian13-reviewed-snapshot
+          path: vm-state
+          run-id: ${{ inputs.review_run }}
+          github-token: ${{ github.token }}
+      - uses: dtolnay/rust-toolchain@1.99.1
+        if: inputs.stage == 'prepare'
+      - run: cargo build --locked -p udm-app
+        if: inputs.stage == 'prepare'
+      - name: Load newest successful tooling image and reject reviewed-image drift
+        env:
+          GH_TOKEN: ${{ github.token }}
+          STAGE: ${{ inputs.stage }}
+          REVIEW_SHA256: ${{ inputs.review_sha256 }}
+        run: |
+          review=()
+          if test "$STAGE" = accept; then review=(--review-sha256 "$REVIEW_SHA256"); fi
+          python3 tests/vm/tooling.py --state vm-state "${review[@]}"
+      - name: Measure runner acceleration and run real guest
+        env:
+          STAGE: ${{ inputs.stage }}
+          REVIEW_SOURCE: ${{ inputs.source_revision || github.sha }}
+          SOFTWARE_ONLY: ${{ inputs.software_only }}
+          REVIEW_SHA256: ${{ inputs.review_sha256 }}
+          PLAN_DIGEST: ${{ inputs.plan_digest }}
+        run: |
+          mkdir -p vm-state
+          # Device exposure is limited to KVM; no host display, guest SSH or privileged container.
+          device=()
+          if test "$SOFTWARE_ONLY" != true && test -c /dev/kvm; then device=(--device /dev/kvm); fi
+          docker run --rm "${device[@]}" --mount type=bind,src="$PWD",dst=/source,readonly \
+            --mount type=bind,src="$PWD/vm-state",dst=/state \
+            udm-vm-tooling "$STAGE" --source "$REVIEW_SOURCE" \
+            --review-sha256 "$REVIEW_SHA256" --plan-digest "$PLAN_DIGEST"
+      - name: Publish exact review identity
+        if: inputs.stage == 'prepare'
+        run: |
+          python3 - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import hashlib, json
+          from pathlib import Path
+          p = Path('vm-state/review.json'); r = json.loads(p.read_text())
+          print('Review baseline.json (full package transaction), baseline.png, denial.json and review.json before approval.')
+          print('Source:', r['source_revision'])
+          print('Review SHA256:', hashlib.sha256(p.read_bytes()).hexdigest())
+          print('Plan digest:', r['plan_digest'])
+          print('Acceleration:', r['acceleration'], 'prepare seconds:', r['prepare_seconds'])
+          print('A separate accept dispatch with this run ID and both digests explicitly approves ONLY this snapshot transaction.')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: success() && inputs.stage == 'prepare'
+        with:
+          name: debian13-reviewed-snapshot
+          path: |
+            vm-state/guest.qcow2
+            vm-state/source.iso
+            vm-state/seed.iso
+            vm-state/uuid
+            vm-state/baseline.json
+            vm-state/review.json
+          retention-days: 7
+          compression-level: 1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: debian13-vm-evidence-${{ inputs.stage }}
+          path: |
+            vm-state/*.json
+            vm-state/*.png
+            vm-state/*.log
+            vm-state/*.txt
+            vm-state/SHA512SUMS
+            vm-state/plasma/
+          retention-days: 7

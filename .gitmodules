@@ -1,0 +1,3 @@
+[submodule "vendor/native-bindings"]
+	path = vendor/native-bindings
+	url = ../native-bindings.git

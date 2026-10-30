@@ -1,0 +1,8 @@
+{
+  "approved": false,
+  "source_revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "review_run": 1,
+  "review_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "plan_digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "software_only": true
+}
