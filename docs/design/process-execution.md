@@ -23,6 +23,21 @@ The privileged helper must remain narrow and separately authorized, regardless o
 which library/interface performs the work. Native bindings require validation and
 safe memory/lifetime handling too; library use is not a guarantee against all RCE.
 
+## Rust binding maintenance requirement
+
+Only well-maintained Rust bindings may be adopted. Before adding one, document:
+
+- Identifiable maintainers and evidence of ongoing relevant maintenance, including
+  upstream or maintained downstream fixes and handling of reported problems.
+- Explicit compatibility with the native-library/distribution versions we support.
+- Meaningful tests/CI and a credible way to handle security and ABI changes.
+
+Evaluate actual support rather than star counts or a release-age cutoff. A docs.rs
+page or distribution package alone does not establish maintenance. No candidate is
+selected or approved yet. If no binding qualifies or required API coverage is absent,
+record the gap; do not quietly use an abandoned dependency, unreviewed custom bridge,
+CLI wrapper or non-Rust application backend as a workaround.
+
 ## Current implementation inventory
 
 | Operation | Current implementation | Requirement status |

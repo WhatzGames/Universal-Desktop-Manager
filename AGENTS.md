@@ -16,6 +16,9 @@ approved target architecture. Python may remain in development/CI/test tooling.
 FFI to system libraries is explicitly allowed. Keep all UDM-owned application logic
 in Rust; foreign bridge code may marshal types/calls, not implement UDM policy.
 Do not replace native bindings with shell wrappers or embedded interpreter backends.
+Only adopt Rust bindings with documented evidence of active maintenance and support
+for our target native-library versions. A crate/package listing alone is not approval.
+If none qualifies, report the integration gap instead of silently adding a substitute.
 
 Application runtime is library/API-first: use native libraries/bindings and structured
 IPC, not shell command evaluation or new CLI-output wrappers. Never route data through

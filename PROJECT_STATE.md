@@ -1,5 +1,11 @@
 # Current project state
 
+Rust bindings are permitted only with verified, documented maintenance and support
+for our target native libraries. Selection must identify maintainers, compatibility
+and test/CI evidence; availability alone is insufficient. No binding has been selected
+or maintenance-approved. Record an integration gap if none qualifies; no silent
+abandoned/custom/CLI/non-Rust substitute. See the process-execution contract.
+
 Rust language requirement confirmed 2026-10-30: all shipped UDM-owned runtime code,
 including the privileged package helper, must be Rust. The Python backend was an
 implementation shortcut and still requires migration; it is not an approved target

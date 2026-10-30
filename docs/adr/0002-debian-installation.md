@@ -11,10 +11,13 @@ privilege/audit semantics when replacing the remaining process-based interfaces.
 
 The user confirmed on 2026-10-30 that Rust applies to every shipped UDM-owned runtime
 component, including the privileged helper. The required replacement is a Rust
-helper using maintained Rust bindings to native APT, or a narrowly reviewed native
-bridge where binding coverage is insufficient. Rust bindings exist; suitability
+helper using well-maintained Rust bindings to native APT. Rust bindings exist; suitability
 for the complete existing safety contract still requires evaluation. Do not replace
 native resolution with a new ad-hoc resolver or shell/CLI wrappers.
+The user requires verified maintenance, not merely availability. Record maintainers,
+relevant upstream/downstream activity, supported Debian/APT versions and test/CI
+evidence before selection. If no qualifying binding covers the safety contract,
+report the gap; do not silently introduce an abandoned crate or custom replacement.
 
 FFI is explicitly approved: all UDM-owned transaction policy, validation, authorization,
 workflow, journaling and recovery logic must stay in Rust. A native bridge may adapt
@@ -68,7 +71,8 @@ Rust replacement. A changed helper requires fresh native verification and exact 
 transaction review before any further installation.
 
 Rust binding reference: [rust-apt/libapt-pkg](https://docs.rs/rust-apt/latest/rust_apt/).
-This is an evaluated option to investigate, not an added dependency or coverage claim.
+This is a research reference, not an approved dependency, maintenance assessment or
+coverage claim. No Rust binding has been selected.
 
 A narrowly filtered push can carry the same explicit approval: one signed owner
 commit changes only the dedicated approval record and names its exact manifest.

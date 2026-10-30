@@ -43,6 +43,9 @@ UDM is a Linux application for discovering, installing, configuring, and switchi
   types/calls. A Python
   product helper is not the target architecture. Python development/CI/test tooling
   is separate. Existing Python backend implementation requires migration.
+- **Rust binding maintenance:** adopt only well-maintained bindings with documented
+  maintainer, compatibility and testing evidence. No binding is approved merely by
+  being available; follow the [selection contract](../design/process-execution.md).
 - **Control plane:** Bevy ECS (Bevy may run headless; graphical UI eventually Bevy UI, subject to practical validation).
 - **Display/compositor runtime:** Smithay with its own calloop-driven event loop, initially run nested for safety.
 - **X11 compatibility:** Xwayland plus the appropriate X11 window-management implementation.
