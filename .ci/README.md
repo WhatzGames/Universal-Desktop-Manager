@@ -6,6 +6,11 @@ The separate TCG experiment requires `[vm-prepare-tcg] `; it is not run with nor
 KVM preparation.
 This marker never authorizes installation.
 
+VM jobs use the [newest successful tooling-image artifact](../tests/vm/TOOLING.md).
+Its full identity is bound into each new snapshot review. If a newer image appears
+after review, acceptance stops and needs fresh preparation/approval; it cannot
+silently select old tooling or substitute new tooling into an approved snapshot.
+
 Installation has a separate, fail-closed push gate:
 
 1. The branch already exists as `ci/debian13-install-approved`.
@@ -49,6 +54,5 @@ No true approval record is shipped by the integration branch. A false record may
 used on the dedicated branch to prove rejection; it cannot schedule the VM job.
 See [the full review packet](../docs/development/validation/v0.2-vm/README.md) and
 [the VM protocol](../tests/vm/README.md). Maintainer scripts remain privileged and
-installation acceptance is still pending actual approved execution.
-
-This approval branch currently contains only an explicitly false negative-test record.
+the [approved KVM suite passed](../docs/development/validation/v0.2-vm/kvm-fixed/accepted/README.md).
+This does not authorize another transaction or bypass the same gate.

@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "uid": 1001,
+  "renderer": "QPainter",
+  "layout": {
+    "desktops": 1,
+    "panels": 1
+  },
+  "scope": "KWin Wayland and Plasma shell startup, not a login session"
+}

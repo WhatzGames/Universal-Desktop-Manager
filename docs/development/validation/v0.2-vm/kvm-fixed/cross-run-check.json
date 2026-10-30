@@ -1,0 +1,6 @@
+{
+  "passed": true,
+  "elapsed_seconds": 9.235897174000002,
+  "source": "fa95a619c62e5692661d0991a855249186ae4138",
+  "scope": "Read-only KVM restore/capture; no authorization or install"
+}

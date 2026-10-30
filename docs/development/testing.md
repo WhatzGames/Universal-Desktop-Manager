@@ -82,22 +82,25 @@ Debian CI job provisions python3-apt in a disposable container and runs
 no removal/upgrade/display-manager additions, honest pre-install verification and
 identical before/after package inventory. It never installs KDE.
 
-[Evidence and snapshot-VM acceptance blocker](validation/v0.2/README.md). Real
+[Historical simulation evidence](validation/v0.2/README.md). Each real
 installation requires a newly reviewed VM-specific plan and explicit approval.
 
 ## Snapshot VM CI candidate
 
 [Real VM protocol, approval gate and limits](../../tests/vm/README.md). Preparation
-and acceptance are separate manual operations; the existing container job remains
+and acceptance are separate operations; the existing container job remains
 a fast component check. Real guest preparation/restore and default Polkit denial passed on hosted KVM
 and TCG; [exact review artifacts](validation/v0.2-vm/README.md) are retained.
-Real KDE commit/failure/continuity/component acceptance is still behind human
-approval. Keep issue #11 and milestone v0.2 open.
+The approved KVM suite passed real KDE commit, documented failure/interruption,
+desktop continuity, isolated Plasma and final recovery in run 40975763374.
+[Native evidence and limits](validation/v0.2-vm/kvm-fixed/accepted/README.md).
+Keep issue #11 and milestone v0.2 open for review/merge.
 
 ## Push approval filtering
 
 [Strict signed single-file approval gate](../../.ci/README.md) and
 [real GitHub denial/non-trigger evidence](validation/v0.2-vm/push-gate/README.md).
 Ordinary integration pushes skip VM preparation; `[vm-prepare] ` opts in explicitly.
-Only a separate exact approved record can schedule installation. Positive native
-acceptance is still gated; the expected false-record workflow failure is a denial test.
+Only a separate exact approved record can schedule installation. The expected false-record workflow failure is a denial test; the subsequent exact
+human-approved native acceptance passed. Reruns and semantic approval repeats remain
+rejected; no further installation is authorized by an ordinary documentation push.

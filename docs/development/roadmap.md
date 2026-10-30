@@ -16,12 +16,12 @@ Source: [complete master plan](master-plan.md). These phases are plans, not rele
 
 ### v0.2 — KDE installation
 
-Active implementation milestone after merged v0.1. Debian 13 native simulation and
-safety tests are implemented; real installation acceptance remains pending an approved
-snapshot VM. The [VM CI candidate](../../tests/vm/README.md) has passed real
-KVM and TCG guest preparation/restore; [full evidence and the exact approval packet](validation/v0.2-vm/README.md)
-remain separate from unapproved installation acceptance. Keep #10/#11 and the
-v0.2 milestone open until acceptance evidence exists. See [evidence](validation/v0.2/README.md). No release claim.
+The approved Debian 13 snapshot-VM suite passed native installation, stale/download/
+dpkg/interruption/verification failures, original XFCE/LightDM continuity, isolated
+real Plasma and final snapshot recovery. [Acceptance evidence](validation/v0.2-vm/kvm-fixed/accepted/README.md).
+Draft PR #14 combines merged PR #12 checks with draft PR #13's restricted helper.
+Keep #10/#11 and milestone v0.2 open for review/merge; this is not a supported release.
+Interactive password prompts, native repair and physical GPU/input remain unvalidated.
 
 - Native distribution package adapter (one distro first), transaction simulation, dependency/conflict review.
 - Privileged minimal helper + Polkit, authorized install, journal and failure handling.

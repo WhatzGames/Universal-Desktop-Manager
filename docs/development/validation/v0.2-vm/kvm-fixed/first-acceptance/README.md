@@ -1,0 +1,7 @@
+# First approved acceptance attempt
+
+[Run 40973063920](https://github.com/WhatzGames/Universal-Desktop-Manager/actions/runs/40973063920) passed signed approval and restored the reviewed KVM snapshot. Stale-plan rejection, real download failure and native dpkg pre-invoke failure passed with the original desktop baseline preserved. The suite then stopped at interruption; success, verification-failure, Plasma and final recovery were not reached.
+
+The interruption observer accepted any process named dpkg. The retained failure has no operation records and no package mutation in its native log. The helper runs dpkg --audit during planning, before writing its installing journal; the observer could kill that read-only process. This does not establish interrupted installation recovery. The correction requires the exact digest's installing journal, this invocation's process group and a mutating dpkg argument; a regression rejects planning/audit and unrelated processes.
+
+Original failure capture is retained in interruption-failure.json, completed cases in acceptance.json, compact native records in case-summaries.json. Full stdout/native logs and captures remain in the run's debian13-vm-evidence-accept artifact (12940554152). No retry or workflow rerun was issued. The human reaffirmed approval to complete the same GitHub-only suite after the harness correction; the transaction and suite scope must remain unchanged.

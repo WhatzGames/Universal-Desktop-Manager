@@ -45,8 +45,11 @@ The [snapshot VM CI candidate](../../tests/vm/README.md) preserves a running gue
 across a digest-bound manual approval gate. Its CI Polkit rule is limited to the
 reviewed helper transaction; it is not the deployment policy or an interactive
 authentication test. Real KVM/TCG guest preparation, default Polkit denial and RAM/disk restoration
-are [validated](../development/validation/v0.2-vm/README.md). Installation acceptance
-remains pending explicit transaction approval and actual commit/failure evidence.
+are [validated](../development/validation/v0.2-vm/README.md). The subsequent
+[approved KVM suite passed](../development/validation/v0.2-vm/kvm-fixed/accepted/README.md)
+actual commit/failure/interruption, original desktop continuity, isolated Plasma and
+final snapshot recovery. Interactive authorization, native repair and physical hardware
+remain outside that evidence.
 
 The [signed push approval gate](../../.ci/README.md) is a second explicit entry
 point for GitHub-only execution. It validates a single-file signed owner approval

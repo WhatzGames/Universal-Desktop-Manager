@@ -1,0 +1,20 @@
+{
+  "complete": false,
+  "outcomes": [
+    {
+      "case": "stale",
+      "passed": true,
+      "recovery": "Restore reviewed VM RAM/disk snapshot"
+    },
+    {
+      "case": "download-failure",
+      "passed": true,
+      "recovery": "Restore reviewed VM RAM/disk snapshot"
+    },
+    {
+      "case": "dpkg-failure",
+      "passed": true,
+      "recovery": "Restore reviewed VM RAM/disk snapshot"
+    }
+  ]
+}

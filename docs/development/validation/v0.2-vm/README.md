@@ -1,6 +1,8 @@
 # Debian 13 running-snapshot review — 2026-10-29
 
-**Historical preparation passed. No KDE installation is approved or executed.**
+**Current result: [approved KVM acceptance passed](kvm-fixed/accepted/README.md): real installation, documented failures, original desktop continuity, isolated Plasma and final snapshot recovery.**
+
+The remainder of this page retains historical evidence. Its old source/digests are not the accepted KVM identities.
 
 The original KVM candidate below is **withdrawn** for cross-runner use after a real
 Intel-to-AMD restore failure. [Evidence and replacement work](kvm-portability-failure/README.md).
@@ -114,8 +116,7 @@ gh workflow run ci.yml --repo WhatzGames/Universal-Desktop-Manager \
   -f runner=ubuntu-24.04 -F software_only=true
 ```
 
-The current CLI credential cannot dispatch workflows (403); no account permission
-was broadened. Both full hosted snapshots are also retained locally under
+The earlier CLI account could not dispatch workflows (403). WhatzGames is now the active account with repository ADMIN access; the selected route remains the strictly gated push. Both full hosted snapshots are also retained locally under
 `target/hosted-fc9df23-{kvm,tcg}-snapshot/`. All KVM files were hash-validated; the
 TCG files were hash-validated on an APFS clone before replay. The original copies
 remain intact.

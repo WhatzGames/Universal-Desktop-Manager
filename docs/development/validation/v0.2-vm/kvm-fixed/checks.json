@@ -1,0 +1,14 @@
+{
+  "same_runner_restored": true,
+  "independent_runner_restored": true,
+  "baseline_equal": true,
+  "transaction_equal": true,
+  "inventory_equal": true,
+  "package_selection_unchanged_from_historical": true,
+  "changed_state_files": [
+    "/var/lib/apt/lists/deb.debian.org_debian_dists_trixie-updates_InRelease",
+    "/var/lib/apt/lists/security.debian.org_debian-security_dists_trixie-security_InRelease"
+  ],
+  "full_baseline_sha256": "2a8dd0ba8a63bf7741c30c514d5dbabec6da5c881c3ff1d1764e4ecb2afcda96",
+  "independent_capture_sha256": "2a8dd0ba8a63bf7741c30c514d5dbabec6da5c881c3ff1d1764e4ecb2afcda96"
+}

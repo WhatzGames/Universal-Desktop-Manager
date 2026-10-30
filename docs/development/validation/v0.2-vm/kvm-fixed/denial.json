@@ -1,0 +1,44 @@
+{
+  "returncode": 1,
+  "stdout": "",
+  "stderr": "Error executing command as another user: Not authorized\n\nThis incident has been reported.\nError: Custom { kind: Other, error: \"Package helper exited exit status: 127\" }\n",
+  "baseline": {
+    "boot_id": "c642830d-c786-4977-a33d-8bc4c343d874",
+    "machine_id": "ffef6fb5589e4066838a2876d98a1a10",
+    "processes": {
+      "xfce4-session": [
+        {
+          "pid": 4367,
+          "start": "6564"
+        }
+      ],
+      "xfwm4": [
+        {
+          "pid": 4436,
+          "start": "6577"
+        }
+      ],
+      "xfdesktop": [
+        {
+          "pid": 4461,
+          "start": "6637"
+        }
+      ],
+      "xfce4-panel": [
+        {
+          "pid": 4445,
+          "start": "6629"
+        }
+      ]
+    },
+    "display_manager": {
+      "pid": 4326,
+      "start": "6518"
+    },
+    "sessions": [
+      "1"
+    ],
+    "dm_config": "/usr/sbin/lightdm\n"
+  },
+  "inventory_unchanged": true
+}

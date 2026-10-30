@@ -112,8 +112,15 @@ jobs:
         if: inputs.stage == 'prepare'
       - run: cargo build --locked -p udm-app
         if: inputs.stage == 'prepare'
-      - name: Build container-scoped QEMU tooling
-        run: docker build -t udm-vm-tooling tests/vm
+      - name: Load newest successful tooling image and reject reviewed-image drift
+        env:
+          GH_TOKEN: ${{ github.token }}
+          STAGE: ${{ inputs.stage }}
+          REVIEW_SHA256: ${{ inputs.review_sha256 }}
+        run: |
+          review=()
+          if test "$STAGE" = accept; then review=(--review-sha256 "$REVIEW_SHA256"); fi
+          python3 tests/vm/tooling.py --state vm-state "${review[@]}"
       - name: Measure runner acceleration and run real guest
         env:
           STAGE: ${{ inputs.stage }}

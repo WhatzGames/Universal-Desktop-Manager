@@ -1,21 +1,26 @@
 # Known limitations
 
 No GUI, desktop activation, compositor or live switching exists yet. The v0.2
-Debian 13 installer is experimental: native resolution is tested, but snapshot-VM
-installation, Polkit prompts, interrupted dpkg recovery and desktop continuity
-are not yet validated. There is no automatic package rollback.
+Debian 13 installer is experimental. There is no automatic package rollback.
 Other distributions have unsupported package queries. Session entries can be stale.
-Xwayland lets X11 apps use a Wayland host; it does not migrate windows between desktops.
-Future nested desktop sessions retain applications in their original session. Native
-login switching may require logout; UDM promises no universal window migration.
+Xwayland does not migrate windows between desktops. Future nested desktop sessions
+retain applications in their original session; native login may require logout.
 
-A separate snapshot-VM CI candidate has prepared and restored a real Debian 13
-XFCE desktop. KDE installation still requires approval and remains unvalidated. Its preparation stage
-records the original desktop and exact package transaction. Installation requires
-a separate explicit approval tied to that snapshot, source revision and transaction
-digest. Passing the existing Plasma container check does not validate installation
-safety, interactive authorization or preservation of your current desktop.
+The [approved Debian 13 KVM test suite](https://github.com/WhatzGames/Universal-Desktop-Manager/actions/runs/40975763374) passed real installation,
+documented stale/download/dpkg/interruption/verification failures, original
+XFCE/LightDM process and session continuity, isolated KWin/Plasma rendering and final
+snapshot recovery. It added exactly 579 reviewed packages without removing packages
+or changing existing versions. This validates the disposable test guest, not a
+supported release or physical hardware. Ordinary pushes cannot trigger installation.
 
-Developer VM installation tests can run entirely on GitHub after explicit approval
-of the reviewed transaction and snapshot. Ordinary pushes do not install packages;
-actual installation acceptance is still pending.
+Interactive auth_admin password prompting, partially configured maintainer-script
+recovery, native package repair, full guest power loss and physical GPU/input remain
+untested. The native dpkg failure hook runs before unpacking; interruption proves
+a real mutating command/journal interruption, not every maintainer-script state.
+Maintainer scripts remain privileged; policy-rc.d is not a sandbox. Recovery restores
+the reviewed VM snapshot. No primary desktop or host package change was tested.
+
+The fixed enforced KVM CPU model passed independent-runner restoration, but does not
+guarantee compatibility with every runner. The test guest reports speculative-store-
+bypass vulnerability; this public-data disposable VM is not production security
+validation. Source/manifest/transaction changes remain review boundaries.

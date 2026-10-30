@@ -1,0 +1,88 @@
+{
+  "baseline": {
+    "boot_id": "f8e5b7e3-8ec9-4de9-9018-27c9808d0f0d",
+    "machine_id": "93724d46b9124230a49a2ff622af9d72",
+    "processes": {
+      "xfce4-session": [
+        {
+          "pid": 4373,
+          "start": "6486"
+        }
+      ],
+      "xfwm4": [
+        {
+          "pid": 4442,
+          "start": "6499"
+        }
+      ],
+      "xfdesktop": [
+        {
+          "pid": 4465,
+          "start": "6557"
+        }
+      ],
+      "xfce4-panel": [
+        {
+          "pid": 4451,
+          "start": "6548"
+        }
+      ]
+    },
+    "display_manager": {
+      "pid": 4331,
+      "start": "6442"
+    },
+    "sessions": [
+      "1"
+    ],
+    "dm_config": "/usr/sbin/lightdm\n"
+  },
+  "returncode": 0,
+  "verification": {
+    "packages_missing": [],
+    "dpkg_audit_clean": true,
+    "dpkg_audit": "",
+    "launcher": "/usr/bin/startplasma-wayland",
+    "launcher_executable": true,
+    "session_entries": [
+      "/usr/share/wayland-sessions/plasma.desktop"
+    ],
+    "reboot_required": false,
+    "ready": true,
+    "graphics_readiness": "unverified",
+    "session_started": false,
+    "live_switch_capable": false
+  },
+  "records": [
+    {
+      "id": "1793317717342833082-ed20b81bb265",
+      "digest": "ed20b81bb265c6549f47ecd5b978ac1affe0b79e694ed25da8f1e62381266fa9",
+      "caller_uid": 1000,
+      "phase": "ready",
+      "recovery": "Inspect this operation and /var/log/apt/term.log and /var/log/dpkg.log. Run dpkg --audit as administrator. After reviewing its output, an administrator may need dpkg --configure -a or apt-get --fix-broken install. These can change packages or services; UDM does not run them automatically. If an interrupted UDM operation left /usr/sbin/policy-rc.d, inspect and remove only the UDM guard after recovery. There is no automatic rollback. Restore the disposable VM snapshot if appropriate.",
+      "verification": {
+        "packages_missing": [],
+        "dpkg_audit_clean": true,
+        "dpkg_audit": "",
+        "launcher": "/usr/bin/startplasma-wayland",
+        "launcher_executable": true,
+        "session_entries": [
+          "/usr/share/wayland-sessions/plasma.desktop"
+        ],
+        "reboot_required": false,
+        "ready": true,
+        "graphics_readiness": "unverified",
+        "session_started": false,
+        "live_switch_capable": false
+      }
+    }
+  ],
+  "full_plan_reference": "../transaction.json",
+  "stderr_excerpt": "",
+  "original_capture_sha256": "67e50fbe7ff4194cbb57bd6c8065d7e482c2cff4ebeba89f6733991e9d2b7feb",
+  "native_log_sha256": {
+    "/var/log/dpkg.log": "f25588e5f9d5537543fe2a42e3b86a3b52dc8be2bb442419600e7d246a32468a",
+    "/var/log/apt/term.log": "38a5b3670601b3e07c3051c3876c8c0ee7052b3e4557be12ff667ad487a9ae85",
+    "/var/log/apt/history.log": "bdc0814591ac6ed5488b70f52d57094ddc42daa4b05beabe35720f362cef08d3"
+  }
+}

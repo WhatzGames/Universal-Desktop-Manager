@@ -8,8 +8,10 @@ Other distributions report unsupported package querying. Session entry presence 
 not prove installation completeness or launchability. macOS runs report unsupported.
 
 The v0.2 development branch adds an explicit Debian 13 KDE transaction CLI and restricted
-Polkit helper. Native APT simulation is tested; actual installation and desktop continuity
-remain unvalidated pending an approved snapshot VM. See [helper setup and limits](packaging/debian/README.md).
+Polkit helper. The approved Debian 13 snapshot-VM suite passed real installation,
+documented failures, original desktop continuity, isolated Plasma and snapshot recovery.
+This validates that disposable guest, not a supported release or physical hardware.
+[Acceptance evidence](docs/development/validation/v0.2-vm/kvm-fixed/accepted/README.md). See [helper setup and limits](packaging/debian/README.md).
 No GUI, compositor, session activation or live switching exists.
 Arbitrary GNOME/KDE or Xorg/Wayland window migration is not promised. Future integrated
 switching uses custom shells on one persistent compositor, not native GNOME/KDE shells.
