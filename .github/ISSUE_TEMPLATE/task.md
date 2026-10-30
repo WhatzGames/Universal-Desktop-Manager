@@ -11,6 +11,6 @@ assignees: ''
 
 ## Acceptance criteria
 
-## Validation and handoff
+## Validation
 
 ## Risks and limitations

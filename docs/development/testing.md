@@ -70,8 +70,7 @@ hash of `pacman -Q` before/after to detect package inventory changes. This check
 not establish arbitrary window preservation or the absence of every possible side effect.
 
 For Debian desktop compatibility, use a separate disposable Debian 13 test system;
-CachyOS hardware cannot validate the release-specific APT adapter. Keep recorded results
-in PROJECT_STATE.md and the relevant issue/PR, distinguishing observed from planned.
+CachyOS hardware cannot validate the release-specific APT adapter. Report results in the relevant issue/PR, distinguishing observed from planned.
 
 ## v0.2 package workflow
 
@@ -82,7 +81,7 @@ Debian CI job provisions python3-apt in a disposable container and runs
 no removal/upgrade/display-manager additions, honest pre-install verification and
 identical before/after package inventory. It never installs KDE.
 
-[Historical simulation evidence](validation/v0.2/README.md). Each real
+Each real
 installation requires a newly reviewed VM-specific plan and explicit approval.
 
 ## Snapshot VM CI candidate
@@ -90,17 +89,36 @@ installation requires a newly reviewed VM-specific plan and explicit approval.
 [Real VM protocol, approval gate and limits](../../tests/vm/README.md). Preparation
 and acceptance are separate operations; the existing container job remains
 a fast component check. Real guest preparation/restore and default Polkit denial passed on hosted KVM
-and TCG; [exact review artifacts](validation/v0.2-vm/README.md) are retained.
+and TCG; review artifacts are retained by the corresponding Actions run.
 The approved KVM suite passed real KDE commit, documented failure/interruption,
 desktop continuity, isolated Plasma and final recovery in run 40975763374.
-[Native evidence and limits](validation/v0.2-vm/kvm-fixed/accepted/README.md).
+[Acceptance run](https://github.com/WhatzGames/Universal-Desktop-Manager/actions/runs/40975763374); [protocol limits](../../tests/vm/README.md).
 Keep issue #11 and milestone v0.2 open for review/merge.
 
 ## Push approval filtering
 
-[Strict signed single-file approval gate](../../.ci/README.md) and
-[real GitHub denial/non-trigger evidence](validation/v0.2-vm/push-gate/README.md).
+[Strict signed single-file approval gate](../../.ci/README.md).
+Denial and non-trigger results belong to their Actions runs.
 Ordinary integration pushes skip VM preparation; `[vm-prepare] ` opts in explicitly.
 Only a separate exact approved record can schedule installation. The expected false-record workflow failure is a denial test; the subsequent exact
 human-approved native acceptance passed. Reruns and semantic approval repeats remain
 rejected; no further installation is authorized by an ordinary documentation push.
+
+## Retrieving CI results
+
+Keep test source and small authored fixtures in Git. Run outputs—logs, screenshots,
+reports, package plans, VM manifests/snapshots and image inventories—belong in Actions
+logs/artifacts. Do not copy them into docs or turn captured runs into test fixtures.
+Tests should construct synthetic cases where deterministic input is required.
+
+```sh
+gh run list --repo WhatzGames/Universal-Desktop-Manager
+gh run view RUN_ID --repo WhatzGames/Universal-Desktop-Manager --log
+gh run download RUN_ID --repo WhatzGames/Universal-Desktop-Manager --dir target/ci-artifacts/RUN_ID
+```
+
+Select a named artifact with --name when only a review packet or image is needed.
+Current workflows retain uploaded artifacts for seven days; logs follow the
+repository's GitHub retention settings. Expiry can make outputs unavailable.
+Review-dependent installation must stop when required artifacts are missing; run
+fresh preparation and obtain exact approval rather than bypassing integrity checks.

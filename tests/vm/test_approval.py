@@ -1,6 +1,7 @@
 """The push gate must reject accidental triggers before any VM is scheduled."""
 import copy
 import importlib.util
+import hashlib
 import json
 from pathlib import Path
 import unittest
@@ -65,25 +66,31 @@ class Approval(unittest.TestCase):
             self.validate(record={**self.record, 'extra': 'field'})
         self.assertEqual(self.validate(previous={**self.record, 'approved': False})['approval_commit'], 'b' * 40)
 
-    def test_actual_review_manifest_and_run_must_match_before_vm_outputs(self):
-        manifest = Path('docs/development/validation/v0.2-vm/tcg-review.json').read_bytes()
+    def test_review_manifest_and_run_must_match_before_vm_outputs(self):
+        manifest = json.dumps(dict(source_revision=self.record['source_revision'],
+                                   plan_digest=self.record['plan_digest'],
+                                   snapshot_restore_verified=True, acceleration='tcg')).encode()
+        record = {**self.record, 'review_sha256': hashlib.sha256(manifest).hexdigest()}
         run = dict(conclusion='success', head_sha=self.record['source_revision'],
                    head_repository={'full_name': 'WhatzGames/Universal-Desktop-Manager'},
                    event='push', head_branch='ci/debian13-snapshot-vm', path='.github/workflows/debian-vm-tcg.yml')
-        gate.check_review(self.record, run, manifest, 'WhatzGames/Universal-Desktop-Manager')
+        gate.check_review(record, run, manifest, 'WhatzGames/Universal-Desktop-Manager')
         for key, value in [('conclusion', 'failure'), ('head_sha', 'c' * 40), ('path', 'other.yml')]:
             with self.subTest(key=key), self.assertRaises(ValueError):
-                gate.check_review(self.record, {**run, key: value}, manifest, 'WhatzGames/Universal-Desktop-Manager')
+                gate.check_review(record, {**run, key: value}, manifest, 'WhatzGames/Universal-Desktop-Manager')
         with self.assertRaises(ValueError):
-            gate.check_review(self.record, run, manifest + b' ', 'WhatzGames/Universal-Desktop-Manager')
+            gate.check_review(record, run, manifest + b' ', 'WhatzGames/Universal-Desktop-Manager')
         with self.assertRaises(ValueError):
-            gate.check_review({**self.record, 'plan_digest': '0' * 64}, run, manifest, 'WhatzGames/Universal-Desktop-Manager')
+            gate.check_review({**record, 'plan_digest': '0' * 64}, run, manifest, 'WhatzGames/Universal-Desktop-Manager')
 
 
     def test_old_host_passthrough_kvm_snapshot_is_rejected(self):
+        manifest = json.dumps(dict(source_revision=self.record['source_revision'],
+                                   plan_digest=self.record['plan_digest'],
+                                   snapshot_restore_verified=True, acceleration='kvm',
+                                   cpu_model='host')).encode()
         record = {**self.record, 'software_only': False,
-                  'review_sha256': '24888a508b6575c42e8de9d9bfae490d5e0bce3f6b7161f8255b975ed6bcc621'}
-        manifest = Path('docs/development/validation/v0.2-vm/kvm-review.json').read_bytes()
+                  'review_sha256': hashlib.sha256(manifest).hexdigest()}
         run = dict(conclusion='success', head_sha=record['source_revision'],
                    head_repository={'full_name': 'WhatzGames/Universal-Desktop-Manager'},
                    event='push', head_branch='ci/debian13-snapshot-vm', path='.github/workflows/ci.yml')

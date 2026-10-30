@@ -145,21 +145,17 @@ reviewing and explicitly approving its exact manifest and transaction digests.
 
 ## KVM running-state portability correction
 
-The original host-passthrough KVM snapshot failed an independent Intel-to-AMD runner
-restore before installation. [Evidence](../../docs/development/validation/v0.2-vm/kvm-portability-failure/README.md).
+Host-passthrough CPU state is not a portable cross-runner snapshot format.
 KVM now uses `Westmere-v1,phys-bits=40,enforce`, records that exact CPU model in the
 manifest and requires it on acceptance. Unsupported features fail initialization.
 A replacement must pass preparation and cross-runner restoration before approval;
 no universal hardware-migration claim follows. TCG remains an explicitly requested
 fallback experiment (`[vm-prepare-tcg] `), not part of normal KVM preparation.
 
-## Accepted execution evidence
+## Run outputs
 
-The [approved hosted KVM suite](../../docs/development/validation/v0.2-vm/kvm-fixed/accepted/README.md)
-passed in run 40975763374 with exact transaction approval. It includes real native
-installation and failure journals, an observed dpkg --unpack descendant interrupted
-through its exact parent chain, blocked retry, post-commit verification failure,
-original XFCE/LightDM identities, isolated real Plasma and final original snapshot
-recovery. The observer ignores planning dpkg --audit and does not assume a shared
-process group. This measured result preserves every limit above; new transactions
-still require explicit review/approval.
+Review manifests, snapshots, captures, screenshots and native logs are Actions
+artifacts, not source files. Use gh run view RUN_ID --log and gh run download RUN_ID.
+See [retrieval and retention](../../docs/development/testing.md#retrieving-ci-results).
+The observer ignores planning dpkg --audit and follows exact process ancestry for
+native interruption. New transactions still require explicit review/approval.

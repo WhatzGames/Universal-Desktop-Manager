@@ -1,14 +1,22 @@
 # ADR 0002: restricted Debian 13 installation transactions
 
-Status: implemented candidate; approved disposable snapshot-VM suite passed.
-Date: 2026-10-28
+Status: proposed Rust backend; the current prototype helper uses Python APT bindings.
 
-Keep discovery in the Rust/Bevy application. Use Debian's system `python3-apt`
-binding to its native APT resolver and commit implementation, avoiding a new Rust
-FFI layer or parsing human apt-get output. A root-owned isolated Python executable
-is the separate privilege boundary. It accepts fixed `plan`, `verify`, and
-`install REVIEW_DIGEST` operations only. Rust invokes absolute helper/pkexec paths
-without a shell. No package names, arbitrary paths, options or commands come from UI.
+UDM-owned application logic, including the privileged helper, is Rust. Use maintained
+Rust bindings to native APT. Verify maintainer activity, compatibility with supported
+Debian/APT versions, test coverage and security/ABI handling before selecting bindings.
+No package is approved merely because it is available. Do not substitute a custom
+resolver or shell/CLI wrappers for native package-management APIs.
+
+FFI is allowed. UDM policy, validation, authorization, workflow, journaling and recovery
+stay in Rust; foreign bridge code only adapts calls/types. External libraries retain
+their native implementation. Review ownership/lifetimes and error propagation.
+
+The package helper is a narrow, separately authorized privilege boundary accepting
+fixed plan, verify and install REVIEW_DIGEST operations. Package names, arbitrary
+paths, options and commands must not come directly from UI. The existing prototype
+uses a root-owned isolated Python helper and fixed helper/pkexec paths without shell
+command evaluation. Its observed behavior is documented in packaging/debian/README.md.
 
 Polkit authenticates an active user's administrator authorization without cached
 permission. The helper binds authorization to a recomputed plan using SHA-256 and
@@ -37,12 +45,15 @@ artifacts, then require a separate digest-bound explicit approval before any KDE
 commit. Revalidate snapshot files, original desktop identities and guest transaction.
 See [protocol and remaining acceptance limits](../../tests/vm/README.md).
 
-The [approved KVM acceptance](../development/validation/v0.2-vm/kvm-fixed/accepted/README.md)
-passed real CLI/pkexec/helper installation, native failures/interruption, original
-XFCE/LightDM continuity, isolated Plasma and final snapshot recovery. The original
-host-bound KVM snapshot was withdrawn; a fixed enforced CPU model passed independent
-restoration. Interactive password prompting, native repair and physical hardware
-remain unvalidated. This is scoped disposable-guest evidence, not general safety.
+Integration runs publish logs and review/acceptance artifacts through GitHub Actions.
+The VM protocol checks native installation/failure/recovery and desktop continuity;
+interactive password prompting, native repair and physical hardware require separate
+validation. A changed helper requires fresh native verification and exact transaction
+approval. Historical runs do not establish correctness of a replacement backend.
+
+Binding API reference: [rust-apt/libapt-pkg](https://docs.rs/rust-apt/latest/rust_apt/).
+Native APT handles dependency resolution; adoption still requires compatibility,
+maintenance and safety review.
 
 A narrowly filtered push can carry the same explicit approval: one signed owner
 commit changes only the dedicated approval record and names its exact manifest.

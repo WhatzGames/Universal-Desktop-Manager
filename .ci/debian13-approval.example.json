@@ -1,8 +1,8 @@
 {
   "approved": false,
-  "source_revision": "fc9df23f06b5b79c06a7259bc9f0358ae388acc8",
-  "review_run": 40952610041,
-  "review_sha256": "095cbefa5861fb779d72a8e433fe8cb27e73adf0c4d5b4c8d633b3ab772345df",
-  "plan_digest": "f958050ea5fdaf430c5ecec486d6b14529d02e9c6791e0c2850973071b8a6e3f",
+  "source_revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "review_run": 1,
+  "review_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "plan_digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
   "software_only": true
 }

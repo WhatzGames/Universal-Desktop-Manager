@@ -1,7 +1,0 @@
-{
-  "passed": true,
-  "elapsed_seconds": 69.62574139299977,
-  "source": "fc9df23f06b5b79c06a7259bc9f0358ae388acc8",
-  "plan_digest": "f958050ea5fdaf430c5ecec486d6b14529d02e9c6791e0c2850973071b8a6e3f",
-  "scope": "Read-only capture/plan/restore only; no install authorization or install command"
-}

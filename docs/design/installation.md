@@ -1,5 +1,9 @@
 # Debian 13 installation contract (v0.2 candidate)
 
+Application-owned logic must be Rust, using maintained native-library bindings and
+structured IPC. FFI is allowed; bridge code only adapts calls/types. No application
+operation may evaluate shell-command strings. Preserve audit/authorization semantics.
+
 The no-argument report preserves v0.1's read-only behavior. Explicit `packages plan`,
 `packages verify` and `packages install SHA256` dispatch to an installed absolute helper;
 only install goes through `/usr/bin/pkexec`. Discovery never triggers authorization.
@@ -44,12 +48,9 @@ unconfigured packages; administrator recovery or a VM snapshot is the fallback.
 The [snapshot VM CI candidate](../../tests/vm/README.md) preserves a running guest
 across a digest-bound manual approval gate. Its CI Polkit rule is limited to the
 reviewed helper transaction; it is not the deployment policy or an interactive
-authentication test. Real KVM/TCG guest preparation, default Polkit denial and RAM/disk restoration
-are [validated](../development/validation/v0.2-vm/README.md). The subsequent
-[approved KVM suite passed](../development/validation/v0.2-vm/kvm-fixed/accepted/README.md)
-actual commit/failure/interruption, original desktop continuity, isolated Plasma and
-final snapshot recovery. Interactive authorization, native repair and physical hardware
-remain outside that evidence.
+authentication test. Run-specific captures, manifests and results are uploaded as
+GitHub Actions artifacts rather than committed. Interactive authorization, native
+repair and physical hardware remain outside that automated protocol.
 
 The [signed push approval gate](../../.ci/README.md) is a second explicit entry
 point for GitHub-only execution. It validates a single-file signed owner approval

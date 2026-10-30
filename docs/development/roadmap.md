@@ -11,19 +11,21 @@ Source: [complete master plan](master-plan.md). These phases are plans, not rele
 - Model desktop catalog including not-installed KDE Plasma Wayland.
 - Do **read-only** KDE package availability/compatibility checks (where repository interface supports safely querying).
 - Build automated unit tests and CI.
-- Establish agent persistence, GitHub technical docs, end-user wiki skeleton, issues/milestones.
+- Establish technical docs, end-user wiki, issues and milestones.
 - **Acceptance:** `cargo build`, tests and formatting pass; app starts and generates honest read-only desktop/KDE status; no root actions, packages installed, or session manipulation.
 
 ### v0.2 — KDE installation
 
 The approved Debian 13 snapshot-VM suite passed native installation, stale/download/
 dpkg/interruption/verification failures, original XFCE/LightDM continuity, isolated
-real Plasma and final snapshot recovery. [Acceptance evidence](validation/v0.2-vm/kvm-fixed/accepted/README.md).
+real Plasma and final snapshot recovery. [Acceptance run](https://github.com/WhatzGames/Universal-Desktop-Manager/actions/runs/40975763374).
 Draft PR #14 combines merged PR #12 checks with draft PR #13's restricted helper.
 Keep #10/#11 and milestone v0.2 open for review/merge; this is not a supported release.
 Interactive password prompts, native repair and physical GPU/input remain unvalidated.
 
 - Native distribution package adapter (one distro first), transaction simulation, dependency/conflict review.
+- Implement the package helper in Rust using maintained native-library bindings.
+- Library/API-first operations with no shell evaluation; preserve audit and authorization semantics.
 - Privileged minimal helper + Polkit, authorized install, journal and failure handling.
 - Verify KDE Plasma Wayland install and session launcher.
 - **Acceptance:** install in snapshot VM after approval without disrupting current desktop; failed transaction reports recovery accurately.

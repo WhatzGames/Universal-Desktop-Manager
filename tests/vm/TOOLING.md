@@ -57,3 +57,7 @@ The loaded tag is `udm-vm-tooling:artifact`; its default entrypoint expects the
 repository mounted at `/source`, as documented in [the VM protocol](README.md).
 Rust, native APT simulation and the separate Plasma container check retain their
 own prerequisites; this image is the shared VM tooling runtime.
+
+Image build results and package inventories remain in Actions logs/artifacts.
+See [retrieval and retention](../../docs/development/testing.md#retrieving-ci-results).
+Do not copy them into source control.
