@@ -2,7 +2,7 @@
 
 Prerequisites on the disposable Debian 13 VM: system Python 3, `python3-apt`,
 `polkitd` and `pkexec`. These are system dependencies, not pip dependencies.
-Do not provision this helper on a primary desktop while VM acceptance is pending.
+This remains experimental; the passing disposable VM suite is not primary-desktop support.
 
 Build UDM using the pinned Rust toolchain. An administrator installs the reviewed
 helper and policy, with root-owned parents and no group/world write permissions:
@@ -51,6 +51,7 @@ matching Wayland session definition. It does not start a session or establish GP
 readiness. Installation and v0.3 session activation remain separate.
 
 A [prepared VM review packet](../../docs/development/validation/v0.2-vm/README.md)
-now records real XFCE/LightDM baseline and restored KVM/TCG snapshots. This is
-preparation evidence only. Do not execute its install/failure stage until a human
-approves the exact snapshot manifest and complete transaction digest.
+records preparation history and [approved KVM acceptance](../../docs/development/validation/v0.2-vm/kvm-fixed/accepted/README.md):
+real installation/failures, original XFCE/LightDM continuity, isolated Plasma and
+snapshot recovery passed. Interactive password prompting, native repair and physical
+hardware remain untested. Every new transaction still requires exact human approval.

@@ -1,6 +1,6 @@
 # Fixed CPU KVM review candidate
 
-Preparation and independent-runner restore passed. **The human approved this exact KVM suite; the first acceptance attempt stopped at an interruption-observer defect and is not validated.** This candidate replaces the withdrawn host-passthrough KVM snapshot. TCG is fallback-only.
+**Current result: [approved KVM acceptance passed](accepted/README.md), including all native cases, isolated Plasma and final snapshot recovery.** The identities below describe the original approved candidate; observer corrections and the exact unchanged transaction are recorded in the accepted packet. This candidate replaces the withdrawn host-passthrough KVM snapshot. TCG is fallback-only.
 
 | Identity | Exact value |
 |---|---|

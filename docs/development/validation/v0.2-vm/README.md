@@ -1,8 +1,8 @@
 # Debian 13 running-snapshot review — 2026-10-29
 
-**Current candidate: [fixed CPU KVM review](kvm-fixed/README.md). Preparation and independent-runner restore passed; installation remains unapproved and not run.**
+**Current result: [approved KVM acceptance passed](kvm-fixed/accepted/README.md): real installation, documented failures, original desktop continuity, isolated Plasma and final snapshot recovery.**
 
-The remainder of this page retains historical evidence. Its old source/digests are not the current KVM approval candidate.
+The remainder of this page retains historical evidence. Its old source/digests are not the accepted KVM identities.
 
 The original KVM candidate below is **withdrawn** for cross-runner use after a real
 Intel-to-AMD restore failure. [Evidence and replacement work](kvm-portability-failure/README.md).

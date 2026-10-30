@@ -1,0 +1,25 @@
+kf.plasma.quick: Applet preload policy set to 1
+file:///usr/share/plasma/plasmoids/org.kde.desktopcontainment/contents/ui/main.qml:178:25: QML FolderViewDropArea (parent or ancestor of QQuickLayoutAttached): Binding loop detected for property "minimumWidth":
+file:///usr/share/plasma/plasmoids/org.kde.desktopcontainment/contents/ui/main.qml:201:9
+Toolbox not loading, toolbox package is either invalid or disabled.
+file:///usr/share/plasma/plasmoids/org.kde.plasma.kickoff/contents/ui/main.qml:310:13: QML Image: Cannot open: file:///usr/share/plasma/plasmoids/org.kde.plasma.kickoff/contents/ui/start-here-kde-symbolic
+org.kde.plasma.kicker: Entry is not valid "org.kde.kontact.desktop" 0x564e915a1050
+org.kde.plasma.kicker: Entry is not valid "systemsettings.desktop" 0x564e915a1050
+org.kde.plasma.kicker: Entry is not valid "org.kde.discover.desktop" 0x564e9159ff70
+file:///usr/share/plasma/plasmoids/org.kde.plasma.notifications/contents/ui/global/PulseAudio.qml:9:1: module "org.kde.plasma.private.volume" is not installed
+[W][23:58:35.829890] pw.conf      | [          conf.c: 1182 try_load_conf()] can't load config client.conf: No such file or directory
+[E][23:58:35.829941] pw.conf      | [          conf.c: 1215 pw_conf_load_conf_for_context()] can't load config client.conf: No such file or directory
+kpipewire_logging: Failed to create PipeWire context
+received error while creating the stream "Failed to create PipeWire context" Media monitor will not work.
+kde.plasmashell: Activity added twice "39967364-d16f-4dbb-a77e-0c507b6d444b"
+qt.dbus.integration: QDBusConnection: name 'org.freedesktop.UDisks2' had owner '' but we thought it was ':1.38'
+qt.dbus.integration: QDBusConnection: name 'org.freedesktop.UPower' had owner '' but we thought it was ':1.39'
+org.kde.plasma.kicker: Entry is not valid "org.kde.kontact.desktop" 0x564e91330900
+org.kde.plasma.kicker: Entry is not valid "systemsettings.desktop" 0x564e91d4ad20
+org.kde.plasma.kicker: Entry is not valid "org.kde.discover.desktop" 0x564e912643a0
+org.kde.plasma.kicker: Entry is not valid "org.kde.kontact.desktop" 0x564e93eecd10
+org.kde.plasma.kicker: Entry is not valid "systemsettings.desktop" 0x564e91330900
+org.kde.plasma.kicker: Entry is not valid "org.kde.discover.desktop" 0x564e9106fbf0
+file:///usr/share/plasma/plasmoids/org.kde.plasma.notifications/contents/ui/global/Globals.qml:130: TypeError: Cannot read property 'screenGeometry' of null
+file:///usr/share/plasma/plasmoids/org.kde.plasma.notifications/contents/ui/global/Globals.qml:260: TypeError: Cannot read property 'plasmoid' of undefined
+Failed to write to the pipe: Bad file descriptor.

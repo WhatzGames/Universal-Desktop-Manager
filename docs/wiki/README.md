@@ -34,10 +34,18 @@ git -C ../Universal-Desktop-Manager-wiki push origin master
 
 Resolve any upstream divergence before pushing. Verify links and page rendering after
 publication and record the Wiki commit in PROJECT_STATE.md. Keep planned features
-clearly labeled; the foundation from PR #1 is merged, while v0.2 installation acceptance remains pending.
+clearly labeled; the foundation from PR #1 is merged. Approved disposable VM acceptance
+passed in run 40975763374; release/hardware and interactive-auth limits remain.
 
 Signed Wiki commit `bb46dc8` publishes the snapshot approval and installation
 limitations updates from integration PR #14. Installation acceptance remains open.
 
 Signed Wiki commit `a13db2c` records verified real Debian guest preparation and
 restoration from PR #14; actual KDE installation remains unapproved/unvalidated.
+
+Current six-page source update records the passing native suite and remaining limits.
+Publication to Wiki master is pending specific authorization: automatic approval
+review rejected expansion beyond the earlier two-file publication. The six pages
+are Home, Installation, Supported-Desktops, KDE-Plasma, Installing-Desktops and
+Known-Limitations; the matching local Wiki diff is prepared. Earlier signed cab5058
+remains published and reflects the pre-acceptance status.
