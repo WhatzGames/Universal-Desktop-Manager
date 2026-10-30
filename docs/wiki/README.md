@@ -43,9 +43,9 @@ limitations updates from integration PR #14. Installation acceptance remains ope
 Signed Wiki commit `a13db2c` records verified real Debian guest preparation and
 restoration from PR #14; actual KDE installation remains unapproved/unvalidated.
 
-Current six-page source update records the passing native suite and remaining limits.
-Publication to Wiki master is pending specific authorization: automatic approval
-review rejected expansion beyond the earlier two-file publication. The six pages
-are Home, Installation, Supported-Desktops, KDE-Plasma, Installing-Desktops and
-Known-Limitations; the matching local Wiki diff is prepared. Earlier signed cab5058
-remains published and reflects the pre-acceptance status.
+Current six-page update is published in signed Wiki commit
+`61111025c31a4c9a77300f0c889d649ad3207299` after specific human approval.
+Home, Installation, Supported-Desktops, KDE-Plasma, Installing-Desktops and
+Known-Limitations match the integration source bytes and record approved native
+installation/failure/continuity/Plasma/recovery acceptance, with remaining limits.
+Earlier commits above are historical preparation-only states.

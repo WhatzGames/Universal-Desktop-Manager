@@ -78,7 +78,7 @@ review. Native acceptance captures, summaries, log hashes and screenshots are pu
 Issues #10/#11 and milestone v0.2 remain open for review; PR #13/#14 remain draft and
 unmerged. No release was published. Offline CachyOS miix320 was not used or connected.
 
-The six affected Wiki source pages are synchronized in this PR. Live Wiki publication
-is pending specific approval because automatic approval review rejected the expanded
-six-page master push beyond earlier two-file authorization. Local reviewable diff
-is prepared; no denied push was retried.
+All six affected Wiki pages are published in signed commit
+61111025c31a4c9a77300f0c889d649ad3207299 after specific human approval; every
+page matches the integration source bytes. PR #14, issues #10/#11 and the open
+v0.2 milestone now link the passing native evidence and preserve remaining limits.
