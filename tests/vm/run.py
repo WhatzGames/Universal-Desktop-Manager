@@ -223,7 +223,8 @@ def prepare(args):
     snapshot_info = subprocess.check_output(['qemu-img', 'snapshot', '-l', str(STATE / 'guest.qcow2')], text=True)
     assert 'reviewed' in snapshot_info
     (STATE / 'snapshots.txt').write_text(snapshot_info)
-    manifest = dict(cpu_model=vm.cpu_model, qemu_sha256=sha('/usr/bin/qemu-system-x86_64'),
+    manifest = dict(tooling_image=json.loads((STATE / 'tooling-image.json').read_text()),
+                    cpu_model=vm.cpu_model, qemu_sha256=sha('/usr/bin/qemu-system-x86_64'),
                     qemu_version=subprocess.check_output(['qemu-system-x86_64', '--version'], text=True),
                     host_architecture=os.uname().machine, schema_version=1, source_revision=args.source, plan_digest=baseline['review']['digest'],
                     snapshot_name='reviewed', snapshot_restore_verified=True, uuid=(STATE / 'uuid').read_text(), image_url=url + image,
@@ -236,6 +237,8 @@ def prepare(args):
 def accept(args):
     manifest = json.loads((STATE / 'review.json').read_text())
     validate_review(manifest, args.review_sha256, args.plan_digest, args.source)
+    if manifest.get('tooling_image') != json.loads((STATE / 'tooling-image.json').read_text()):
+        raise ValueError('Loaded tooling image differs from the reviewed image')
     if manifest['qemu_sha256'] != sha('/usr/bin/qemu-system-x86_64') or manifest['host_architecture'] != os.uname().machine:
         raise ValueError('Snapshot requires the reviewed QEMU binary and host architecture')
     actual_accel = acceleration()['selected']

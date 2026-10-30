@@ -1,5 +1,10 @@
 # Debian 13 snapshot VM acceptance candidate
 
+VM jobs load the [latest successful tooling-image artifact](TOOLING.md) instead of
+rebuilding QEMU. Preparation binds that image into the review manifest; acceptance
+stops if a newer image has appeared since review. Build a fresh image first when
+none exists or artifacts have expired. Image creation is separate from approval.
+
 This harness is under validation. A written workflow is not installation acceptance.
 It supplements the fast, isolated Plasma container smoke job from merged PR #12 and
 uses the restricted helper from draft PR #13, including origin fix 67165a2. The

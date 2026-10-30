@@ -6,6 +6,11 @@ The separate TCG experiment requires `[vm-prepare-tcg] `; it is not run with nor
 KVM preparation.
 This marker never authorizes installation.
 
+VM jobs use the [newest successful tooling-image artifact](../tests/vm/TOOLING.md).
+Its full identity is bound into each new snapshot review. If a newer image appears
+after review, acceptance stops and needs fresh preparation/approval; it cannot
+silently select old tooling or substitute new tooling into an approved snapshot.
+
 Installation has a separate, fail-closed push gate:
 
 1. The branch already exists as `ci/debian13-install-approved`.

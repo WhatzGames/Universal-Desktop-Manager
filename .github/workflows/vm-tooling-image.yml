@@ -1,0 +1,86 @@
+name: Build fresh VM tooling image
+on:
+  workflow_dispatch:
+  push:
+    branches: [ci/debian13-snapshot-vm]
+    paths:
+      - .github/workflows/vm-tooling-image.yml
+      - tests/vm/Dockerfile
+      - tests/vm/tooling.py
+permissions:
+  contents: read
+jobs:
+  image:
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.event.head_commit.message, '[vm-tooling-image] ')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Pull base and rebuild with current Debian 13 packages
+        run: |
+          docker build --pull --no-cache --platform linux/amd64 \
+            --label "org.opencontainers.image.revision=$GITHUB_SHA" \
+            --label "org.opencontainers.image.source=$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" \
+            --tag udm-vm-tooling:artifact tests/vm
+      - name: Package image and record dependencies
+        run: |
+          mkdir tooling-image
+          docker image inspect udm-vm-tooling:artifact > tooling-image/image-inspect.json
+          docker run --rm --entrypoint dpkg-query udm-vm-tooling:artifact -W > tooling-image/packages.tsv
+          docker image save udm-vm-tooling:artifact | gzip -1 > tooling-image/udm-vm-tooling.tar.gz
+          python3 - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          archive = Path('tooling-image/udm-vm-tooling.tar.gz')
+          with archive.open('rb') as stream:
+              digest = hashlib.file_digest(stream, 'sha256').hexdigest()
+          image = json.loads(Path('tooling-image/image-inspect.json').read_text())[0]
+          metadata = dict(schema_version=1, run_id=int(os.environ['GITHUB_RUN_ID']),
+                          run_attempt=int(os.environ['GITHUB_RUN_ATTEMPT']),
+                          source_revision=os.environ['GITHUB_SHA'], platform='linux/amd64',
+                          image_id=image['Id'], archive_sha256=digest,
+                          dockerfile_sha256=hashlib.sha256(Path('tests/vm/Dockerfile').read_bytes()).hexdigest())
+          Path('tooling-image/metadata.json').write_text(json.dumps(metadata, indent=2) + '\n')
+          PY
+          cd tooling-image
+          sha256sum udm-vm-tooling.tar.gz image-inspect.json packages.tsv metadata.json > SHA256SUMS
+      - name: Verify archive reload and prerequisite tools
+        run: |
+          cd tooling-image
+          sha256sum --check SHA256SUMS
+          expected=$(docker image inspect --format '{{.Id}}' udm-vm-tooling:artifact)
+          docker image rm udm-vm-tooling:artifact
+          docker image load --input udm-vm-tooling.tar.gz
+          test "$expected" = "$(docker image inspect --format '{{.Id}}' udm-vm-tooling:artifact)"
+          docker run --rm --entrypoint sh udm-vm-tooling:artifact -ec '
+            test -z "$(dpkg --audit)"
+            qemu-system-x86_64 --version
+            qemu-img --version
+            genisoimage --version
+            python3 --version
+            curl --version
+            test -s /etc/ssl/certs/ca-certificates.crt
+          '
+          {
+            echo 'Fresh linux/amd64 VM tooling image built, exported, reloaded and smoke-tested.'
+            echo "Source: $GITHUB_SHA"
+            echo "Image ID: $expected"
+            echo "Artifact: udm-vm-tooling-image-$GITHUB_RUN_ATTEMPT (7-day retention)."
+            echo 'Verify SHA256SUMS, then docker load --input udm-vm-tooling.tar.gz.'
+            echo 'This builds tooling only; no guest or installation suite was started.'
+          } >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: udm-vm-tooling-image-${{ github.run_attempt }}
+          path: tooling-image/
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 7
+      - uses: actions/upload-artifact@v4
+        with:
+          name: udm-vm-tooling-metadata-${{ github.run_attempt }}
+          path: tooling-image/metadata.json
+          if-no-files-found: error
+          retention-days: 7
