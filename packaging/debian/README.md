@@ -1,5 +1,10 @@
 # Debian 13 package helper (v0.2 development)
 
+This page describes the existing Python-backed candidate. The required product
+architecture is Rust for the application and privileged helper; the Python helper
+still needs replacement. [Decision correction](../../docs/adr/0002-debian-installation.md).
+The commands below document current behavior, not completed Rust migration.
+
 Prerequisites on the disposable Debian 13 VM: system Python 3, `python3-apt`,
 `polkitd` and `pkexec`. These are system dependencies, not pip dependencies.
 This remains experimental; the passing disposable VM suite is not primary-desktop support.

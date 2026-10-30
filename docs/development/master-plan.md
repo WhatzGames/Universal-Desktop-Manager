@@ -37,7 +37,12 @@ UDM is a Linux application for discovering, installing, configuring, and switchi
 
 ## 3. Architectural foundations
 
-- **Language:** Rust.
+- **Language:** Rust for all shipped UDM-owned runtime components, including the
+  privileged package helper. FFI/native system-library bindings are explicitly
+  allowed; all UDM-owned application logic stays in Rust and bridge code only adapts
+  types/calls. A Python
+  product helper is not the target architecture. Python development/CI/test tooling
+  is separate. Existing Python backend implementation requires migration.
 - **Control plane:** Bevy ECS (Bevy may run headless; graphical UI eventually Bevy UI, subject to practical validation).
 - **Display/compositor runtime:** Smithay with its own calloop-driven event loop, initially run nested for safety.
 - **X11 compatibility:** Xwayland plus the appropriate X11 window-management implementation.

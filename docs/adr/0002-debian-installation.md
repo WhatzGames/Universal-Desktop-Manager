@@ -1,6 +1,6 @@
 # ADR 0002: restricted Debian 13 installation transactions
 
-Status: implemented candidate; approved disposable snapshot-VM suite passed.
+Status: Python backend choice superseded by Rust runtime requirement; migration pending.
 Date: 2026-10-28
 
 The user clarified the [library-first/no-shell requirement](../design/process-execution.md)
@@ -9,12 +9,26 @@ process calls are documented gaps against that preferred integration, not permis
 for shell operations or arbitrary commands. Retain native APT bindings and preserve
 privilege/audit semantics when replacing the remaining process-based interfaces.
 
-Keep discovery in the Rust/Bevy application. Use Debian's system `python3-apt`
-binding to its native APT resolver and commit implementation, avoiding a new Rust
-FFI layer or parsing human apt-get output. A root-owned isolated Python executable
-is the separate privilege boundary. It accepts fixed `plan`, `verify`, and
-`install REVIEW_DIGEST` operations only. Rust invokes absolute helper/pkexec paths
-without a shell. No package names, arbitrary paths, options or commands come from UI.
+The user confirmed on 2026-10-30 that Rust applies to every shipped UDM-owned runtime
+component, including the privileged helper. The required replacement is a Rust
+helper using maintained Rust bindings to native APT, or a narrowly reviewed native
+bridge where binding coverage is insufficient. Rust bindings exist; suitability
+for the complete existing safety contract still requires evaluation. Do not replace
+native resolution with a new ad-hoc resolver or shell/CLI wrappers.
+
+FFI is explicitly approved: all UDM-owned transaction policy, validation, authorization,
+workflow, journaling and recovery logic must stay in Rust. A native bridge may adapt
+types and calls only; it must not become a second implementation of UDM application
+logic in C++, Python or another language. External libraries retain their own native
+implementation. Review ABI compatibility, ownership/lifetimes and error propagation.
+
+The existing implementation used Debian's `python3-apt` to reuse native APT without
+writing Rust FFI. That shortcut is historical, not the desired product architecture.
+It currently uses a root-owned isolated Python executable accepting fixed `plan`,
+`verify` and `install REVIEW_DIGEST` operations. Rust invokes fixed helper/pkexec
+paths without a shell. Preserve its validation/authorization contract during migration;
+do not describe the current implementation as Rust-only. Python test/CI tooling is
+outside the shipped runtime requirement.
 
 Polkit authenticates an active user's administrator authorization without cached
 permission. The helper binds authorization to a recomputed plan using SHA-256 and
@@ -49,6 +63,12 @@ XFCE/LightDM continuity, isolated Plasma and final snapshot recovery. The origin
 host-bound KVM snapshot was withdrawn; a fixed enforced CPU model passed independent
 restoration. Interactive password prompting, native repair and physical hardware
 remain unvalidated. This is scoped disposable-guest evidence, not general safety.
+These results validate the frozen Python-backed implementation, not an unimplemented
+Rust replacement. A changed helper requires fresh native verification and exact VM
+transaction review before any further installation.
+
+Rust binding reference: [rust-apt/libapt-pkg](https://docs.rs/rust-apt/latest/rust_apt/).
+This is an evaluated option to investigate, not an added dependency or coverage claim.
 
 A narrowly filtered push can carry the same explicit approval: one signed owner
 commit changes only the dedicated approval record and names its exact manifest.

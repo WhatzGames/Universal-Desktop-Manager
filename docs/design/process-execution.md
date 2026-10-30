@@ -12,7 +12,12 @@ executable paths. Quoting/escaping is not a substitute for this boundary. Do not
 execute discovered desktop-entry `Exec` values as a shortcut to session activation.
 
 Use APT's `libapt-pkg`/`libapt-inst` developer interfaces or maintained bindings;
-the current installer already uses Debian's `python3-apt` for resolution and commit.
+the required shipped implementation is Rust, including the privileged helper.
+The current installer uses Debian's `python3-apt` for resolution and commit, which
+is library-backed but does not meet the Rust runtime requirement. Replace that
+backend with Rust native-library integration while preserving its safety contract.
+FFI is explicitly allowed. Keep UDM-owned policy, workflow and safety logic in Rust;
+foreign bridge code only adapts types/calls into external native libraries.
 Use structured system-service interfaces for future session/authorization operations.
 The privileged helper must remain narrow and separately authorized, regardless of
 which library/interface performs the work. Native bindings require validation and
@@ -22,7 +27,7 @@ safe memory/lifetime handling too; library use is not a guarantee against all RC
 
 | Operation | Current implementation | Requirement status |
 |---|---|---|
-| Package resolution/download/commit | `python3-apt` (`apt`, `apt_pkg`) | Library-backed; preserve |
+| Package resolution/download/commit | `python3-apt` (`apt`, `apt_pkg`) | Library-backed but Python; migrate helper to Rust and preserve native APT/safety semantics |
 | Read-only availability query | Fixed `/usr/bin/apt-cache policy kde-plasma-desktop` in `compat.rs` | Direct process, no shell; remaining CLI-wrapper migration |
 | Package audit | Fixed `/usr/bin/dpkg --audit` in the helper | Direct process, no shell; investigate supported library equivalent without weakening audit semantics |
 | Helper and administrator authorization | Fixed absolute helper path and `/usr/bin/pkexec`, separate arguments and validated digest | Direct processes, no shell; review API/structured IPC replacement as part of privilege-boundary design |

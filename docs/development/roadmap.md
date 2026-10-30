@@ -24,6 +24,8 @@ Keep #10/#11 and milestone v0.2 open for review/merge; this is not a supported r
 Interactive password prompts, native repair and physical GPU/input remain unvalidated.
 
 - Native distribution package adapter (one distro first), transaction simulation, dependency/conflict review.
+- Ship the package helper in Rust using native-library bindings; the existing
+  Python implementation is legacy migration work, not the target architecture.
 - Library/API-first operations with no shell evaluation; migrate the explicitly
   [inventoried fixed CLI calls](../design/process-execution.md) without weakening audit or authorization.
 - Privileged minimal helper + Polkit, authorized install, journal and failure handling.

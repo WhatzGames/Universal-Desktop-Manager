@@ -1,5 +1,16 @@
 # Current project state
 
+Rust language requirement confirmed 2026-10-30: all shipped UDM-owned runtime code,
+including the privileged package helper, must be Rust. The Python backend was an
+implementation shortcut and still requires migration; it is not an approved target
+architecture. ADR 0002 now distinguishes legacy behavior/evidence from the required
+Rust replacement. Rust APT bindings exist but coverage has not been validated or a
+dependency selected. Python CI/test tooling is separate. No runtime migration or
+new native installation was performed in this documentation correction.
+The user explicitly permits FFI: external libraries may retain their native code,
+but all UDM-owned application logic stays Rust; bridge code is limited to type/call
+adaptation. Preserve authorization, validation, journal/recovery and no-shell policy.
+
 Runtime integration requirement clarified 2026-10-30: library/API-first system
 operations, no shell-command evaluation. Installer resolution/commit already use
 python3-apt; apt-cache availability, dpkg audit and fixed helper/pkexec launches
