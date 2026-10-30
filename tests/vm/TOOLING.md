@@ -58,6 +58,6 @@ repository mounted at `/source`, as documented in [the VM protocol](README.md).
 Rust, native APT simulation and the separate Plasma container check retain their
 own prerequisites; this image is the shared VM tooling runtime.
 
-[Verified image builds and real guest consumption](../../docs/development/validation/v0.2-vm/tooling-image/README.md):
-both initial/push and manual refreshed image builds passed export/reload/smoke checks;
-fresh preparation selected the newer image and restored the exact guest baseline.
+Image build results and package inventories remain in Actions logs/artifacts.
+See [retrieval and retention](../../docs/development/testing.md#retrieving-ci-results).
+Do not copy them into source control.

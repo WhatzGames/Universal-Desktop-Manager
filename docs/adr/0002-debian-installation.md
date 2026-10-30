@@ -45,15 +45,11 @@ artifacts, then require a separate digest-bound explicit approval before any KDE
 commit. Revalidate snapshot files, original desktop identities and guest transaction.
 See [protocol and remaining acceptance limits](../../tests/vm/README.md).
 
-The [approved KVM acceptance](../development/validation/v0.2-vm/kvm-fixed/accepted/README.md)
-passed real CLI/pkexec/helper installation, native failures/interruption, original
-XFCE/LightDM continuity, isolated Plasma and final snapshot recovery. The original
-host-bound KVM snapshot was withdrawn; a fixed enforced CPU model passed independent
-restoration. Interactive password prompting, native repair and physical hardware
-remain unvalidated. This is scoped disposable-guest evidence, not general safety.
-These results validate the frozen Python-backed implementation, not an unimplemented
-Rust replacement. A changed helper requires fresh native verification and exact VM
-transaction review before any further installation.
+Integration runs publish logs and review/acceptance artifacts through GitHub Actions.
+The VM protocol checks native installation/failure/recovery and desktop continuity;
+interactive password prompting, native repair and physical hardware require separate
+validation. A changed helper requires fresh native verification and exact transaction
+approval. Historical runs do not establish correctness of a replacement backend.
 
 Binding API reference: [rust-apt/libapt-pkg](https://docs.rs/rust-apt/latest/rust_apt/).
 Native APT handles dependency resolution; adoption still requires compatibility,

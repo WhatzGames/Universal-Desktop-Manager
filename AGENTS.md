@@ -23,6 +23,8 @@ test before closeout. Keep documentation focused on product behavior, architectu
 usage and testing. Update user-facing Wiki source when product behavior changes.
 
 Do not commit agent diaries, gap inventories, session summaries, conversation-derived
-records or handoff/status files. Communicate work status in the conversation and
+records or handoff/status files. Do not commit CI run outputs, logs, screenshots,
+VM manifests/snapshots or copied artifact reports; keep them in Actions artifacts.
+Keep authored test fixtures separate from run outputs. Communicate work status in the conversation and
 relevant issue/PR. Code/tests define behavior; roadmap defines planned scope; issues
 track tasks; architecture/design documents define technical contracts.

@@ -55,8 +55,9 @@ Verification checks the installed target packages, executable launcher and a
 matching Wayland session definition. It does not start a session or establish GPU
 readiness. Installation and v0.3 session activation remain separate.
 
-A [prepared VM review packet](../../docs/development/validation/v0.2-vm/README.md)
-records preparation history and [approved KVM acceptance](../../docs/development/validation/v0.2-vm/kvm-fixed/accepted/README.md):
-real installation/failures, original XFCE/LightDM continuity, isolated Plasma and
-snapshot recovery passed. Interactive password prompting, native repair and physical
-hardware remain untested. Every new transaction still requires exact human approval.
+VM preparation uploads its full package plan, manifest, original desktop captures
+and snapshot as GitHub Actions artifacts. Review those artifacts before approving
+an exact transaction. Installation/failure logs stay with the run; retrieve them
+with gh run view or gh run download. Do not commit run outputs to the repository.
+Interactive password prompting, native repair and physical hardware require separate
+validation. Every new transaction still requires exact human approval.

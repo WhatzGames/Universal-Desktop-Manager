@@ -11,7 +11,7 @@ The v0.2 development branch adds an explicit Debian 13 KDE transaction CLI and r
 Polkit helper. The approved Debian 13 snapshot-VM suite passed real installation,
 documented failures, original desktop continuity, isolated Plasma and snapshot recovery.
 This validates that disposable guest, not a supported release or physical hardware.
-[Acceptance evidence](docs/development/validation/v0.2-vm/kvm-fixed/accepted/README.md). See [helper setup and limits](packaging/debian/README.md).
+[VM acceptance run](https://github.com/WhatzGames/Universal-Desktop-Manager/actions/runs/40975763374). See [helper setup and limits](packaging/debian/README.md).
 No GUI, compositor, session activation or live switching exists.
 Arbitrary GNOME/KDE or Xorg/Wayland window migration is not promised. Future integrated
 switching uses custom shells on one persistent compositor, not native GNOME/KDE shells.
@@ -28,7 +28,7 @@ cargo clippy --workspace --all-targets --locked -- -D warnings
 cargo test --workspace --locked
 ```
 
-Validation: [offline hardware and Debian evidence](docs/development/validation/README.md),
+Validation: [GitHub Actions runs](https://github.com/WhatzGames/Universal-Desktop-Manager/actions),
 [testing procedure](docs/development/testing.md).
 
 The default report needs no sudo. Explicit package installation requires Polkit administrator authorization. JSON stdout contains a schema version, host, sessions, desktops and

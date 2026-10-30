@@ -23,4 +23,4 @@ helper. Native dependency resolution stays in Debian's binding; Polkit is the
 privilege boundary. See [ADR 0002](../adr/0002-debian-installation.md) and
 [installation design](../design/installation.md). The approved disposable Debian 13 snapshot suite passed real installation and
 original desktop continuity, documented failure/recovery and isolated Plasma checks.
-[Scoped evidence and limits](../development/validation/v0.2-vm/kvm-fixed/accepted/README.md). No compositor or session runtime was added.
+[VM test protocol and limits](../../tests/vm/README.md). No compositor or session runtime was added.

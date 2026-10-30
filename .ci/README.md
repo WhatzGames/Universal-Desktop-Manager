@@ -52,7 +52,9 @@ No new account token or main-branch merge is required for the push trigger.
 
 No true approval record is shipped by the integration branch. A false record may be
 used on the dedicated branch to prove rejection; it cannot schedule the VM job.
-See [the full review packet](../docs/development/validation/v0.2-vm/README.md) and
-[the VM protocol](../tests/vm/README.md). Maintainer scripts remain privileged and
-the [approved KVM suite passed](../docs/development/validation/v0.2-vm/kvm-fixed/accepted/README.md).
-This does not authorize another transaction or bypass the same gate.
+Review the preparation run's debian13-vm-evidence-prepare and reviewed-snapshot
+artifacts using the [VM protocol](../tests/vm/README.md). The full transaction and
+manifest live with that run; CI results, package plans, captures and logs must not
+be checked into Git. Missing/expired artifacts require fresh preparation/review.
+Maintainer scripts remain privileged; passing a previous suite does not authorize
+another transaction or bypass the same gate.
