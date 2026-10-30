@@ -7,6 +7,12 @@ pull requests and schedules never build the image. The manual Actions entry beco
 available on the default branch after integration; the narrow push path permits
 validation before merging.
 
+The manual trigger is already callable on this branch:
+
+```sh
+gh workflow run vm-tooling-image.yml --ref ci/debian13-snapshot-vm
+```
+
 Each invocation pulls the current Debian 13 base, disables layer-cache reuse,
 refreshes APT metadata, upgrades installed packages and installs the existing QEMU,
 Python, ISO, curl and certificate prerequisites. Updates stay within Debian 13.

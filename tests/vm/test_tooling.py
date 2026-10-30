@@ -2,6 +2,7 @@
 import importlib.util
 from pathlib import Path
 import unittest
+import tempfile
 
 spec = importlib.util.spec_from_file_location('tooling', Path(__file__).with_name('tooling.py'))
 tooling = importlib.util.module_from_spec(spec)
@@ -9,6 +10,12 @@ spec.loader.exec_module(tooling)
 
 
 class Tooling(unittest.TestCase):
+    def test_archive_hash_reads_the_actual_bytes(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'archive'
+            path.write_bytes(b'abc')
+            self.assertEqual(tooling.sha(path), 'ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad')
+
     def setUp(self):
         self.repository = 'WhatzGames/Universal-Desktop-Manager'
         self.run = dict(id=42, run_attempt=2, head_sha='a' * 40, conclusion='success',

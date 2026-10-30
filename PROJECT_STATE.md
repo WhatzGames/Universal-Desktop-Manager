@@ -82,3 +82,17 @@ All six affected Wiki pages are published in signed commit
 61111025c31a4c9a77300f0c889d649ad3207299 after specific human approval; every
 page matches the integration source bytes. PR #14, issues #10/#11 and the open
 v0.2 milestone now link the passing native evidence and preserve remaining limits.
+
+## Tooling image refresh and newest-image CI — current change
+
+The image action pulls current Debian 13, upgrades packages without build-cache reuse,
+exports image/inventory/checksums, reloads the archive and smoke-tests tools. Push
+build 41105262099 and manual refresh 41105512320 both passed. VM CI now resolves the
+newest successful producer at job startup, validates source/recipe/archive/image
+identity and binds it into the review manifest. Image drift after review fails
+closed and requires fresh preparation/approval. Old accepted evidence above is
+historical and unchanged; this update authorizes no further installation.
+19 VM unit tests pass, including provenance, recipe/architecture/hash mismatches,
+old reviews and latest-image drift. Fresh read-only preparation is the next check.
+The hard-coded historical KVM restore workflow was retired; its evidence is retained.
+Details and artifact usage: tests/vm/TOOLING.md.
