@@ -93,6 +93,14 @@ identity and binds it into the review manifest. Image drift after review fails
 closed and requires fresh preparation/approval. Old accepted evidence above is
 historical and unchanged; this update authorizes no further installation.
 19 VM unit tests pass, including provenance, recipe/architecture/hash mismatches,
-old reviews and latest-image drift. Fresh read-only preparation is the next check.
+old reviews and latest-image drift. Fresh read-only preparation 41105790965 passed in 88.759 seconds, selected manual
+refresh 41105512320 and restored identical original baseline/transaction/inventory.
 The hard-coded historical KVM restore workflow was retired; its evidence is retained.
 Details and artifact usage: tests/vm/TOOLING.md.
+
+[Tooling artifact evidence](docs/development/validation/v0.2-vm/tooling-image/README.md)
+retains both build identities and the consumer review manifest. Approval controller
+de46e73 uses the same latest-image policy; its approval file remained byte-identical
+and no installation workflow was triggered. PR checks passed on 7b27076. This
+tooling transport/update change has not rerun native installation; that remains
+historical accepted evidence on 4d3c188, with new review required for this snapshot.

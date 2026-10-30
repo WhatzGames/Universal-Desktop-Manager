@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "run_id": 41105512320,
+  "run_attempt": 1,
+  "source_revision": "1e9ace369206fa8a91fe210222851d4d32dd34a2",
+  "platform": "linux/amd64",
+  "image_id": "sha256:fd31ec5b839fe292bec96016847d316093f6af05afb2f274a6ee965dc19d6afa",
+  "archive_sha256": "6929970146bc38784bc6cfc8e4f5b9d931701de752d05e2f402fc6663f2617f4",
+  "dockerfile_sha256": "49781962eaa63dc13ae7a62b47f541ddb821d2354b922e3a7a6eaca86392948d"
+}

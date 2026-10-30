@@ -1,0 +1,38 @@
+{
+  "tooling_image": {
+    "schema_version": 1,
+    "run_id": 41105512320,
+    "run_attempt": 1,
+    "source_revision": "1e9ace369206fa8a91fe210222851d4d32dd34a2",
+    "platform": "linux/amd64",
+    "image_id": "sha256:fd31ec5b839fe292bec96016847d316093f6af05afb2f274a6ee965dc19d6afa",
+    "archive_sha256": "6929970146bc38784bc6cfc8e4f5b9d931701de752d05e2f402fc6663f2617f4",
+    "dockerfile_sha256": "49781962eaa63dc13ae7a62b47f541ddb821d2354b922e3a7a6eaca86392948d"
+  },
+  "cpu_model": "Westmere-v1,phys-bits=40,enforce",
+  "qemu_sha256": "d3c1a558ad220e77a4412048c8d96b44f8c2b41c7ad2a4ecfe522a4b122fe067",
+  "qemu_version": "QEMU emulator version 10.0.13 (Debian 1:10.0.13+ds-0+deb13u1)\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\n",
+  "host_architecture": "x86_64",
+  "schema_version": 1,
+  "source_revision": "7b270763e2b9362f9bf449779287b8934cf884c2",
+  "plan_digest": "85857f77feb457b9860eade98d4990eb5a707eba3c78034b97593d568810d391",
+  "snapshot_name": "reviewed",
+  "snapshot_restore_verified": true,
+  "uuid": "143040f3-1505-4dae-80a3-6901ade48941",
+  "image_url": "https://cloud.debian.org/images/cloud/trixie/latest/debian-13-generic-amd64.qcow2",
+  "image_sha512": "5bd891c6e62d01639f52a5587b72a4607421e445732214be787dba6043cf9797a6ff90bed982aada6a6c7e619f1f956d961c4fad76757171abd607920aac098a",
+  "acceleration": "kvm",
+  "acceleration_probe": {
+    "selected": "kvm",
+    "probe_returncode": 0,
+    "probe_stderr": ""
+  },
+  "prepare_seconds": 88.75883703100001,
+  "files": {
+    "guest.qcow2": "4be9700cceec08bd8a5a9bfa4c9477608a7072ad432f21d6a9e9ff07b5811095",
+    "source.iso": "8d31968817d3fb929948fc8cc02793c9fa1ed07d074a43bc0f09bbe0968d4e3b",
+    "seed.iso": "55e02511dacf3e6d0a009d7a7de90de8ea3a02f0d27f6cfdafd3a3bcf5448276",
+    "uuid": "799325bbb73bf09866195d4367fb874cb8bcc711212775dfe0c5144c7547a457",
+    "baseline.json": "d5e88097f49649a16a2bcbe1a7dba2354d4b2f159060dd70abcd22cb5b2afc8b"
+  }
+}
