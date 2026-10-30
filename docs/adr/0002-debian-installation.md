@@ -3,6 +3,12 @@
 Status: implemented candidate; approved disposable snapshot-VM suite passed.
 Date: 2026-10-28
 
+The user clarified the [library-first/no-shell requirement](../design/process-execution.md)
+on 2026-10-30. This ADR describes the existing helper boundary; fixed CLI/helper
+process calls are documented gaps against that preferred integration, not permission
+for shell operations or arbitrary commands. Retain native APT bindings and preserve
+privilege/audit semantics when replacing the remaining process-based interfaces.
+
 Keep discovery in the Rust/Bevy application. Use Debian's system `python3-apt`
 binding to its native APT resolver and commit implementation, avoiding a new Rust
 FFI layer or parsing human apt-get output. A root-owned isolated Python executable

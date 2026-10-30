@@ -64,6 +64,15 @@ UDM is a Linux application for discovering, installing, configuring, and switchi
 
 ### Process and security boundaries
 
+**Library-first runtime, no shell evaluation (user requirement, 2026-10-30):** use
+maintained native APIs/bindings and structured IPC for operations. Do not construct
+or evaluate shell commands from application data, and do not substitute CLI-output
+parsing where a supported library interface exists. Current fixed process calls
+and package-manager script boundaries are explicitly inventoried in
+[the execution contract](../design/process-execution.md); they are not proof of a
+library-only runtime or permission for arbitrary command execution. Avoid claiming
+that libraries alone eliminate every RCE or package maintainer-script risk.
+
 1. **Unprivileged Bevy controller:** Owns ECS status and workflows; communicates via typed events/commands.
 2. **Independent compositor:** Owns client sockets, input, rendering, and actual window surfaces; should continue functioning if management UI crashes.
 3. **Restricted privileged package helper:** Accepts a tightly validated, pre-reviewed transaction, performs Polkit checks, invokes appropriate trusted package manager; never executes arbitrary UI-supplied shell commands. Avoid automatic repo additions or dangerous removals.

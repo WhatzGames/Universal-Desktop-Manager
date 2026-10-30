@@ -24,6 +24,8 @@ Keep #10/#11 and milestone v0.2 open for review/merge; this is not a supported r
 Interactive password prompts, native repair and physical GPU/input remain unvalidated.
 
 - Native distribution package adapter (one distro first), transaction simulation, dependency/conflict review.
+- Library/API-first operations with no shell evaluation; migrate the explicitly
+  [inventoried fixed CLI calls](../design/process-execution.md) without weakening audit or authorization.
 - Privileged minimal helper + Polkit, authorized install, journal and failure handling.
 - Verify KDE Plasma Wayland install and session launcher.
 - **Acceptance:** install in snapshot VM after approval without disrupting current desktop; failed transaction reports recovery accurately.

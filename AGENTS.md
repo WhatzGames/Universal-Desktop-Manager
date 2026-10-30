@@ -10,6 +10,14 @@ project SPDX terms from the generic GPLv2 text. Do not merge without human appro
 Keep v0.1 read-only: no package refresh/install, root operations, logout, display-manager
 restart, compositor takeover or execution of discovered desktop commands.
 
+Application runtime is library/API-first: use native libraries/bindings and structured
+IPC, not shell command evaluation or new CLI-output wrappers. Never route data through
+`sh -c`, `bash -c`, `system()`, `shell=True`, dynamic code evaluation or user-selected
+executables. Existing fixed process calls are documented gaps, not general permission.
+Preserve authorization/audit semantics when replacing them. Read
+docs/design/process-execution.md before changing system integration. CI/build/test
+shell automation is separate from shipped application operations.
+
 Before closeout run cargo fmt --check, cargo clippy --workspace --all-targets -- -D warnings,
 cargo build --workspace --locked, cargo test --workspace --locked and a report smoke test.
 Report acceptance criteria with evidence, failures and unverified claims. Update relevant

@@ -1,5 +1,10 @@
 # Debian 13 installation contract (v0.2 candidate)
 
+Follow the [library-first, no-shell runtime requirement](process-execution.md).
+Resolution and commit already use native APT bindings; fixed apt-cache/audit and
+authorization/helper process calls remain explicitly inventoried integration gaps.
+No runtime refactor or all-RCE-prevention claim is implied by this requirement.
+
 The no-argument report preserves v0.1's read-only behavior. Explicit `packages plan`,
 `packages verify` and `packages install SHA256` dispatch to an installed absolute helper;
 only install goes through `/usr/bin/pkexec`. Discovery never triggers authorization.

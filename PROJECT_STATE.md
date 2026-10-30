@@ -1,5 +1,12 @@
 # Current project state
 
+Runtime integration requirement clarified 2026-10-30: library/API-first system
+operations, no shell-command evaluation. Installer resolution/commit already use
+python3-apt; apt-cache availability, dpkg audit and fixed helper/pkexec launches
+remain documented process-based gaps. [Inventory and contract](docs/design/process-execution.md).
+This is a persistent requirement/documentation update, not a completed runtime
+migration or a guarantee against every RCE. No installation was authorized or run.
+
 Verified 2026-10-30. The snapshot-based Debian 13 CI objective is implemented and
 validated in a disposable GitHub-hosted KVM guest. This is not a release claim.
 
