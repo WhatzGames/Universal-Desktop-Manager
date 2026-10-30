@@ -39,7 +39,7 @@ nonzero; missing session directories are normal. No configuration file is needed
 [Wiki source / publication](docs/wiki/README.md) ·
 [Technical architecture](docs/architecture/overview.md) ·
 [Full master plan](docs/development/master-plan.md) ·
-[Roadmap](docs/development/roadmap.md) · [Handoff](PROJECT_STATE.md)
+[Roadmap](docs/development/roadmap.md)
 
 The existing [LICENSE](LICENSE) is unchanged. Project-level SPDX choice remains open;
 packages are not configured for registry publication.

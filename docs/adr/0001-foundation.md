@@ -13,7 +13,7 @@ report and structured diagnostic output; defer configurable paths and persistent
 storage until a workflow needs them. Bevy subcrates license themselves MIT OR Apache-2.0;
 the project license choice and a distribution dependency audit remain unresolved.
 
-Keep end-user guidance in the Wiki; technical specifications and agent handoff in Git.
+Keep end-user guidance in the Wiki; technical specifications in Git.
 Use one release-specific local APT query (Debian 13), explicitly unvalidated elsewhere.
 
 Proposed, not accepted by implementation: Smithay/calloop runtime isolation, typed IPC,

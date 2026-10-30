@@ -6,10 +6,10 @@ Closes #
 
 Commands, results, platform and unverified behavior:
 
-## Documentation and handoff
+## Documentation
 
-User Wiki/source, technical docs, PROJECT_STATE.md, relevant ADRs:
+User Wiki/source, technical documentation and relevant ADRs:
 
 ## Risks
 
-License impact, trust boundaries, preservation guarantees and next task:
+License impact, trust boundaries, preservation guarantees:

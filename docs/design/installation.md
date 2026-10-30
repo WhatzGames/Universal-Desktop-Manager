@@ -1,9 +1,8 @@
 # Debian 13 installation contract (v0.2 candidate)
 
-Follow the [library-first, no-shell runtime requirement](process-execution.md).
-Resolution and commit already use native APT bindings; fixed apt-cache/audit and
-authorization/helper process calls remain explicitly inventoried integration gaps.
-No runtime refactor or all-RCE-prevention claim is implied by this requirement.
+Application-owned logic must be Rust, using maintained native-library bindings and
+structured IPC. FFI is allowed; bridge code only adapts calls/types. No application
+operation may evaluate shell-command strings. Preserve audit/authorization semantics.
 
 The no-argument report preserves v0.1's read-only behavior. Explicit `packages plan`,
 `packages verify` and `packages install SHA256` dispatch to an installed absolute helper;

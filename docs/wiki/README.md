@@ -1,20 +1,9 @@
-# Published user manual
+# User manual publication
 
-Live Wiki: https://github.com/WhatzGames/Universal-Desktop-Manager/wiki
-
-Owner initialized Home on 2026-10-28. Fourteen user pages plus _Sidebar.md were
-published in signed Wiki commit `ee09dc3f040e119c8e0c00c600bf97ed42455c67`.
-The live Getting Started page and fourteen-page navigation were checked in a browser.
-The v0.2 user updates are published in signed Wiki commits `e0a3763` and `f5bb5ac`; all pages match
-the source copies in draft PR #13. this README
-is publication guidance and is not itself a Wiki page. No separate Wiki license adopted.
-
-Both repositories follow My Flow layout:
-
-- Bare Wiki Git data: `<workspace>/bares/Universal-Desktop-Manager.wiki.git`
-- Wiki checkout: `<workspace>/worktrees/Universal-Desktop-Manager-wiki`, branch master
-- SSH remote: `git@github-personal:WhatzGames/Universal-Desktop-Manager.wiki.git`
-- Same author, personal SSH signing key and attribution hooks as the project repository
+The user-facing manual is published at
+https://github.com/WhatzGames/Universal-Desktop-Manager/wiki.
+The Markdown pages in this directory are its reviewed source; README.md is developer
+publication guidance, not a Wiki page. No separate Wiki license is adopted.
 
 ## Updating an initialized Wiki
 
@@ -32,20 +21,6 @@ git -C ../Universal-Desktop-Manager-wiki commit -S -m 'Update user manual'
 git -C ../Universal-Desktop-Manager-wiki push origin master
 ```
 
-Resolve any upstream divergence before pushing. Verify links and page rendering after
-publication and record the Wiki commit in PROJECT_STATE.md. Keep planned features
-clearly labeled; the foundation from PR #1 is merged. Approved disposable VM acceptance
-passed in run 40975763374; release/hardware and interactive-auth limits remain.
-
-Signed Wiki commit `bb46dc8` publishes the snapshot approval and installation
-limitations updates from integration PR #14. Installation acceptance remains open.
-
-Signed Wiki commit `a13db2c` records verified real Debian guest preparation and
-restoration from PR #14; actual KDE installation remains unapproved/unvalidated.
-
-Current six-page update is published in signed Wiki commit
-`61111025c31a4c9a77300f0c889d649ad3207299` after specific human approval.
-Home, Installation, Supported-Desktops, KDE-Plasma, Installing-Desktops and
-Known-Limitations match the integration source bytes and record approved native
-installation/failure/continuity/Plasma/recovery acceptance, with remaining limits.
-Earlier commits above are historical preparation-only states.
+Resolve upstream divergence before pushing. Verify links, page rendering and source
+content after publication. Keep planned features clearly labeled and describe tested
+behavior with its practical limits.

@@ -1,12 +1,11 @@
-# Universal Desktop Manager — Master Project Plan and Agent Handoff
+# Universal Desktop Manager — Master Project Plan
 
 **Repository:** https://github.com/WhatzGames/Universal-Desktop-Manager  
 **Project:** Universal Desktop Manager (UDM)  
-**Document role:** Persistent development plan and initial repository-setup task specification  
+**Document role:** Product architecture and implementation roadmap
 **Status:** Proposed architecture and implementation roadmap; not evidence of implemented functionality  
 **Prepared:** 2026-10-27
 
-> **Instructions to the next Work/coding-agent session:** Read this entire document before editing the repository. Inspect the live repository before drawing conclusions about existing files, branch status, licensing, or GitHub Wiki availability. Preserve existing changes. Create a branch and a pull request; do not merge without approval. Do the initial setup described in Section 12, not the entire product implementation. Do not treat proposed designs as tested capabilities.
 
 ## 1. Vision and requirements
 
@@ -23,7 +22,7 @@ UDM is a Linux application for discovering, installing, configuring, and switchi
 7. Track and validate application-process continuity, surface/connection continuity, focus, window placement, and workspaces for supported live switches.
 8. Fail safely: never log the user out or kill the previous compositor as an implicit consequence of a supposedly seamless live switch.
 9. Be extensible to additional desktop environments, distributions, and protocol backends.
-10. Provide end-user documentation in the GitHub Wiki; maintain technical documentation and agent handoff state in the main Git repository.
+10. Provide end-user documentation in the GitHub Wiki; maintain technical documentation in the main Git repository.
 
 ## 2. Non-negotiable technical truth: three switching modes
 
@@ -40,12 +39,11 @@ UDM is a Linux application for discovering, installing, configuring, and switchi
 - **Language:** Rust for all shipped UDM-owned runtime components, including the
   privileged package helper. FFI/native system-library bindings are explicitly
   allowed; all UDM-owned application logic stays in Rust and bridge code only adapts
-  types/calls. A Python
-  product helper is not the target architecture. Python development/CI/test tooling
-  is separate. Existing Python backend implementation requires migration.
+  types/calls. A Python product helper is not the target architecture. Python development/CI/test tooling
+  is separate.
 - **Rust binding maintenance:** adopt only well-maintained bindings with documented
   maintainer, compatibility and testing evidence. No binding is approved merely by
-  being available; follow the [selection contract](../design/process-execution.md).
+  being available; verify support for our target native-library versions before adoption.
 - **Control plane:** Bevy ECS (Bevy may run headless; graphical UI eventually Bevy UI, subject to practical validation).
 - **Display/compositor runtime:** Smithay with its own calloop-driven event loop, initially run nested for safety.
 - **X11 compatibility:** Xwayland plus the appropriate X11 window-management implementation.
@@ -72,14 +70,12 @@ UDM is a Linux application for discovering, installing, configuring, and switchi
 
 ### Process and security boundaries
 
-**Library-first runtime, no shell evaluation (user requirement, 2026-10-30):** use
+**Library-first runtime, no shell evaluation:** use
 maintained native APIs/bindings and structured IPC for operations. Do not construct
 or evaluate shell commands from application data, and do not substitute CLI-output
-parsing where a supported library interface exists. Current fixed process calls
-and package-manager script boundaries are explicitly inventoried in
-[the execution contract](../design/process-execution.md); they are not proof of a
-library-only runtime or permission for arbitrary command execution. Avoid claiming
-that libraries alone eliminate every RCE or package maintainer-script risk.
+parsing where a supported library interface exists. Package-manager scripts remain
+privileged native code; library integration does not eliminate every execution or
+memory-safety risk.
 
 1. **Unprivileged Bevy controller:** Owns ECS status and workflows; communicates via typed events/commands.
 2. **Independent compositor:** Owns client sockets, input, rendering, and actual window surfaces; should continue functioning if management UI crashes.
@@ -135,7 +131,6 @@ Universal-Desktop-Manager/
 │   ├── ISSUE_TEMPLATE/
 │   └── pull_request_template.md
 ├── AGENTS.md
-├── PROJECT_STATE.md
 ├── README.md
 ├── LICENSE                    # Existing license must be preserved pending decision
 ├── CONTRIBUTING.md
@@ -190,21 +185,18 @@ User-friendly pages: Home, Getting Started, Installation, First Launch, Quick St
 - `docs/adr/`: architectural decision records, with statuses proposed/accepted/superseded/rejected.
 - Rustdoc for public APIs. README is concise and points to wiki and developer docs.
 
-The wiki must **not** be the sole technical specification or agent handoff store; technical changes should be reviewed in the same PR as code.
+The wiki must **not** be the sole technical specification; technical changes should be reviewed in the same PR as code.
 
-## 8. Durable plan tracking across agent sessions
+## 8. Development workflow
 
-**`AGENTS.md`:** Mandatory startup: inspect git branch/status, read `PROJECT_STATE.md`, relevant `docs/` and ADRs, inspect assigned issue/milestone, inspect code, plan scoped task. Mandatory closeout: run checks, report acceptance criteria, update issue/PR, update state when warranted, change relevant technical docs, hand off verified work, blockers and next step. Do not assume prior chat memory. Never claim success based merely on code written.
+Keep architecture, design, usage and test procedures with the code. Track work in
+GitHub issues/milestones and review implementation changes through pull requests.
+CI checks formatting, Clippy, compilation, tests and scoped integration behavior;
+it does not establish every preservation or hardware guarantee.
 
-**`PROJECT_STATE.md`:** Compact handoff status: date verified, current milestone, last successful validation, implemented vs planned, blockers, issue/PR links, next action. Keep synchronized with verified repository state; not a diary or substitute for tests.
-
-**GitHub Issues & Milestones:** Fine-grained approved tasks with description, dependencies, acceptance criteria, labels and milestone; PRs refer to issues. Suggested milestones v0.1, v0.2, v0.3, v0.4, v0.5, v0.6, v0.7–0.9, v1.0; group versions if GitHub limitations make ranges awkward. The live repository is authoritative for what issues actually exist.
-
-**ADRs:** Record why Rust/Bevy, Smithay, runtime separation, preservation contract, wiki/docs boundary, distro backends were chosen. Distinguish decisions discussed from decisions accepted.
-
-**GitHub Actions:** `cargo fmt --check`, Clippy, compilation, `cargo test`, with scoped security/license checks where practical. PR template asks which issue, what changed, tests, user-facing docs, technical docs, risks and handoff. CI cannot automatically prove semantic agent compliance.
-
-**Source-of-truth map:** Technical roadmap → `docs/development/roadmap.md`; task progress → Issues and Milestones; current handoff → `PROJECT_STATE.md`; architecture → `docs/architecture` and accepted ADRs; agent rules → `AGENTS.md`; user manual → Wiki; actual behavior → code + tests.
+Do not add agent diaries, gap inventories, session summaries, conversation-derived
+records or handoff/status files to the repository. Product requirements and technical
+contracts belong in normal project documentation; progress belongs in issues/PRs.
 
 ## 9. Full product roadmap
 
@@ -216,7 +208,7 @@ The wiki must **not** be the sole technical specification or agent handoff store
 - Model desktop catalog including not-installed KDE Plasma Wayland.
 - Do **read-only** KDE package availability/compatibility checks (where repository interface supports safely querying).
 - Build automated unit tests and CI.
-- Establish agent persistence, GitHub technical docs, end-user wiki skeleton, issues/milestones.
+- Establish technical docs, end-user wiki, issues and milestones.
 - **Acceptance:** `cargo build`, tests and formatting pass; app starts and generates honest read-only desktop/KDE status; no root actions, packages installed, or session manipulation.
 
 ### v0.2 — KDE installation
@@ -262,7 +254,10 @@ The wiki must **not** be the sole technical specification or agent handoff store
 
 ## 10. Licensing decision still open — DO NOT CHANGE LICENSE WITHOUT APPROVAL
 
-Prior conversation considered GPL-3.0-or-later and explained GPLv2 vs GPLv3. The reported current repository has a GPLv2 license file, **but the incoming agent must verify this live**. Keep existing `LICENSE` unchanged. Do not infer `GPL-2.0-only` versus `GPL-2.0-or-later` merely from a copy of generic GPLv2 text; obtain an explicit project-level choice and copyright notice before asserting SPDX metadata. Likewise, licensing the wiki under CC-BY-4.0 is only a suggestion until approved. Audit dependencies before distribution. Bevy and Smithay licensing compatibility should be verified at pinned versions.
+Keep existing LICENSE unchanged without approval. Do not infer GPL-2.0-only versus
+GPL-2.0-or-later solely from generic GPLv2 text; obtain an explicit project-level
+choice before asserting SPDX metadata. No separate Wiki license is adopted. Audit
+dependencies and verify licensing compatibility at pinned versions before distribution.
 
 ## 11. Safety and non-goals
 
@@ -274,62 +269,3 @@ Prior conversation considered GPL-3.0-or-later and explained GPLv2 vs GPLv3. The
 - Never make the management UI's lifecycle an implicit kill switch for applications.
 - No application or package change without an approved scope and tested fallback.
 - Early compositor/native-session experiments belong in nested sessions or disposable VMs, not as a developer's primary desktop.
-
-## 12. EXACT initial repository-setup task for the incoming Work session
-
-**Primary assignment: set up repository infrastructure and v0.1 foundations; do not attempt the entire product roadmap.**
-
-### A. Reconnaissance
-
-1. Inspect `https://github.com/WhatzGames/Universal-Desktop-Manager`, `main`, files, license, existing workflows, wiki, issues, and milestones using authenticated GitHub tooling when connected. If unavailable, explicitly report limitations rather than inventing status.
-2. Identify repo protections and permissions. Work on a separate `setup/v0.1-foundation` branch (or another appropriate nonconflicting branch); do not overwrite unrelated work.
-3. Confirm available stable Rust/Bevy versions and compatible dependency versions using upstream documentation. Pin dependencies appropriately.
-
-### B. Implement functional v0.1 project skeleton
-
-1. Create workspace root manifest, lockfile, `udm-app`, `udm-core`, `udm-ecs`, `udm-catalog`, `udm-compat` (or a smaller justified organization if it avoids empty crates).
-2. Add a minimal executable Bevy ECS app that loads desktop catalog/state, detects host basics read-only, and prints or displays a truthful compatibility summary.
-3. Include ECS unit tests and maintain clear boundaries between discovery/compatibility and future side-effecting modules.
-4. Add `README.md` with project overview, honest feature status, build/test instructions and links to wiki and `docs/`.
-5. Preserve `.gitignore` and existing `LICENSE`; do not invent license metadata.
-
-### C. Persistent governance files
-
-1. Create `AGENTS.md` with mandatory read/implement/test/document/handoff rules described in Section 8.
-2. Create `PROJECT_STATE.md` clearly identifying verified current status, completed implementation, blocker links, current milestone and next action.
-3. Add `docs/development/roadmap.md` containing the full phase-by-phase plan from this file, not an abbreviated or materially different version.
-4. Create initial architecture docs, design docs and ADRs; label proposals appropriately. This file may be preserved in the repo as `docs/development/master-plan.md` verbatim or copied with only harmless formatting edits so **the exact plan is not lost**.
-
-### D. GitHub management
-
-1. Create milestone(s) starting with v0.1 and plan through v1.0, without claiming releases exist.
-2. Create actionable v0.1 Issues: workspace foundation, Bevy ECS, catalog, distro detection, session discovery, KDE compatibility, CI, documentation. Mark tasks already done by the setup PR as appropriately covered, avoiding duplicate issues.
-3. Add issue templates, pull-request template, and GitHub Actions CI (`fmt`, `clippy`, `build`, `test`), then run checks.
-4. Enable/initialize the Wiki if authorized/permitted. Wiki pages should be user-centric and mark unreleased functionality as planned. If GitHub tooling cannot initialize wiki, create ready-to-publish content and provide exact manual instructions.
-
-### E. Deliverables and completion
-
-1. Open a pull request from the setup branch to `main`, **do not merge**.
-2. Share PR URL, changed files, build/test results, created issues/milestones, wiki status, current blockers and next task.
-3. Update `PROJECT_STATE.md` and relevant issues with objectively verified results before completing the session.
-4. Do not claim completion of v0.1 features that are still stubs or not tested.
-
-### Initial setup acceptance checklist
-
-- [ ] Repository state and license inspected live and preserved.
-- [ ] Cargo workspace builds from a clean checkout.
-- [ ] Bevy ECS application runs without privileged side effects.
-- [ ] Desktop discovery and KDE compatibility results are truthful and tested (or clearly reported incomplete).
-- [ ] `AGENTS.md`, `PROJECT_STATE.md`, and complete roadmap/master plan committed.
-- [ ] Technical documentation is in `docs/`; user guidance is in GitHub Wiki or publish-ready Wiki files.
-- [ ] CI runs formatting, lint, build and tests.
-- [ ] Issues, milestones and handoff recorded if access permits.
-- [ ] Pull request opened without merging.
-
-## 13. Standard future-agent session checklist
-
-At start: `git status` → read `AGENTS.md` → read `PROJECT_STATE.md` → read `docs/development/master-plan.md` and relevant ADR/design docs → inspect assigned issue and branch → inspect code and baseline tests → scope work.
-
-At end: validate code and expected behavior → update docs/issues/ADRs as relevant → update project state only with evidence → push branch/create or update PR → summarize what changed, what is unverified, blockers, and next task.
-
-**Never rely on cross-session conversational memory as the authoritative plan. The Git repository, issues, test results, and recorded decisions are the enduring record.**

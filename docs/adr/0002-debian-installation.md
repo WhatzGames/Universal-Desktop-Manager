@@ -1,37 +1,22 @@
 # ADR 0002: restricted Debian 13 installation transactions
 
-Status: Python backend choice superseded by Rust runtime requirement; migration pending.
-Date: 2026-10-28
+Status: proposed Rust backend; the current prototype helper uses Python APT bindings.
 
-The user clarified the [library-first/no-shell requirement](../design/process-execution.md)
-on 2026-10-30. This ADR describes the existing helper boundary; fixed CLI/helper
-process calls are documented gaps against that preferred integration, not permission
-for shell operations or arbitrary commands. Retain native APT bindings and preserve
-privilege/audit semantics when replacing the remaining process-based interfaces.
+UDM-owned application logic, including the privileged helper, is Rust. Use maintained
+Rust bindings to native APT. Verify maintainer activity, compatibility with supported
+Debian/APT versions, test coverage and security/ABI handling before selecting bindings.
+No package is approved merely because it is available. Do not substitute a custom
+resolver or shell/CLI wrappers for native package-management APIs.
 
-The user confirmed on 2026-10-30 that Rust applies to every shipped UDM-owned runtime
-component, including the privileged helper. The required replacement is a Rust
-helper using well-maintained Rust bindings to native APT. Rust bindings exist; suitability
-for the complete existing safety contract still requires evaluation. Do not replace
-native resolution with a new ad-hoc resolver or shell/CLI wrappers.
-The user requires verified maintenance, not merely availability. Record maintainers,
-relevant upstream/downstream activity, supported Debian/APT versions and test/CI
-evidence before selection. If no qualifying binding covers the safety contract,
-report the gap; do not silently introduce an abandoned crate or custom replacement.
+FFI is allowed. UDM policy, validation, authorization, workflow, journaling and recovery
+stay in Rust; foreign bridge code only adapts calls/types. External libraries retain
+their native implementation. Review ownership/lifetimes and error propagation.
 
-FFI is explicitly approved: all UDM-owned transaction policy, validation, authorization,
-workflow, journaling and recovery logic must stay in Rust. A native bridge may adapt
-types and calls only; it must not become a second implementation of UDM application
-logic in C++, Python or another language. External libraries retain their own native
-implementation. Review ABI compatibility, ownership/lifetimes and error propagation.
-
-The existing implementation used Debian's `python3-apt` to reuse native APT without
-writing Rust FFI. That shortcut is historical, not the desired product architecture.
-It currently uses a root-owned isolated Python executable accepting fixed `plan`,
-`verify` and `install REVIEW_DIGEST` operations. Rust invokes fixed helper/pkexec
-paths without a shell. Preserve its validation/authorization contract during migration;
-do not describe the current implementation as Rust-only. Python test/CI tooling is
-outside the shipped runtime requirement.
+The package helper is a narrow, separately authorized privilege boundary accepting
+fixed plan, verify and install REVIEW_DIGEST operations. Package names, arbitrary
+paths, options and commands must not come directly from UI. The existing prototype
+uses a root-owned isolated Python helper and fixed helper/pkexec paths without shell
+command evaluation. Its observed behavior is documented in packaging/debian/README.md.
 
 Polkit authenticates an active user's administrator authorization without cached
 permission. The helper binds authorization to a recomputed plan using SHA-256 and
@@ -70,9 +55,9 @@ These results validate the frozen Python-backed implementation, not an unimpleme
 Rust replacement. A changed helper requires fresh native verification and exact VM
 transaction review before any further installation.
 
-Rust binding reference: [rust-apt/libapt-pkg](https://docs.rs/rust-apt/latest/rust_apt/).
-This is a research reference, not an approved dependency, maintenance assessment or
-coverage claim. No Rust binding has been selected.
+Binding API reference: [rust-apt/libapt-pkg](https://docs.rs/rust-apt/latest/rust_apt/).
+Native APT handles dependency resolution; adoption still requires compatibility,
+maintenance and safety review.
 
 A narrowly filtered push can carry the same explicit approval: one signed owner
 commit changes only the dedicated approval record and names its exact manifest.

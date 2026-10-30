@@ -70,8 +70,7 @@ hash of `pacman -Q` before/after to detect package inventory changes. This check
 not establish arbitrary window preservation or the absence of every possible side effect.
 
 For Debian desktop compatibility, use a separate disposable Debian 13 test system;
-CachyOS hardware cannot validate the release-specific APT adapter. Keep recorded results
-in PROJECT_STATE.md and the relevant issue/PR, distinguishing observed from planned.
+CachyOS hardware cannot validate the release-specific APT adapter. Report results in the relevant issue/PR, distinguishing observed from planned.
 
 ## v0.2 package workflow
 
