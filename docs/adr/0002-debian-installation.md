@@ -1,6 +1,6 @@
 # ADR 0002: restricted Debian 13 installation transactions
 
-Status: implemented candidate; snapshot-VM acceptance pending.
+Status: implemented candidate; approved disposable snapshot-VM suite passed.
 Date: 2026-10-28
 
 Keep discovery in the Rust/Bevy application. Use Debian's system `python3-apt`
@@ -33,14 +33,16 @@ Sources: [python-apt cache API](https://apt-team.pages.debian.net/python-apt/lib
 [Plasma workspace](https://packages.debian.org/trixie/plasma-workspace).
 
 CI integration candidate: preserve RAM/disk and exact source/transaction in review
-artifacts, then require a separate digest-bound manual dispatch before any KDE
+artifacts, then require a separate digest-bound explicit approval before any KDE
 commit. Revalidate snapshot files, original desktop identities and guest transaction.
 See [protocol and remaining acceptance limits](../../tests/vm/README.md).
 
-Preparation and exact running-snapshot restoration passed on hosted KVM and TCG
-on fc9df23. The [review packet](../development/validation/v0.2-vm/README.md) retains
-the identical complete transaction and distinct VM manifests. Positive authorization
-and native installation acceptance remain unapproved/unverified.
+The [approved KVM acceptance](../development/validation/v0.2-vm/kvm-fixed/accepted/README.md)
+passed real CLI/pkexec/helper installation, native failures/interruption, original
+XFCE/LightDM continuity, isolated Plasma and final snapshot recovery. The original
+host-bound KVM snapshot was withdrawn; a fixed enforced CPU model passed independent
+restoration. Interactive password prompting, native repair and physical hardware
+remain unvalidated. This is scoped disposable-guest evidence, not general safety.
 
 A narrowly filtered push can carry the same explicit approval: one signed owner
 commit changes only the dedicated approval record and names its exact manifest.

@@ -147,3 +147,14 @@ manifest and requires it on acceptance. Unsupported features fail initialization
 A replacement must pass preparation and cross-runner restoration before approval;
 no universal hardware-migration claim follows. TCG remains an explicitly requested
 fallback experiment (`[vm-prepare-tcg] `), not part of normal KVM preparation.
+
+## Accepted execution evidence
+
+The [approved hosted KVM suite](../../docs/development/validation/v0.2-vm/kvm-fixed/accepted/README.md)
+passed in run 40975763374 with exact transaction approval. It includes real native
+installation and failure journals, an observed dpkg --unpack descendant interrupted
+through its exact parent chain, blocked retry, post-commit verification failure,
+original XFCE/LightDM identities, isolated real Plasma and final original snapshot
+recovery. The observer ignores planning dpkg --audit and does not assume a shared
+process group. This measured result preserves every limit above; new transactions
+still require explicit review/approval.

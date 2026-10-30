@@ -49,4 +49,5 @@ No true approval record is shipped by the integration branch. A false record may
 used on the dedicated branch to prove rejection; it cannot schedule the VM job.
 See [the full review packet](../docs/development/validation/v0.2-vm/README.md) and
 [the VM protocol](../tests/vm/README.md). Maintainer scripts remain privileged and
-installation acceptance is still pending actual approved execution.
+the [approved KVM suite passed](../docs/development/validation/v0.2-vm/kvm-fixed/accepted/README.md).
+This does not authorize another transaction or bypass the same gate.
